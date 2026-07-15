@@ -478,7 +478,7 @@ function showEncouragement(pct){
   if(pct>=1)toast.classList.add('done');
   else if(pct<0.5)toast.classList.add('low');
   toast.classList.add('show');
-  const dur=pct>=1?3500:pct>=0.7?3000:2500;
+  const dur=pct>=1?4000:pct>=0.7?4000:msg.t.length>40?5000:4000;
   setTimeout(()=>toast.classList.remove('show'),dur);
 }
 
