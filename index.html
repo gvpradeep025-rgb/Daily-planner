@@ -14,9 +14,7 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 .app{min-height:100vh;display:flex;flex-direction:column}
 
 /* Progress bar */
@@ -28,18 +26,14 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .back-btn:hover{color:var(--text);background:var(--surface2)}
 .back-btn.visible{display:block}
 
-/* Steps container */
+/* Steps */
 .steps{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 24px 40px}
 .step{display:none;max-width:640px;width:100%;animation:stepIn 0.5s cubic-bezier(0.16,1,0.3,1)}
 .step.active{display:block}
 @keyframes stepIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-
-/* Step header */
 .step-eyebrow{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:12px}
 .step h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;line-height:1.2;margin-bottom:8px;letter-spacing:-0.02em}
 .step p{font-size:1rem;color:var(--muted);line-height:1.6;margin-bottom:32px}
-
-/* Goal cards */
 .goal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
 .goal-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:24px 20px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);text-align:center;position:relative;overflow:hidden}
 .goal-card:hover{border-color:rgba(139,92,246,0.4);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
@@ -47,8 +41,6 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .goal-card .icon{font-size:2rem;margin-bottom:12px;display:block}
 .goal-card .label{font-size:0.95rem;font-weight:600}
 .goal-card .sub{font-size:0.78rem;color:var(--muted);margin-top:4px}
-
-/* Lifestyle cards */
 .lifestyle-grid{display:flex;flex-direction:column;gap:10px}
 .lifestyle-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 24px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);display:flex;align-items:center;gap:16px}
 .lifestyle-card:hover{border-color:rgba(139,92,246,0.4);transform:translateX(4px)}
@@ -59,8 +51,6 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .lifestyle-card .l-desc{font-size:0.8rem;color:var(--muted);margin-top:2px}
 .lifestyle-card .l-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;font-size:0.7rem;color:transparent}
 .lifestyle-card.selected .l-check{background:var(--accent);border-color:var(--accent);color:#fff}
-
-/* Inline fields */
 .inline-fields{margin-top:16px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);animation:expandIn 0.3s cubic-bezier(0.16,1,0.3,1);display:none}
 .inline-fields.show{display:block}
 @keyframes expandIn{from{opacity:0;max-height:0}to{opacity:1;max-height:300px}}
@@ -69,8 +59,6 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .field label{display:block;font-size:0.75rem;color:var(--muted);margin-bottom:6px;font-weight:500}
 .field input,.field select{width:100%;padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.9rem;font-family:inherit;outline:none;transition:border 0.2s}
 .field input:focus,.field select:focus{border-color:var(--accent)}
-
-/* Productivity cards */
 .prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .prod-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:24px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);text-align:center}
 .prod-card:hover{border-color:rgba(139,92,246,0.4);transform:translateY(-2px)}
@@ -78,723 +66,569 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .prod-card .p-icon{font-size:1.8rem;margin-bottom:8px}
 .prod-card .p-label{font-size:0.9rem;font-weight:600}
 .prod-card .p-time{font-size:0.75rem;color:var(--muted);margin-top:4px}
-
-/* Preference chips */
 .pref-grid{display:flex;flex-wrap:wrap;gap:10px}
 .pref-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:100px;padding:10px 20px;cursor:pointer;transition:all 0.2s;font-size:0.88rem;font-weight:500;display:flex;align-items:center;gap:8px;user-select:none}
 .pref-chip:hover{border-color:rgba(139,92,246,0.4)}
 .pref-chip.selected{border-color:var(--accent);background:rgba(139,92,246,0.1);color:var(--accent2)}
-.pref-chip .p-emoji{font-size:1.1rem}
-
-/* Textarea */
 .big-textarea{width:100%;min-height:120px;padding:20px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:1rem;font-family:inherit;outline:none;resize:vertical;line-height:1.6;transition:border 0.2s}
 .big-textarea:focus{border-color:var(--accent)}
 .big-textarea::placeholder{color:var(--muted);opacity:0.6}
-
-/* Examples */
 .examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .example-tag{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:0.78rem;color:var(--muted);cursor:pointer;transition:all 0.2s}
 .example-tag:hover{border-color:var(--accent);color:var(--text)}
-
-/* Summary */
 .summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px}
 .summary-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(63,63,70,0.4)}
 .summary-row:last-child{border-bottom:none}
 .summary-label{font-size:0.85rem;color:var(--muted)}
 .summary-value{font-size:0.9rem;font-weight:600}
-
-/* CTA button */
 .cta-wrap{margin-top:32px;text-align:center}
 .cta-btn{display:inline-flex;align-items:center;gap:10px;padding:16px 40px;border:none;border-radius:100px;font-size:1.05rem;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);font-family:inherit;box-shadow:0 4px 24px rgba(139,92,246,0.3)}
 .cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(139,92,246,0.4)}
-.cta-btn:active{transform:translateY(0)}
-
-/* Next button */
 .next-wrap{margin-top:32px;display:flex;justify-content:flex-end}
 .next-btn{padding:12px 32px;border:none;border-radius:100px;font-size:0.9rem;font-weight:600;cursor:pointer;background:var(--accent);color:#fff;transition:all 0.25s;font-family:inherit;opacity:0.3;pointer-events:none}
 .next-btn.ready{opacity:1;pointer-events:auto}
 .next-btn.ready:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(139,92,246,0.3)}
 
-/* Schedule view */
-#schedule-view{display:none;padding:80px 24px 40px}
-.schedule-inner{max-width:750px;margin:0 auto}
-.s-header{margin-bottom:32px}
-.s-header h1{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-0.02em}
-.s-header .s-tag{display:inline-block;padding:4px 14px;border-radius:100px;font-size:0.75rem;font-weight:600;background:rgba(139,92,246,0.15);color:var(--accent);margin-top:8px}
+/* ====== SCHEDULE VIEW ====== */
+#schedule-view{display:none;padding:80px 24px 60px}
+.schedule-inner{max-width:700px;margin:0 auto}
+.s-header{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.s-header h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-0.02em}
+.s-tag{display:inline-block;padding:4px 14px;border-radius:100px;font-size:0.72rem;font-weight:600;background:rgba(139,92,246,0.15);color:var(--accent);margin-top:4px}
+.sound-toggle{background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:0.75rem;color:var(--muted);cursor:pointer;transition:all 0.2s;font-family:inherit;display:flex;align-items:center;gap:6px}
+.sound-toggle:hover{border-color:var(--accent);color:var(--text)}
+.sound-toggle.active{border-color:var(--accent);color:var(--accent)}
 
-.strategy-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
-.strategy-box h3{font-size:0.85rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
-.strategy-box li{font-size:0.88rem;color:var(--muted);padding:6px 0 6px 20px;position:relative;line-height:1.5;list-style:none}
-.strategy-box li::before{content:'';position:absolute;left:0;top:13px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+/* Progress ring */
+.progress-dashboard{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
+.dash-card .dash-value{font-size:1.6rem;font-weight:700;color:var(--text)}
+.dash-card .dash-label{font-size:0.72rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+.ring-wrap{position:relative;width:80px;height:80px;margin:0 auto 8px}
+.ring-svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--surface2);stroke-width:6}
+.ring-fill{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1)}
+.ring-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700}
 
+/* Encouragement toast */
+.encourage-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:10px 24px;font-size:0.85rem;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:200;display:flex;align-items:center;gap:8px;opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;white-space:nowrap}
+.encourage-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.encourage-toast .e-emoji{font-size:1.1rem}
+
+/* XP float */
+.xp-float{position:fixed;z-index:200;font-size:0.85rem;font-weight:700;color:var(--accent);pointer-events:none;animation:xpUp 1.2s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes xpUp{0%{opacity:1;transform:translateY(0) scale(1)}50%{opacity:1;transform:translateY(-30px) scale(1.1)}100%{opacity:0;transform:translateY(-60px) scale(0.9)}}
+
+/* Confetti canvas */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:150}
+
+/* Strategy */
+.strategy-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.strategy-box h3{font-size:0.78rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.strategy-box li{font-size:0.85rem;color:var(--muted);padding:5px 0 5px 18px;position:relative;line-height:1.5;list-style:none}
+.strategy-box li::before{content:'';position:absolute;left:0;top:12px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+
+/* Timeline */
 .timeline{position:relative;padding-left:32px}
 .timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--border)}
-.t-block{position:relative;margin-bottom:14px;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:all 0.2s}
-.t-block:hover{border-color:rgba(139,92,246,0.4);transform:translateX(4px)}
-.t-block::before{content:'';position:absolute;left:-26px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.t-block{position:relative;margin-bottom:12px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);cursor:default}
+.t-block::before{content:'';position:absolute;left:-26px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);transition:all 0.3s}
 .t-block.active::before{background:var(--green);box-shadow:0 0 10px var(--green)}
 .t-block.done::before{background:var(--muted)}
-.t-time{font-size:0.72rem;color:var(--accent);font-weight:700;letter-spacing:0.5px}
-.t-title{font-size:0.95rem;font-weight:600;margin:4px 0 2px}
-.t-desc{font-size:0.82rem;color:var(--muted);line-height:1.4}
-.t-reason{font-size:0.72rem;color:var(--accent);opacity:0.6;margin-top:4px;font-style:italic}
-.t-icon{position:absolute;right:16px;top:16px;font-size:1.2rem}
-.t-check{position:absolute;right:16px;bottom:14px;width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:0.7rem;color:transparent}
-.t-check:hover{border-color:var(--green)}
-.t-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.t-block.done{opacity:0.55}
+.t-block.completing{animation:cardLift 0.4s cubic-bezier(0.16,1,0.3,1)}
+@keyframes cardLift{0%{transform:scale(1)}30%{transform:scale(1.015) translateY(-2px)}100%{transform:scale(1) translateY(0)}}
+.t-block .success-glow{position:absolute;inset:-1px;border-radius:var(--radius);border:2px solid var(--green);opacity:0;pointer-events:none;animation:glowPulse 0.6s ease-out forwards}
+@keyframes glowPulse{0%{opacity:0.8;transform:scale(1)}100%{opacity:0;transform:scale(1.03)}}
+.t-time{font-size:0.7rem;color:var(--accent);font-weight:700;letter-spacing:0.5px}
+.t-title{font-size:0.92rem;font-weight:600;margin:3px 0 2px;transition:all 0.3s}
+.t-block.done .t-title{text-decoration:line-through;text-decoration-color:var(--muted);animation:strikeThrough 0.4s ease-out}
+@keyframes strikeThrough{from{text-decoration-color:transparent}to{text-decoration-color:var(--muted)}}
+.t-desc{font-size:0.8rem;color:var(--muted);line-height:1.4}
+.t-reason{font-size:0.7rem;color:var(--accent);opacity:0.5;margin-top:3px;font-style:italic}
+.t-icon{position:absolute;right:14px;top:14px;font-size:1.1rem}
+.t-check{position:absolute;right:14px;bottom:12px;width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);font-size:0.7rem;color:transparent;overflow:visible}
+.t-check:hover{border-color:var(--green);transform:scale(1.1)}
+.t-check:active{transform:scale(0.9)}
+.t-check.checked{background:var(--green);border-color:var(--green);color:#fff;animation:checkBounce 0.4s cubic-bezier(0.16,1,0.3,1)}
+@keyframes checkBounce{0%{transform:scale(0.8)}40%{transform:scale(1.2)}70%{transform:scale(0.95)}100%{transform:scale(1)}}
+.t-check .ripple{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(34,197,94,0.3);animation:rippleOut 0.5s ease-out forwards;pointer-events:none}
+@keyframes rippleOut{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.5);opacity:0}}
 
-.progress-section{margin-top:24px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
-.progress-section h3{font-size:0.82rem;color:var(--muted);margin-bottom:10px;font-weight:500}
-.p-bar-bg{width:100%;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
-.p-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:3px;transition:width 0.4s ease;width:0%}
-.p-text{font-size:0.78rem;color:var(--muted);margin-top:8px;text-align:right}
+/* Streak card */
+.streak-card{background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(244,63,94,0.08));border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-top:20px;text-align:center;display:none}
+.streak-card.show{display:block;animation:stepIn 0.5s cubic-bezier(0.16,1,0.3,1)}
+.streak-fire{font-size:2.5rem;margin-bottom:8px;display:inline-block;animation:fireGlow 1s ease-in-out infinite alternate}
+@keyframes fireGlow{from{filter:brightness(1)}to{filter:brightness(1.3)}}
+.streak-title{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.streak-sub{font-size:0.85rem;color:var(--muted)}
+.streak-stats{display:flex;justify-content:center;gap:32px;margin-top:16px}
+.streak-stat .ss-val{font-size:1.4rem;font-weight:700;color:var(--accent)}
+.streak-stat .ss-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.trophy-anim{font-size:3rem;display:block;margin-bottom:12px;animation:trophyBounce 0.6s cubic-bezier(0.16,1,0.3,1)}
+@keyframes trophyBounce{0%{transform:scale(0) rotate(-20deg)}60%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
 
 .improve-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px}
-.improve-box h3{font-size:0.85rem;color:var(--rose);margin-bottom:12px;font-weight:600}
-.improve-box li{font-size:0.85rem;color:var(--muted);padding:5px 0 5px 20px;position:relative;line-height:1.5;list-style:none}
+.improve-box h3{font-size:0.82rem;color:var(--rose);margin-bottom:12px;font-weight:600}
+.improve-box li{font-size:0.85rem;color:var(--muted);padding:5px 0 5px 18px;position:relative;line-height:1.5;list-style:none}
 .improve-box li::before{content:'!';position:absolute;left:0;top:5px;width:16px;height:16px;border-radius:50%;background:rgba(244,63,94,0.15);color:var(--rose);font-size:0.65rem;display:flex;align-items:center;justify-content:center;font-weight:700}
-
-.quote-box{text-align:center;margin-top:24px;padding:20px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(192,132,252,0.06));border:1px solid var(--border);font-size:0.9rem;color:var(--muted);font-style:italic}
-
+.quote-box{text-align:center;margin-top:20px;padding:18px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(192,132,252,0.06));border:1px solid var(--border);font-size:0.88rem;color:var(--muted);font-style:italic}
 .edit-btn{display:block;margin:24px auto 0;padding:12px 32px;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--muted);font-size:0.88rem;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:inherit}
 .edit-btn:hover{border-color:var(--accent);color:var(--text)}
-
 @media(max-width:600px){
   .goal-grid{grid-template-columns:1fr 1fr}
   .prod-grid{grid-template-columns:1fr}
   .field-row{grid-template-columns:1fr}
-  .progress-wrap{padding:16px 20px}
+  .progress-dashboard{grid-template-columns:1fr}
+  .streak-stats{gap:20px}
 }
 </style>
 </head>
 <body>
+<canvas id="confetti-canvas"></canvas>
+<div class="encourage-toast" id="encourage-toast"><span class="e-emoji" id="e-emoji"></span><span id="e-text"></span></div>
 <div class="app">
-
-  <!-- Progress bar -->
   <div class="progress-wrap" id="progress-bar">
     <button class="back-btn" id="back-btn" onclick="prevStep()">←</button>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     <div class="progress-label" id="progress-label">1 / 5</div>
   </div>
-
-  <!-- Steps -->
   <div class="steps" id="steps-container">
-
-    <!-- Step 1: Goal -->
     <div class="step active" data-step="1">
       <div class="step-eyebrow">Step 1</div>
       <h1>What are you working towards?</h1>
       <p>Pick the goal that matters most right now.</p>
       <div class="goal-grid">
-        <div class="goal-card" data-val="fitness" onclick="selectGoal(this)">
-          <span class="icon">🏋️</span>
-          <div class="label">Get Fit</div>
-          <div class="sub">Lose weight, build muscle, feel better</div>
-        </div>
-        <div class="goal-card" data-val="study" onclick="selectGoal(this)">
-          <span class="icon">📚</span>
-          <div class="label">Learn a Skill</div>
-          <div class="sub">Study, courses, certifications</div>
-        </div>
-        <div class="goal-card" data-val="coding" onclick="selectGoal(this)">
-          <span class="icon">💻</span>
-          <div class="label">Build Something</div>
-          <div class="sub">Apps, websites, projects</div>
-        </div>
-        <div class="goal-card" data-val="business" onclick="selectGoal(this)">
-          <span class="icon">🚀</span>
-          <div class="label">Start a Business</div>
-          <div class="sub">Side hustle, freelance, startup</div>
-        </div>
-        <div class="goal-card" data-val="creative" onclick="selectGoal(this)">
-          <span class="icon">🎨</span>
-          <div class="label">Create</div>
-          <div class="sub">Art, music, writing, content</div>
-        </div>
-        <div class="goal-card" data-val="productivity" onclick="selectGoal(this)">
-          <span class="icon">⚡</span>
-          <div class="label">Be Productive</div>
-          <div class="sub">Structure, habits, discipline</div>
-        </div>
-        <div class="goal-card" data-val="mental" onclick="selectGoal(this)">
-          <span class="icon">🧠</span>
-          <div class="label">Feel Better</div>
-          <div class="sub">Mental health, sleep, calm</div>
-        </div>
-        <div class="goal-card" data-val="custom" onclick="selectGoal(this)">
-          <span class="icon">✨</span>
-          <div class="label">Something Else</div>
-          <div class="sub">I'll describe it</div>
-        </div>
+        <div class="goal-card" data-val="fitness" onclick="selectGoal(this)"><span class="icon">🏋️</span><div class="label">Get Fit</div><div class="sub">Lose weight, build muscle</div></div>
+        <div class="goal-card" data-val="study" onclick="selectGoal(this)"><span class="icon">📚</span><div class="label">Learn a Skill</div><div class="sub">Study, courses, certs</div></div>
+        <div class="goal-card" data-val="coding" onclick="selectGoal(this)"><span class="icon">💻</span><div class="label">Build Something</div><div class="sub">Apps, websites, projects</div></div>
+        <div class="goal-card" data-val="business" onclick="selectGoal(this)"><span class="icon">🚀</span><div class="label">Start a Business</div><div class="sub">Side hustle, startup</div></div>
+        <div class="goal-card" data-val="creative" onclick="selectGoal(this)"><span class="icon">🎨</span><div class="label">Create</div><div class="sub">Art, music, writing</div></div>
+        <div class="goal-card" data-val="productivity" onclick="selectGoal(this)"><span class="icon">⚡</span><div class="label">Be Productive</div><div class="sub">Structure, habits</div></div>
+        <div class="goal-card" data-val="mental" onclick="selectGoal(this)"><span class="icon">🧠</span><div class="label">Feel Better</div><div class="sub">Mental health, calm</div></div>
+        <div class="goal-card" data-val="custom" onclick="selectGoal(this)"><span class="icon">✨</span><div class="label">Something Else</div><div class="sub">I'll describe it</div></div>
       </div>
       <div class="next-wrap"><button class="next-btn" id="next1" onclick="nextStep()">Continue →</button></div>
     </div>
-
-    <!-- Step 2: Description -->
     <div class="step" data-step="2">
       <div class="step-eyebrow">Step 2</div>
       <h1>What exactly do you want to achieve?</h1>
-      <p>The more specific, the better your plan will be.</p>
-      <textarea class="big-textarea" id="goal-desc" placeholder="e.g. Pass the AWS Solutions Architect exam by March, lose 10kg, learn piano, build a SaaS app..." oninput="checkDesc()"></textarea>
-      <div class="examples">
-        <span class="example-tag" onclick="fillDesc(this)">Pass AWS certification</span>
-        <span class="example-tag" onclick="fillDesc(this)">Lose 10kg in 3 months</span>
-        <span class="example-tag" onclick="fillDesc(this)">Learn Spanish to B2 level</span>
-        <span class="example-tag" onclick="fillDesc(this)">Build and launch a SaaS</span>
-        <span class="example-tag" onclick="fillDesc(this)">Get a software engineering job</span>
-        <span class="example-tag" onclick="fillDesc(this)">Write a novel</span>
-      </div>
+      <p>The more specific, the better your plan.</p>
+      <textarea class="big-textarea" id="goal-desc" placeholder="e.g. Pass AWS certification by March, lose 10kg, learn piano..." oninput="checkDesc()"></textarea>
+      <div class="examples"><span class="example-tag" onclick="fillDesc(this)">Pass AWS certification</span><span class="example-tag" onclick="fillDesc(this)">Lose 10kg in 3 months</span><span class="example-tag" onclick="fillDesc(this)">Learn Spanish to B2</span><span class="example-tag" onclick="fillDesc(this)">Build and launch a SaaS</span><span class="example-tag" onclick="fillDesc(this)">Get a software job</span><span class="example-tag" onclick="fillDesc(this)">Write a novel</span></div>
       <div class="next-wrap"><button class="next-btn" id="next2" onclick="nextStep()">Continue →</button></div>
     </div>
-
-    <!-- Step 3: Lifestyle -->
     <div class="step" data-step="3">
       <div class="step-eyebrow">Step 3</div>
       <h1>Tell me about your day</h1>
-      <p>This helps me work around your existing schedule.</p>
+      <p>This helps me work around your schedule.</p>
       <div class="lifestyle-grid">
-        <div class="lifestyle-card" data-val="free" onclick="selectLifestyle(this)">
-          <span class="l-icon">🌅</span>
-          <div class="l-content">
-            <div class="l-title">I'm free most of the day</div>
-            <div class="l-desc">No fixed commitments. I can structure my own time.</div>
-          </div>
-          <span class="l-check">✓</span>
-        </div>
-        <div class="lifestyle-card" data-val="student" onclick="selectLifestyle(this)">
-          <span class="l-icon">🎓</span>
-          <div class="l-content">
-            <div class="l-title">I'm a student</div>
-            <div class="l-desc">Classes, lectures, study groups.</div>
-          </div>
-          <span class="l-check">✓</span>
-        </div>
-        <div class="lifestyle-card" data-val="working" onclick="selectLifestyle(this)">
-          <span class="l-icon">💼</span>
-          <div class="l-content">
-            <div class="l-title">I work full time</div>
-            <div class="l-desc">Fixed office hours. Goal work before/after.</div>
-          </div>
-          <span class="l-check">✓</span>
-        </div>
-        <div class="lifestyle-card" data-val="parttime" onclick="selectLifestyle(this)">
-          <span class="l-icon">⏰</span>
-          <div class="l-content">
-            <div class="l-title">I work part-time / shifts</div>
-            <div class="l-desc">Schedule changes. Some days are busier.</div>
-          </div>
-          <span class="l-check">✓</span>
-        </div>
+        <div class="lifestyle-card" data-val="free" onclick="selectLifestyle(this)"><span class="l-icon">🌅</span><div class="l-content"><div class="l-title">I'm free most of the day</div><div class="l-desc">No fixed commitments</div></div><span class="l-check">✓</span></div>
+        <div class="lifestyle-card" data-val="student" onclick="selectLifestyle(this)"><span class="l-icon">🎓</span><div class="l-content"><div class="l-title">I'm a student</div><div class="l-desc">Classes, lectures</div></div><span class="l-check">✓</span></div>
+        <div class="lifestyle-card" data-val="working" onclick="selectLifestyle(this)"><span class="l-icon">💼</span><div class="l-content"><div class="l-title">I work full time</div><div class="l-desc">Fixed office hours</div></div><span class="l-check">✓</span></div>
+        <div class="lifestyle-card" data-val="parttime" onclick="selectLifestyle(this)"><span class="l-icon">⏰</span><div class="l-content"><div class="l-title">Part-time / shifts</div><div class="l-desc">Schedule changes</div></div><span class="l-check">✓</span></div>
       </div>
-
-      <!-- Inline fields for student -->
-      <div class="inline-fields" id="fields-student">
-        <div class="field-row">
-          <div class="field"><label>First class</label><input type="time" id="class-start" value="09:00"></div>
-          <div class="field"><label>Last class ends</label><input type="time" id="class-end" value="15:00"></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Commute (min)</label><input type="number" id="commute" value="0" min="0"></div>
-        </div>
-      </div>
-
-      <!-- Inline fields for working -->
-      <div class="inline-fields" id="fields-working">
-        <div class="field-row">
-          <div class="field"><label>Office starts</label><input type="time" id="work-start" value="09:00"></div>
-          <div class="field"><label>Office ends</label><input type="time" id="work-end" value="17:00"></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Commute (min)</label><input type="number" id="commute2" value="0" min="0"></div>
-        </div>
-      </div>
-
-      <!-- Inline fields for part-time -->
-      <div class="inline-fields" id="fields-parttime">
-        <div class="field-row">
-          <div class="field"><label>Typical start</label><input type="time" id="shift-start" value="09:00"></div>
-          <div class="field"><label>Typical end</label><input type="time" id="shift-end" value="14:00"></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Days per week</label><input type="number" id="shift-days" value="5" min="1" max="7"></div>
-        </div>
-      </div>
-
+      <div class="inline-fields" id="fields-student"><div class="field-row"><div class="field"><label>First class</label><input type="time" id="class-start" value="09:00"></div><div class="field"><label>Last class ends</label><input type="time" id="class-end" value="15:00"></div></div><div class="field-row"><div class="field"><label>Commute (min)</label><input type="number" id="commute" value="0" min="0"></div></div></div>
+      <div class="inline-fields" id="fields-working"><div class="field-row"><div class="field"><label>Office starts</label><input type="time" id="work-start" value="09:00"></div><div class="field"><label>Office ends</label><input type="time" id="work-end" value="17:00"></div></div><div class="field-row"><div class="field"><label>Commute (min)</label><input type="number" id="commute2" value="0" min="0"></div></div></div>
+      <div class="inline-fields" id="fields-parttime"><div class="field-row"><div class="field"><label>Typical start</label><input type="time" id="shift-start" value="09:00"></div><div class="field"><label>Typical end</label><input type="time" id="shift-end" value="14:00"></div></div></div>
       <div class="next-wrap"><button class="next-btn" id="next3" onclick="nextStep()">Continue →</button></div>
     </div>
-
-    <!-- Step 4: Productivity -->
     <div class="step" data-step="4">
       <div class="step-eyebrow">Step 4</div>
       <h1>When are you most productive?</h1>
-      <p>I'll schedule your hardest work during your peak hours.</p>
+      <p>I'll schedule your hardest work during peak hours.</p>
       <div class="prod-grid">
-        <div class="prod-card" data-val="morning" onclick="selectProd(this)">
-          <div class="p-icon">🌅</div>
-          <div class="p-label">Morning Person</div>
-          <div class="p-time">Peak: 6 AM – 12 PM</div>
-        </div>
-        <div class="prod-card" data-val="afternoon" onclick="selectProd(this)">
-          <div class="p-icon">☀️</div>
-          <div class="p-label">Afternoon</div>
-          <div class="p-time">Peak: 12 PM – 6 PM</div>
-        </div>
-        <div class="prod-card" data-val="night" onclick="selectProd(this)">
-          <div class="p-icon">🌙</div>
-          <div class="p-label">Night Owl</div>
-          <div class="p-time">Peak: 6 PM – 12 AM</div>
-        </div>
-        <div class="prod-card" data-val="flexible" onclick="selectProd(this)">
-          <div class="p-icon">🔄</div>
-          <div class="p-label">Flexible</div>
-          <div class="p-time">Depends on the day</div>
-        </div>
+        <div class="prod-card" data-val="morning" onclick="selectProd(this)"><div class="p-icon">🌅</div><div class="p-label">Morning Person</div><div class="p-time">Peak: 6 AM – 12 PM</div></div>
+        <div class="prod-card" data-val="afternoon" onclick="selectProd(this)"><div class="p-icon">☀️</div><div class="p-label">Afternoon</div><div class="p-time">Peak: 12 PM – 6 PM</div></div>
+        <div class="prod-card" data-val="night" onclick="selectProd(this)"><div class="p-icon">🌙</div><div class="p-label">Night Owl</div><div class="p-time">Peak: 6 PM – 12 AM</div></div>
+        <div class="prod-card" data-val="flexible" onclick="selectProd(this)"><div class="p-icon">🔄</div><div class="p-label">Flexible</div><div class="p-time">Depends on the day</div></div>
       </div>
-
-      <div style="margin-top:24px">
-        <div class="field-row">
-          <div class="field"><label>Wake up time</label><input type="time" id="wake-time" value="06:00"></div>
-          <div class="field"><label>Bedtime</label><input type="time" id="bed-time" value="22:30"></div>
-        </div>
-      </div>
-
+      <div style="margin-top:24px"><div class="field-row"><div class="field"><label>Wake up time</label><input type="time" id="wake-time" value="06:00"></div><div class="field"><label>Bedtime</label><input type="time" id="bed-time" value="22:30"></div></div></div>
       <div class="next-wrap"><button class="next-btn" id="next4" onclick="nextStep()">Continue →</button></div>
     </div>
-
-    <!-- Step 5: Preferences -->
     <div class="step" data-step="5">
       <div class="step-eyebrow">Step 5</div>
       <h1>Any preferences?</h1>
-      <p>Select what matters to you. All optional.</p>
+      <p>Select what matters. All optional.</p>
       <div class="pref-grid">
-        <div class="pref-chip" data-val="morning-workout" onclick="togglePref(this)"><span class="p-emoji">💪</span>Morning Workout</div>
-        <div class="pref-chip" data-val="evening-workout" onclick="togglePref(this)"><span class="p-emoji">🏃</span>Evening Workout</div>
-        <div class="pref-chip" data-val="meditation" onclick="togglePref(this)"><span class="p-emoji">🧘</span>Meditation</div>
-        <div class="pref-chip" data-val="journal" onclick="togglePref(this)"><span class="p-emoji">📝</span>Journaling</div>
-        <div class="pref-chip" data-val="reading" onclick="togglePref(this)"><span class="p-emoji">📖</span>Reading</div>
-        <div class="pref-chip" data-val="social" onclick="togglePref(this)"><span class="p-emoji">💬</span>Social Time</div>
-        <div class="pref-chip" data-val="gaming" onclick="togglePref(this)"><span class="p-emoji">🎮</span>Gaming</div>
-        <div class="pref-chip" data-val="cooking" onclick="togglePref(this)"><span class="p-emoji">👨‍🍳</span>Meal Prep</div>
-        <div class="pref-chip" data-val="walks" onclick="togglePref(this)"><span class="p-emoji">🚶</span>Walks</div>
-        <div class="pref-chip" data-val="music" onclick="togglePref(this)"><span class="p-emoji">🎵</span>Music Practice</div>
-        <div class="pref-chip" data-val="family" onclick="togglePref(this)"><span class="p-emoji">👨‍👩‍👧</span>Family Time</div>
-        <div class="pref-chip" data-val="free" onclick="togglePref(this)"><span class="p-emoji">🎮</span>Free Time</div>
+        <div class="pref-chip" data-val="morning-workout" onclick="togglePref(this)"><span>💪</span>Morning Workout</div>
+        <div class="pref-chip" data-val="evening-workout" onclick="togglePref(this)"><span>🏃</span>Evening Workout</div>
+        <div class="pref-chip" data-val="meditation" onclick="togglePref(this)"><span>🧘</span>Meditation</div>
+        <div class="pref-chip" data-val="journal" onclick="togglePref(this)"><span>📝</span>Journaling</div>
+        <div class="pref-chip" data-val="reading" onclick="togglePref(this)"><span>📖</span>Reading</div>
+        <div class="pref-chip" data-val="social" onclick="togglePref(this)"><span>💬</span>Social Time</div>
+        <div class="pref-chip" data-val="gaming" onclick="togglePref(this)"><span>🎮</span>Gaming</div>
+        <div class="pref-chip" data-val="cooking" onclick="togglePref(this)"><span>👨‍🍳</span>Meal Prep</div>
+        <div class="pref-chip" data-val="walks" onclick="togglePref(this)"><span>🚶</span>Walks</div>
+        <div class="pref-chip" data-val="music" onclick="togglePref(this)"><span>🎵</span>Music Practice</div>
+        <div class="pref-chip" data-val="family" onclick="togglePref(this)"><span>👨‍👩‍👧</span>Family Time</div>
+        <div class="pref-chip" data-val="free" onclick="togglePref(this)"><span>🎮</span>Free Time</div>
       </div>
-
       <div class="next-wrap"><button class="next-btn ready" id="next5" onclick="showSummary()">See My Plan →</button></div>
     </div>
-
-    <!-- Step 6: Summary -->
     <div class="step" data-step="6">
       <div class="step-eyebrow">Your Plan</div>
-      <h1>Here's what I'll build for you</h1>
-      <p>Review your inputs, then let's create your optimized day.</p>
-
+      <h1>Here's what I'll build</h1>
+      <p>Review, then let's create your day.</p>
       <div class="summary-card" id="summary-card"></div>
-
-      <div class="cta-wrap">
-        <button class="cta-btn" onclick="buildSchedule()">✨ Build My Perfect Plan</button>
-      </div>
+      <div class="cta-wrap"><button class="cta-btn" onclick="buildSchedule()">✨ Build My Perfect Plan</button></div>
     </div>
-
   </div>
 
-  <!-- Schedule view -->
   <div id="schedule-view">
     <div class="schedule-inner">
       <div class="s-header">
-        <h1>Your Optimized Day</h1>
-        <div class="s-tag" id="s-tag"></div>
+        <div><h1>Your Optimized Day</h1><div class="s-tag" id="s-tag"></div></div>
+        <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()">🔊 Sound</button>
+      </div>
+      <div class="progress-dashboard" id="progress-dashboard">
+        <div class="dash-card">
+          <div class="ring-wrap"><svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" id="ring-fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="213.6"/></svg><div class="ring-text" id="ring-text">0%</div></div>
+          <div class="dash-label">Progress</div>
+        </div>
+        <div class="dash-card"><div class="dash-value" id="tasks-left">0</div><div class="dash-label">Tasks Left</div></div>
+        <div class="dash-card"><div class="dash-value" id="time-left">0h</div><div class="dash-label">Time Left</div></div>
       </div>
       <div class="strategy-box" id="strategy-box"><h3>Strategy</h3><ul id="strategy-list"></ul></div>
       <div class="timeline" id="timeline"></div>
-      <div class="progress-section"><h3>Today's Progress</h3><div class="p-bar-bg"><div class="p-bar-fill" id="p-fill"></div></div><div class="p-text" id="p-text">0 / 0 completed</div></div>
+      <div class="streak-card" id="streak-card">
+        <div class="streak-fire" id="streak-fire">🔥</div>
+        <div class="streak-title">Day Complete!</div>
+        <div class="streak-sub">Outstanding work. See you tomorrow.</div>
+        <div class="streak-stats">
+          <div class="streak-stat"><div class="ss-val" id="streak-count">1</div><div class="ss-label">Day Streak</div></div>
+          <div class="streak-stat"><div class="ss-val" id="streak-pct">100%</div><div class="ss-label">Completed</div></div>
+          <div class="streak-stat"><div class="ss-val" id="streak-xp">+200</div><div class="ss-label">XP Earned</div></div>
+        </div>
+      </div>
       <div class="improve-box" id="improve-box"><h3>Optimization Notes</h3><ul id="improve-list"></ul></div>
       <div class="quote-box" id="quote-box"></div>
       <button class="edit-btn" onclick="resetAll()">← Edit Settings</button>
     </div>
   </div>
-
 </div>
 
 <script>
-let state = { goal:'', desc:'', lifestyle:'', workStart:'', workEnd:'', commute:0, productivity:'', wake:'06:00', bed:'22:30', prefs:[] };
-let currentStep = 1;
-const totalSteps = 5;
+let state={goal:'',desc:'',lifestyle:'',workStart:'',workEnd:'',commute:0,productivity:'',wake:'06:00',bed:'22:30',prefs:[]};
+let currentStep=1;const totalSteps=5;
+let soundEnabled=true;
+let scheduleBlocks=[];
+let completedCount=0;
+let totalBlocks=0;
+let streak=parseInt(localStorage.getItem('planner_streak')||'0');
+let lastDay=localStorage.getItem('planner_last_day');
+let audioCtx=null;
 
-const quotes = [
-  "The secret of getting ahead is getting started. — Mark Twain",
-  "Small daily improvements lead to staggering results.",
-  "You don't have to be extreme, just consistent.",
-  "Discipline is choosing between what you want now and what you want most.",
-  "A year from now you'll wish you had started today.",
-  "Progress, not perfection.",
-  "What you do daily matters more than what you do occasionally.",
-  "Start where you are. Use what you have. Do what you can.",
-  "Your future self will thank you.",
-  "The body achieves what the mind believes."
-];
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playClick(){if(!soundEnabled)return;try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=800;g.gain.value=0.1;g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.08);o.start();o.stop(ctx.currentTime+0.08)}catch(e){}}
+function playSuccess(){if(!soundEnabled)return;try{const ctx=getAudioCtx();[523.25,659.25,783.99].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=0.08;g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.15+i*0.1);o.start(ctx.currentTime+i*0.1);o.stop(ctx.currentTime+0.15+i*0.1)})}catch(e){}}
+function playDayComplete(){if(!soundEnabled)return;try{const ctx=getAudioCtx();[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=0.07;g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.2+i*0.12);o.start(ctx.currentTime+i*0.12);o.stop(ctx.currentTime+0.2+i*0.12)})}catch(e){}}
+function toggleSound(){soundEnabled=!soundEnabled;const btn=document.getElementById('sound-toggle');btn.textContent=soundEnabled?'🔊 Sound':'🔇 Muted';btn.classList.toggle('active',soundEnabled)}
 
-function updateProgress() {
-  const pct = (currentStep / totalSteps) * 100;
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-label').textContent = currentStep <= totalSteps ? `${currentStep} / ${totalSteps}` : 'Done';
-  document.getElementById('back-btn').classList.toggle('visible', currentStep > 1 && currentStep <= totalSteps);
+const quotes=["The secret of getting ahead is getting started. — Mark Twain","Small daily improvements lead to staggering results.","You don't have to be extreme, just consistent.","Discipline is choosing between what you want now and what you want most.","A year from now you'll wish you had started today.","Progress, not perfection.","What you do daily matters more than what you do occasionally.","Start where you are. Use what you have. Do what you can.","Your future self will thank you.","The body achieves what the mind believes."];
+
+const encourageFirst=[{e:'🌅',t:'Way to start the day off.'},{e:'💪',t:"You've got momentum."},{e:'🎯',t:'One step closer.'},{e:'⭐',t:'Great beginning.'},{e:'🚀',t:'Nice! Keep it rolling.'}];
+const encourageMid=[{e:'🔥',t:"You're building consistency."},{e:'⚡',t:'Momentum beats motivation.'},{e:'📈',t:"You're ahead of schedule."},{e:'💎',t:"You're making real progress."},{e:'🏆',t:'Look at you go!'}];
+const encourageEnd=[{e:'🏁',t:'Almost there.'},{e:'💪',t:'Finish strong.'},{e:'🔥',t:'One last push.'},{e:'⭐',t:"Today's future self will thank you."}];
+
+function getRandomEncouragement(pct){
+  if(pct<=0.2)return encourageFirst[Math.floor(Math.random()*encourageFirst.length)];
+  if(pct<=0.7)return encourageMid[Math.floor(Math.random()*encourageMid.length)];
+  return encourageEnd[Math.floor(Math.random()*encourageEnd.length)];
 }
 
-function showStep(n) {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-  const step = document.querySelector(`.step[data-step="${n}"]`);
-  if (step) step.classList.add('active');
-  currentStep = n;
-  updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function showEncouragement(pct){
+  const msg=getRandomEncouragement(pct);
+  const toast=document.getElementById('encourage-toast');
+  document.getElementById('e-emoji').textContent=msg.e;
+  document.getElementById('e-text').textContent=msg.t;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2500);
 }
 
-function nextStep() {
-  if (currentStep === 1 && !state.goal) return;
-  if (currentStep < totalSteps) showStep(currentStep + 1);
+function showXP(x,y){
+  const el=document.createElement('div');
+  el.className='xp-float';
+  el.textContent=`+${x} XP`;
+  el.style.left=y+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1200);
 }
 
-function prevStep() {
-  if (currentStep > 1) showStep(currentStep - 1);
-}
+function haptic(){if(navigator.vibrate)navigator.vibrate(10)}
 
-function selectGoal(el) {
-  document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  state.goal = el.dataset.val;
-  document.getElementById('next1').classList.add('ready');
-}
+// Confetti
+const confettiCanvas=document.getElementById('confetti-canvas');
+const confettiCtx=confettiCanvas.getContext('2d');
+let particles=[];
+function resizeConfetti(){confettiCanvas.width=window.innerWidth;confettiCanvas.height=window.innerHeight}
+window.addEventListener('resize',resizeConfetti);resizeConfetti();
 
-function fillDesc(el) {
-  document.getElementById('goal-desc').value = el.textContent;
-  state.desc = el.textContent;
-  document.getElementById('next2').classList.add('ready');
-}
-
-function checkDesc() {
-  state.desc = document.getElementById('goal-desc').value.trim();
-  document.getElementById('next2').classList.toggle('ready', state.desc.length > 0);
-}
-
-function selectLifestyle(el) {
-  document.querySelectorAll('.lifestyle-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  state.lifestyle = el.dataset.val;
-
-  document.querySelectorAll('.inline-fields').forEach(f => f.classList.remove('show'));
-  const fieldId = 'fields-' + el.dataset.val;
-  const fields = document.getElementById(fieldId);
-  if (fields) fields.classList.add('show');
-
-  document.getElementById('next3').classList.add('ready');
-}
-
-function selectProd(el) {
-  document.querySelectorAll('.prod-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  state.productivity = el.dataset.val;
-  document.getElementById('next4').classList.add('ready');
-}
-
-function togglePref(el) {
-  el.classList.toggle('selected');
-  const val = el.dataset.val;
-  if (state.prefs.includes(val)) state.prefs = state.prefs.filter(p => p !== val);
-  else state.prefs.push(val);
-}
-
-function showSummary() {
-  state.wake = document.getElementById('wake-time').value;
-  state.bed = document.getElementById('bed-time').value;
-
-  if (state.lifestyle === 'working') {
-    state.workStart = document.getElementById('work-start')?.value || '';
-    state.workEnd = document.getElementById('work-end')?.value || '';
-    state.commute = parseInt(document.getElementById('commute2')?.value) || 0;
-  } else if (state.lifestyle === 'student') {
-    state.workStart = document.getElementById('class-start')?.value || '';
-    state.workEnd = document.getElementById('class-end')?.value || '';
-    state.commute = parseInt(document.getElementById('commute')?.value) || 0;
-  } else if (state.lifestyle === 'parttime') {
-    state.workStart = document.getElementById('shift-start')?.value || '';
-    state.workEnd = document.getElementById('shift-end')?.value || '';
+function spawnConfetti(count=12){
+  const colors=['#8b5cf6','#c084fc','#22c55e','#f59e0b','#f43f5e','#3b82f6'];
+  for(let i=0;i<count;i++){
+    particles.push({
+      x:Math.random()*confettiCanvas.width,
+      y:confettiCanvas.height+10,
+      vx:(Math.random()-0.5)*8,
+      vy:-Math.random()*12-4,
+      size:Math.random()*6+3,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      rotation:Math.random()*360,
+      rotSpeed:(Math.random()-0.5)*10,
+      life:1
+    });
   }
+}
 
-  const goalNames = { fitness:'Get Fit', study:'Learn a Skill', coding:'Build Something', business:'Start a Business', creative:'Create', productivity:'Be Productive', mental:'Feel Better', custom:'Custom Goal' };
-  const lifeNames = { free:'Free most of the day', student:'Student', working:'Working full time', parttime:'Part-time / shifts' };
-  const prodNames = { morning:'Morning Person', afternoon:'Afternoon', night:'Night Owl', flexible:'Flexible' };
+function animateConfetti(){
+  confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  particles=particles.filter(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.3;p.rotation+=p.rotSpeed;p.life-=0.015;
+    if(p.life<=0)return false;
+    confettiCtx.save();
+    confettiCtx.translate(p.x,p.y);
+    confettiCtx.rotate(p.rotation*Math.PI/180);
+    confettiCtx.fillStyle=p.color;
+    confettiCtx.globalAlpha=p.life;
+    confettiCtx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
+    confettiCtx.restore();
+    return true;
+  });
+  if(particles.length>0)requestAnimationFrame(animateConfetti);
+}
 
-  let html = `
-    <div class="summary-row"><span class="summary-label">Goal</span><span class="summary-value">${goalNames[state.goal] || state.goal}</span></div>
-    <div class="summary-row"><span class="summary-label">Specific Goal</span><span class="summary-value">${state.desc || 'Not specified'}</span></div>
-    <div class="summary-row"><span class="summary-label">Lifestyle</span><span class="summary-value">${lifeNames[state.lifestyle] || '-'}</span></div>
-    ${state.workStart ? `<div class="summary-row"><span class="summary-label">Commitments</span><span class="summary-value">${fmtTime(timeToMin(state.workStart))} – ${fmtTime(timeToMin(state.workEnd))}</span></div>` : ''}
-    <div class="summary-row"><span class="summary-label">Peak Hours</span><span class="summary-value">${prodNames[state.productivity] || '-'}</span></div>
-    <div class="summary-row"><span class="summary-label">Wake / Bed</span><span class="summary-value">${state.wake} / ${state.bed}</span></div>
-    ${state.prefs.length ? `<div class="summary-row"><span class="summary-label">Preferences</span><span class="summary-value">${state.prefs.length} selected</span></div>` : ''}
-  `;
-  document.getElementById('summary-card').innerHTML = html;
+function updateProgress(){
+  const pct=(currentStep/totalSteps)*100;
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-label').textContent=currentStep<=totalSteps?`${currentStep}/${totalSteps}`:'Done';
+  document.getElementById('back-btn').classList.toggle('visible',currentStep>1&&currentStep<=totalSteps);
+}
+function showStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));const step=document.querySelector(`.step[data-step="${n}"]`);if(step)step.classList.add('active');currentStep=n;updateProgress();window.scrollTo({top:0,behavior:'smooth'})}
+function nextStep(){if(currentStep===1&&!state.goal)return;if(currentStep<totalSteps)showStep(currentStep+1)}
+function prevStep(){if(currentStep>1)showStep(currentStep-1)}
+function selectGoal(el){document.querySelectorAll('.goal-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');state.goal=el.dataset.val;document.getElementById('next1').classList.add('ready')}
+function fillDesc(el){document.getElementById('goal-desc').value=el.textContent;state.desc=el.textContent;document.getElementById('next2').classList.add('ready')}
+function checkDesc(){state.desc=document.getElementById('goal-desc').value.trim();document.getElementById('next2').classList.toggle('ready',state.desc.length>0)}
+function selectLifestyle(el){document.querySelectorAll('.lifestyle-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');state.lifestyle=el.dataset.val;document.querySelectorAll('.inline-fields').forEach(f=>f.classList.remove('show'));const f=document.getElementById('fields-'+el.dataset.val);if(f)f.classList.add('show');document.getElementById('next3').classList.add('ready')}
+function selectProd(el){document.querySelectorAll('.prod-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');state.productivity=el.dataset.val;document.getElementById('next4').classList.add('ready')}
+function togglePref(el){el.classList.toggle('selected');const v=el.dataset.val;if(state.prefs.includes(v))state.prefs=state.prefs.filter(p=>p!==v);else state.prefs.push(v)}
+
+function showSummary(){
+  state.wake=document.getElementById('wake-time').value;
+  state.bed=document.getElementById('bed-time').value;
+  if(state.lifestyle==='working'){state.workStart=document.getElementById('work-start')?.value||'';state.workEnd=document.getElementById('work-end')?.value||'';state.commute=parseInt(document.getElementById('commute2')?.value)||0}
+  else if(state.lifestyle==='student'){state.workStart=document.getElementById('class-start')?.value||'';state.workEnd=document.getElementById('class-end')?.value||'';state.commute=parseInt(document.getElementById('commute')?.value)||0}
+  else if(state.lifestyle==='parttime'){state.workStart=document.getElementById('shift-start')?.value||'';state.workEnd=document.getElementById('shift-end')?.value||''}
+  const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
+  const ln={free:'Free most of the day',student:'Student',working:'Working full time',parttime:'Part-time / shifts'};
+  const pn={morning:'Morning Person',afternoon:'Afternoon',night:'Night Owl',flexible:'Flexible'};
+  let html=`<div class="summary-row"><span class="summary-label">Goal</span><span class="summary-value">${gn[state.goal]||state.goal}</span></div><div class="summary-row"><span class="summary-label">Specific Goal</span><span class="summary-value">${state.desc||'Not specified'}</span></div><div class="summary-row"><span class="summary-label">Lifestyle</span><span class="summary-value">${ln[state.lifestyle]||'-'}</span></div>`;
+  if(state.workStart)html+=`<div class="summary-row"><span class="summary-label">Commitments</span><span class="summary-value">${fmtTime(timeToMin(state.workStart))} – ${fmtTime(timeToMin(state.workEnd))}</span></div>`;
+  html+=`<div class="summary-row"><span class="summary-label">Peak Hours</span><span class="summary-value">${pn[state.productivity]||'-'}</span></div><div class="summary-row"><span class="summary-label">Wake / Bed</span><span class="summary-value">${state.wake} / ${state.bed}</span></div>`;
+  if(state.prefs.length)html+=`<div class="summary-row"><span class="summary-label">Preferences</span><span class="summary-value">${state.prefs.length} selected</span></div>`;
+  document.getElementById('summary-card').innerHTML=html;
   showStep(6);
 }
 
-function timeToMin(t) { const [h, m] = t.split(':').map(Number); return h * 60 + m; }
-function minToTime(m) { const h = Math.floor(((m % 1440) + 1440) % 1440 / 60); const mm = ((m % 1440) + 1440) % 1440 % 60; return `${String(h).padStart(2, '0')}:${String(mm).padStart(2, '0')}`; }
-function fmtTime(m) { let [h, mm] = minToTime(m).split(':').map(Number); return `${h % 12 || 12}:${String(mm).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`; }
-function durStr(min) { return min >= 60 ? `${Math.floor(min / 60)}h${min % 60 ? ' ' + min % 60 + 'm' : ''}` : `${min}m`; }
+function timeToMin(t){const [h,m]=t.split(':').map(Number);return h*60+m}
+function minToTime(m){const h=Math.floor(((m%1440)+1440)%1440/60);const mm=((m%1440)+1440)%1440%60;return`${String(h).padStart(2,'0')}:${String(mm).padStart(2,'0')}`}
+function fmtTime(m){let[h,mm]=minToTime(m).split(':').map(Number);return`${h%12||12}:${String(mm).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
+function durStr(min){return min>=60?`${Math.floor(min/60)}h${min%60?' '+min%60+'m':''}`:`${min}m`}
 
-function buildSchedule() {
-  const wake = timeToMin(state.wake);
-  const bed = timeToMin(state.bed) > wake ? timeToMin(state.bed) : timeToMin(state.bed) + 1440;
-  const hasCommit = state.workStart && state.workEnd;
-  const commitS = hasCommit ? timeToMin(state.workStart) : null;
-  const commitE = hasCommit ? timeToMin(state.workEnd) : null;
-  const commute = state.commute || 0;
-  const isMorning = state.productivity === 'morning';
-  const isNight = state.productivity === 'night';
-  const prefs = state.prefs;
-  const hasWorkout = prefs.includes('morning-workout') || prefs.includes('evening-workout') || state.goal === 'fitness';
-  const morningWorkout = prefs.includes('morning-workout') || (state.goal === 'fitness' && !prefs.includes('evening-workout'));
+function buildSchedule(){
+  const wake=timeToMin(state.wake);const bed=timeToMin(state.bed)>wake?timeToMin(state.bed):timeToMin(state.bed)+1440;
+  const hasCommit=state.workStart&&state.workEnd;const commitS=hasCommit?timeToMin(state.workStart):null;const commitE=hasCommit?timeToMin(state.workEnd):null;
+  const commute=state.commute||0;const isMorning=state.productivity==='morning';const isNight=state.productivity==='night';
+  const prefs=state.prefs;const hasWorkout=prefs.includes('morning-workout')||prefs.includes('evening-workout')||state.goal==='fitness';
+  const morningWorkout=prefs.includes('morning-workout')||(state.goal==='fitness'&&!prefs.includes('evening-workout'));
 
-  let blocks = [];
-  const add = (s, d, t, desc, icon, reason) => blocks.push({ start: s, dur: d, title: t, desc, icon, reason: reason || '' });
+  let blocks=[];const add=(s,d,t,desc,icon,reason)=>blocks.push({start:s,dur:d,title:t,desc,icon,reason:reason||''});
 
-  // Morning routine
-  add(wake, 5, 'Hydrate', '500ml water. Rehydrate after sleep.', '💧', 'Dehydration impairs cognition. Water first thing improves focus by 14%.');
-  add(wake + 5, 10, 'Morning Routine', 'Freshen up. No phone yet.', '☀️', 'No phone for 15 min prevents reactive mindset.');
-  add(wake + 15, 5, 'Plan the Day', 'Set 3 priorities. Visualize success.', '📋', 'Morning planning activates your RAS — brain filters for opportunities all day.');
+  add(wake,5,'Hydrate','500ml water. Rehydrate after sleep.','💧','Dehydration impairs cognition. Water first thing improves focus 14%.');
+  add(wake+5,10,'Morning Routine','Freshen up. No phone yet.','☀️','No phone for 15 min prevents reactive mindset.');
+  add(wake+15,5,'Plan the Day','Set 3 priorities. Visualize success.','📋','Morning planning activates your RAS.');
+  let cursor=wake+20;
+  if(prefs.includes('meditation')){add(cursor,15,'Meditation','Breathe. Focus. Be present.','🧘','13 min daily reduces cortisol, improves focus 4-6 hours.');cursor+=15}
+  if(prefs.includes('journal')){add(cursor,10,'Journaling','Thoughts, goals, gratitude.','📝','Morning journaling clarifies thinking.');cursor+=10}
+  const breakfastTime=cursor;add(breakfastTime,25,'Breakfast','Protein + complex carbs. No sugar.','🍳','Protein prevents mid-morning crash. Spaced 4-5h from lunch.');cursor=breakfastTime+25;
 
-  let cursor = wake + 20;
+  if(hasWorkout&&morningWorkout){add(cursor,5,'Warm Up','Dynamic stretch.','🧘','');cursor+=5;add(cursor,45,'Workout',state.desc?`Train: ${state.desc}`:'Full body session.','💪','Morning exercise: cortisol aligns, EPOC boosts metabolism 8+ hours.');cursor+=45;add(cursor,15,'Post-Workout','Protein + stretch.','🥤','Anabolic window: 30-45 min post-workout.');cursor+=15}
 
-  // Meditation
-  if (prefs.includes('meditation')) {
-    add(cursor, 15, 'Meditation', 'Breathe. Focus. Be present.', '🧘', '13 min daily reduces cortisol and improves focus for 4-6 hours.');
-    cursor += 15;
-  }
+  const beforeCommit=hasCommit?commitS-commute:bed-180;
+  const morningAvail=Math.min(beforeCommit-cursor,isMorning?240:150);
+  if(morningAvail>=45){const sessions=morningAvail>=120?2:1;const sLen=Math.floor(morningAvail/sessions);const mg=getGoalBlock('morning');for(let i=0;i<sessions;i++){add(cursor+i*sLen,sLen-5,mg.title,mg.desc,mg.icon,mg.reason);if(i<sessions-1)add(cursor+(i+1)*sLen-5,5,'Break','Stand, stretch, hydrate.','🚶','Ultradian rhythm: brain resets every 90 min.')}cursor+=morningAvail}
 
-  // Journal
-  if (prefs.includes('journal')) {
-    add(cursor, 10, 'Journaling', 'Thoughts, goals, gratitude.', '📝', 'Morning journaling clarifies thinking before deep work.');
-    cursor += 10;
-  }
+  if(hasCommit&&commute>0){add(cursor,commute,'Commute','Listen to podcast/audiobook.','🚗','Dead time = passive learning.');cursor+=commute}
+  if(hasCommit){add(commitS,commitE-commitS,'Commitment',`${fmtTime(commitS)} – ${fmtTime(commitE)}`,'💼','Fixed block.');cursor=commitE}
+  if(hasCommit&&commute>0){add(cursor,commute,'Commute Back','Decompress.','🚗','');cursor+=commute}
 
-  // Breakfast
-  const breakfastTime = cursor;
-  add(breakfastTime, 25, 'Breakfast', 'Protein + complex carbs. No sugar.', '🍳', 'Protein breakfast prevents mid-morning crash. Spaced 4-5h from lunch.');
+  let lunchTime=Math.max(cursor,timeToMin('12:00'));lunchTime=Math.max(lunchTime,breakfastTime+240);if(lunchTime<wake)lunchTime+=1440;
+  add(lunchTime,30,'Lunch','Protein, veggies, complex carbs. Light.','🍽️','4-5h from breakfast. Heavy food = crash.');cursor=lunchTime+30;
 
-  cursor = breakfastTime + 25;
+  if(cursor<timeToMin('15:00')&&cursor>lunchTime+10){add(cursor,10,'Afternoon Break','Walk outside. Fresh air.','🚶','Post-lunch dip is biological. Walk resets alertness.');cursor+=10}
 
-  // Morning workout
-  if (hasWorkout && morningWorkout) {
-    add(cursor, 5, 'Warm Up', 'Dynamic stretch.', '🧘', '');
-    cursor += 5;
-    add(cursor, 45, 'Workout', state.desc ? `Train: ${state.desc}` : 'Full body session.', '💪', 'Morning exercise: cortisol aligns, EPOC boosts metabolism 8+ hours.');
-    cursor += 45;
-    add(cursor, 15, 'Post-Workout', 'Protein + stretch.', '🥤', 'Anabolic window: 30-45 min post-workout for protein synthesis.');
-    cursor += 15;
-  }
+  const afternoonEnd=Math.min(bed-150,timeToMin('18:00'));const afternoonAvail=afternoonEnd-cursor;
+  if(afternoonAvail>=45){const sessions=afternoonAvail>=120?2:1;const sLen=Math.floor(afternoonAvail/sessions);const ag=getGoalBlock('afternoon');for(let i=0;i<sessions;i++){add(cursor+i*sLen,sLen-5,ag.title,ag.desc,ag.icon,ag.reason);if(i<sessions-1)add(cursor+(i+1)*sLen-5,5,'Break','Quick movement.','🚶','')}cursor=afternoonEnd}
 
-  // Deep work — morning
-  const beforeCommit = hasCommit ? commitS - commute : bed - 180;
-  const morningAvail = Math.min(beforeCommit - cursor, isMorning ? 240 : 150);
+  if(hasWorkout&&prefs.includes('evening-workout')){add(cursor,5,'Warm Up','Dynamic stretch.','🧘','');cursor+=5;add(cursor,45,'Workout',state.desc?`Train: ${state.desc}`:'Cardio + strength.','💪','Evening: body temp peaks, strength 5-10% higher.');cursor+=50}
 
-  if (morningAvail >= 45) {
-    const sessions = morningAvail >= 120 ? 2 : 1;
-    const sLen = Math.floor(morningAvail / sessions);
-    const morningGoal = getGoalBlock('morning');
-    for (let i = 0; i < sessions; i++) {
-      add(cursor + i * sLen, sLen - 5, morningGoal.title, morningGoal.desc, morningGoal.icon, morningGoal.reason);
-      if (i < sessions - 1) add(cursor + (i + 1) * sLen - 5, 5, 'Break', 'Stand, stretch, hydrate.', '🚶', 'Ultradian rhythm: brain resets every 90 min.');
-    }
-    cursor += morningAvail;
-  }
+  let dinnerTime=Math.max(cursor,timeToMin('19:00'));dinnerTime=Math.max(dinnerTime,lunchTime+300);if(dinnerTime<wake)dinnerTime+=1440;
+  add(dinnerTime,30,'Dinner','Light, nutritious. Eat 3h before bed.','🍽️','Eating 3h before sleep improves quality 40%.');cursor=dinnerTime+30;
 
-  // Commute
-  if (hasCommit && commute > 0) {
-    add(cursor, commute, 'Commute', 'Listen to podcast/audiobook.', '🚗', 'Dead time = passive learning. 150+ hrs/year available.');
-    cursor += commute;
-  }
+  const windDown=bed-40;
+  if(prefs.includes('reading')&&cursor<windDown){add(cursor,30,'Reading','Book. Physical > digital.','📖','Reading before bed improves quality.');cursor+=30}
+  if(prefs.includes('social')&&cursor<windDown){add(cursor,30,'Social Time','Call a friend. Be with family.','💬','Social connection = #1 predictor of happiness.');cursor+=30}
+  if(prefs.includes('music')&&cursor<windDown){add(cursor,20,'Music Practice','Play your instrument.','🎵','Evening practice consolidates motor learning.');cursor+=20}
+  if(prefs.includes('gaming')&&cursor<windDown){const g=Math.min(30,windDown-cursor);if(g>0){add(cursor,g,'Free Time','Decompress. Enjoy.','🎮','White space prevents burnout.');cursor+=g}}
+  if(prefs.includes('free')&&cursor<windDown){const f=Math.min(30,windDown-cursor);if(f>0){add(cursor,f,'Free Time','Do whatever you want.','🎮','Unscheduled time fuels creativity.');cursor+=f}}
 
-  // Commitment block
-  if (hasCommit) {
-    add(commitS, commitE - commitS, 'Commitment', `${fmtTime(commitS)} – ${fmtTime(commitE)}`, '💼', 'Fixed block. Goal work scheduled around it.');
-    cursor = commitE;
-  }
+  add(windDown,15,'Review Day','What got done? Celebrate wins.','📝','Evening reflection consolidates learning.');
+  add(windDown+15,15,'Wind Down','No screens. Dim lights. Breathe.','📖','Blue light suppresses melatonin 50%.');
+  add(windDown+30,10,'Sleep','Lights out.','🌙','Consistent sleep times improve quality more than hours.');
 
-  // Commute back
-  if (hasCommit && commute > 0) {
-    add(cursor, commute, 'Commute Back', 'Decompress.', '🚗', '');
-    cursor += commute;
-  }
+  blocks.sort((a,b)=>a.start-b.start);
+  const clean=[];
+  for(const b of blocks){if(b.start<wake||b.start>=bed)continue;if(clean.length){const last=clean[clean.length-1];if(b.start<last.start+last.dur){last.dur=Math.max(last.dur,(b.start+b.dur)-last.start);continue}}clean.push({...b})}
 
-  // Lunch
-  let lunchTime = Math.max(cursor, timeToMin('12:00'));
-  lunchTime = Math.max(lunchTime, breakfastTime + 240);
-  if (lunchTime < wake) lunchTime += 1440;
-  add(lunchTime, 30, 'Lunch', 'Protein, veggies, complex carbs. Light.', '🍽️', '4-5h from breakfast. Heavy food = afternoon crash.');
+  scheduleBlocks=clean;totalBlocks=clean.length;completedCount=0;
 
-  cursor = lunchTime + 30;
+  const strategies=[];const sleepHrs=((1440-(bed-wake))/60).toFixed(1);
+  strategies.push(`Sleep: ${sleepHrs}h. ${parseFloat(sleepHrs)>=7?'Within recommended range.':'Consider earlier bedtime.'}`);
+  if(isMorning)strategies.push('Deep work in morning — peak cortisol window.');
+  else if(isNight)strategies.push('Deep work shifted to evening — creative peak.');
+  else strategies.push('Deep work split morning + afternoon for balanced energy.');
+  strategies.push('Meals spaced 4-5 hours apart for stable blood sugar.');
+  strategies.push('90-min focus blocks match ultradian rhythm.');
+  if(hasCommit)strategies.push(`Commitments blocked ${fmtTime(commitS)}–${fmtTime(commitE)}.`);
+  if(hasWorkout&&morningWorkout)strategies.push('Morning workout for cortisol alignment.');
+  if(hasWorkout&&prefs.includes('evening-workout'))strategies.push('Evening workout: peak body temperature.');
+  if(prefs.includes('meditation'))strategies.push('Morning meditation primes prefrontal cortex.');
 
-  // Afternoon break
-  if (cursor < timeToMin('15:00') && cursor > lunchTime + 10) {
-    add(cursor, 10, 'Afternoon Break', 'Walk outside. Fresh air.', '🚶', 'Post-lunch dip is biological. Walk resets alertness better than caffeine.');
-    cursor += 10;
-  }
+  const improvements=[];if(parseFloat(sleepHrs)<7)improvements.push(`Only ${sleepHrs}h sleep. Cognitive performance drops after 3 days of <7h.`);
+  if(!hasWorkout&&state.goal!=='mental')improvements.push('No exercise scheduled. Even 20 min walking improves focus 2+ hours.');
+  if(!prefs.includes('social'))improvements.push('No social time. 15 min daily connection compounds.');
 
-  // Deep work — afternoon
-  const afternoonEnd = Math.min(bed - 150, timeToMin('18:00'));
-  const afternoonAvail = afternoonEnd - cursor;
+  document.getElementById('steps-container').style.display='none';
+  document.getElementById('progress-bar').style.display='none';
+  document.getElementById('schedule-view').style.display='block';
 
-  if (afternoonAvail >= 45) {
-    const sessions = afternoonAvail >= 120 ? 2 : 1;
-    const sLen = Math.floor(afternoonAvail / sessions);
-    const aftGoal = getGoalBlock('afternoon');
-    for (let i = 0; i < sessions; i++) {
-      add(cursor + i * sLen, sLen - 5, aftGoal.title, aftGoal.desc, aftGoal.icon, aftGoal.reason);
-      if (i < sessions - 1) add(cursor + (i + 1) * sLen - 5, 5, 'Break', 'Quick movement.', '🚶', '');
-    }
-    cursor = afternoonEnd;
-  }
+  const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
+  document.getElementById('s-tag').textContent=gn[state.goal]||state.goal;
+  document.getElementById('strategy-list').innerHTML=strategies.map(s=>`<li>${s}</li>`).join('');
+  document.getElementById('improve-list').innerHTML=improvements.length?improvements.map(s=>`<li>${s}</li>`).join(''):'<li>Schedule is well-optimized.</li>';
+  document.getElementById('quote-box').textContent=quotes[Math.floor(Math.random()*quotes.length)];
 
-  // Evening workout
-  if (hasWorkout && prefs.includes('evening-workout')) {
-    add(cursor, 5, 'Warm Up', 'Dynamic stretch.', '🧘', '');
-    cursor += 5;
-    add(cursor, 45, 'Workout', state.desc ? `Train: ${state.desc}` : 'Cardio + strength.', '💪', 'Evening: body temp peaks, strength 5-10% higher.');
-    cursor += 50;
-  }
+  renderTimeline();updateDash();checkStreak();window.scrollTo({top:0,behavior:'smooth'});
+}
 
-  // Dinner
-  let dinnerTime = Math.max(cursor, timeToMin('19:00'));
-  dinnerTime = Math.max(dinnerTime, lunchTime + 300);
-  if (dinnerTime < wake) dinnerTime += 1440;
-  add(dinnerTime, 30, 'Dinner', 'Light, nutritious. Eat 3h before bed.', '🍽️', 'Eating 3h before sleep improves sleep quality 40%.');
-  cursor = dinnerTime + 30;
+function getGoalBlock(time){
+  const d=state.desc||'your goal';
+  const m={fitness:{title:'Training Session',desc:`${d}`,icon:'💪',reason:'Peak energy for max performance.'},study:{title:'Deep Study',desc:`Study: ${d}`,icon:'🧠',reason:time==='morning'?'Morning: working memory peaks.':'Afternoon: review and consolidate.'},coding:{title:'Deep Coding',desc:`Build: ${d}`,icon:'💻',reason:'90-min blocks optimal for flow state.'},business:{title:time==='morning'?'Revenue Activity':'Build & Improve',desc:`${d}`,icon:time==='morning'?'💰':'🛠️',reason:'Revenue first, then operations.'},creative:{title:time==='morning'?'Creative Work':'Refine & Polish',desc:`${d}`,icon:'🎨',reason:'Morning: divergent thinking. Afternoon: convergent.'},productivity:{title:'Deep Work',desc:`Focus: ${d}`,icon:'🎯',reason:'Peak hours for highest-impact work.'},mental:{title:'Self-Care',desc:`${d}`,icon:'💚',reason:'Daily maintenance.'},custom:{title:'Goal Work',desc:`${d}`,icon:'🎯',reason:'Focused work during peak hours.'}};
+  return m[state.goal]||m.custom;
+}
 
-  // Evening extras
-  const windDown = bed - 40;
-  if (prefs.includes('reading') && cursor < windDown) { add(cursor, 30, 'Reading', 'Book. Physical > digital.', '📖', 'Reading before bed improves sleep quality and retention.'); cursor += 30; }
-  if (prefs.includes('social') && cursor < windDown) { add(cursor, 30, 'Social Time', 'Call a friend. Be with family.', '💬', 'Social connection = #1 predictor of long-term happiness.'); cursor += 30; }
-  if (prefs.includes('music') && cursor < windDown) { add(cursor, 20, 'Music Practice', 'Play your instrument.', '🎵', 'Evening practice consolidates motor learning during sleep.'); cursor += 20; }
-  if (prefs.includes('gaming') && cursor < windDown) { const g = Math.min(30, windDown - cursor); if (g > 0) { add(cursor, g, 'Gaming / Free Time', 'Decompress. Enjoy.', '🎮', 'White space prevents burnout.'); cursor += g; } }
-  if (prefs.includes('free') && cursor < windDown) { const f = Math.min(30, windDown - cursor); if (f > 0) { add(cursor, f, 'Free Time', 'Do whatever you want.', '🎮', 'Unscheduled time is essential for creativity.'); cursor += f; } }
-
-  // Wind down
-  add(windDown, 15, 'Review Day', 'What got done? Celebrate wins.', '📝', 'Evening reflection consolidates learning.');
-  add(windDown + 15, 15, 'Wind Down', 'No screens. Dim lights. Breathe.', '📖', 'Blue light suppresses melatonin 50%. Screens delay sleep 30+ min.');
-  add(windDown + 30, 10, 'Sleep', 'Lights out.', '🌙', 'Consistent sleep times improve quality more than total hours.');
-
-  // Clean
-  blocks.sort((a, b) => a.start - b.start);
-  const clean = [];
-  for (const b of blocks) {
-    if (b.start < wake || b.start >= bed) continue;
-    if (clean.length) {
-      const last = clean[clean.length - 1];
-      if (b.start < last.start + last.dur) { last.dur = Math.max(last.dur, (b.start + b.dur) - last.start); continue; }
-    }
-    clean.push({ ...b });
-  }
-
-  // Strategy
-  const strategies = [];
-  const sleepHrs = ((1440 - (bed - wake)) / 60).toFixed(1);
-  strategies.push(`Sleep: ${sleepHrs}h. ${parseFloat(sleepHrs) >= 7 ? 'Within recommended range.' : 'Consider earlier bedtime for better cognitive function.'}`);
-  if (isMorning) strategies.push('Deep work placed in morning — your peak cortisol and focus window.');
-  else if (isNight) strategies.push('Deep work shifted to evening — your brain is most creative at night.');
-  else strategies.push('Deep work split between morning and afternoon for balanced energy.');
-  strategies.push('Meals spaced 4-5 hours apart to stabilize blood sugar.');
-  strategies.push('90-min focus blocks match ultradian rhythm — your brain\'s natural performance cycle.');
-  if (hasCommit) strategies.push(`Commitments blocked ${fmtTime(commitS)}–${fmtTime(commitE)}. Goal work around it.`);
-  if (hasWorkout && morningWorkout) strategies.push('Morning workout chosen for cortisol alignment and consistency.');
-  if (hasWorkout && prefs.includes('evening-workout')) strategies.push('Evening workout: body temperature peaks, strength is higher.');
-  if (prefs.includes('meditation')) strategies.push('Morning meditation primes prefrontal cortex for better decisions.');
-
-  // Improvements
-  const improvements = [];
-  if (parseFloat(sleepHrs) < 7) improvements.push(`Only ${sleepHrs}h sleep. After 3 days of <7h, cognitive performance drops to impaired levels.`);
-  if (!hasWorkout && state.goal !== 'mental') improvements.push('No exercise scheduled. Even 20 min of walking improves focus for 2+ hours.');
-  if (!prefs.includes('social')) improvements.push('No social time. Even 15 min of connection daily compounds over time.');
-  if (state.lifestyle === 'free' && morningAvail > 240) improvements.push('Large free morning. Consider adding a side project or skill-building.');
-
-  // Render
-  document.getElementById('steps-container').style.display = 'none';
-  document.getElementById('progress-bar').style.display = 'none';
-  document.getElementById('schedule-view').style.display = 'block';
-
-  const goalNames = { fitness:'Get Fit', study:'Learn a Skill', coding:'Build Something', business:'Start a Business', creative:'Create', productivity:'Be Productive', mental:'Feel Better', custom:'Custom Goal' };
-  document.getElementById('s-tag').textContent = goalNames[state.goal] || state.goal;
-
-  document.getElementById('strategy-list').innerHTML = strategies.map(s => `<li>${s}</li>`).join('');
-  document.getElementById('improve-list').innerHTML = improvements.length ? improvements.map(s => `<li>${s}</li>`).join('') : '<li>Schedule is well-optimized. No bottlenecks detected.</li>';
-
-  const tl = document.getElementById('timeline');
-  tl.innerHTML = '';
-  const now = new Date();
-  const cm = now.getHours() * 60 + now.getMinutes();
-
-  clean.forEach(item => {
-    const end = item.start + item.dur;
-    const el = document.createElement('div');
-    el.className = 't-block';
-    if (cm >= end) el.classList.add('done');
-    else if (cm >= item.start && cm < end) el.classList.add('active');
-    el.innerHTML = `
-      <div class="t-time">${fmtTime(item.start)} — ${fmtTime(end)} · ${durStr(item.dur)}</div>
-      <div class="t-title">${item.title}</div>
-      <div class="t-desc">${item.desc}</div>
-      ${item.reason ? `<div class="t-reason">${item.reason}</div>` : ''}
-      <div class="t-icon">${item.icon}</div>
-      <button class="t-check ${cm >= end ? 'checked' : ''}" onclick="toggleCheck(this)">✓</button>
-    `;
+function renderTimeline(){
+  const tl=document.getElementById('timeline');tl.innerHTML='';
+  const now=new Date();const cm=now.getHours()*60+now.getMinutes();
+  scheduleBlocks.forEach((item,i)=>{
+    const end=item.start+item.dur;
+    const el=document.createElement('div');
+    el.className='t-block';el.dataset.idx=i;
+    if(cm>=end)el.classList.add('done');
+    else if(cm>=item.start&&cm<end)el.classList.add('active');
+    el.innerHTML=`<div class="t-time">${fmtTime(item.start)} — ${fmtTime(end)} · ${durStr(item.dur)}</div><div class="t-title">${item.title}</div><div class="t-desc">${item.desc}</div>${item.reason?`<div class="t-reason">${item.reason}</div>`:''}<div class="t-icon">${item.icon}</div><button class="t-check" onclick="completeTask(this,${i})">✓</button>`;
     tl.appendChild(el);
   });
-
-  document.getElementById('quote-box').textContent = quotes[Math.floor(Math.random() * quotes.length)];
-  updateScheduleProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function getGoalBlock(time) {
-  const d = state.desc || 'your goal';
-  const map = {
-    fitness: { title: 'Training Session', desc: `${d}`, icon: '💪', reason: 'Physical training during peak energy for max performance.' },
-    study: { title: 'Deep Study', desc: `Study: ${d}`, icon: '🧠', reason: time === 'morning' ? 'Morning: working memory peaks. Best for new material.' : 'Afternoon: review and consolidate. Active recall.' },
-    coding: { title: 'Deep Coding', desc: `Build: ${d}`, icon: '💻', reason: '90-min uninterrupted blocks optimal for flow state.' },
-    business: { title: time === 'morning' ? 'Revenue Activity' : 'Build & Improve', desc: `${d}`, icon: time === 'morning' ? '💰' : '🛠️', reason: 'Revenue first, then operations.' },
-    creative: { title: time === 'morning' ? 'Creative Work' : 'Refine & Polish', desc: `${d}`, icon: '🎨', reason: 'Morning: divergent thinking peaks. Afternoon: convergent.' },
-    productivity: { title: 'Deep Work', desc: `Focus: ${d}`, icon: '🎯', reason: 'Peak hours for highest-impact work.' },
-    mental: { title: 'Self-Care', desc: `${d}`, icon: '💚', reason: 'Daily maintenance, not crisis response.' },
-    custom: { title: 'Goal Work', desc: `${d}`, icon: '🎯', reason: 'Focused work during peak cognitive hours.' }
-  };
-  return map[state.goal] || map.custom;
+function completeTask(btn,idx){
+  if(btn.classList.contains('checked'))return;
+  btn.classList.add('checked');
+  playClick();haptic();
+
+  const ripple=document.createElement('span');ripple.className='ripple';btn.appendChild(ripple);
+  setTimeout(()=>ripple.remove(),500);
+
+  const block=btn.closest('.t-block');
+  block.classList.add('completing');
+  setTimeout(()=>block.classList.remove('completing'),400);
+
+  const glow=document.createElement('div');glow.className='success-glow';block.appendChild(glow);
+  setTimeout(()=>glow.remove(),600);
+
+  block.classList.add('done');
+  completedCount++;
+
+  const rect=btn.getBoundingClientRect();
+  showXP(25,rect.left);
+  spawnConfetti(8);
+
+  const pct=completedCount/totalBlocks;
+  showEncouragement(pct);
+  updateDash();
+
+  if(completedCount===totalBlocks){
+    setTimeout(()=>dayComplete(),600);
+  }
 }
 
-function toggleCheck(btn) {
-  btn.classList.toggle('checked');
-  const block = btn.closest('.t-block');
-  btn.classList.contains('checked') ? block.classList.add('done') : block.classList.remove('done');
-  updateScheduleProgress();
+function updateDash(){
+  const pct=totalBlocks?Math.round((completedCount/totalBlocks)*100):0;
+  const remaining=totalBlocks-completedCount;
+  let totalMin=0;
+  for(let i=0;i<scheduleBlocks.length;i++){
+    const el=document.querySelector(`.t-block[data-idx="${i}"] .t-check`);
+    if(!el||!el.classList.contains('checked'))totalMin+=scheduleBlocks[i].dur;
+  }
+  document.getElementById('ring-text').textContent=pct+'%';
+  document.getElementById('tasks-left').textContent=remaining;
+  document.getElementById('time-left').textContent=durStr(totalMin);
+
+  const circumference=2*Math.PI*34;
+  const offset=circumference-(pct/100)*circumference;
+  document.getElementById('ring-fill').style.strokeDashoffset=offset;
 }
 
-function updateScheduleProgress() {
-  const total = document.querySelectorAll('.t-check').length;
-  const checked = document.querySelectorAll('.t-check.checked').length;
-  const pct = total ? (checked / total) * 100 : 0;
-  document.getElementById('p-fill').style.width = pct + '%';
-  document.getElementById('p-text').textContent = `${checked} / ${total} completed`;
+function dayComplete(){
+  playDayComplete();
+  spawnConfetti(30);
+  setTimeout(()=>spawnConfetti(20),300);
+
+  const today=new Date().toDateString();
+  if(lastDay!==today){streak++;localStorage.setItem('planner_streak',streak);localStorage.setItem('planner_last_day',today)}
+
+  const streakCard=document.getElementById('streak-card');
+  streakCard.classList.add('show');
+  document.getElementById('streak-count').textContent=streak;
+  document.getElementById('streak-pct').textContent='100%';
+  document.getElementById('streak-xp').textContent=`+${totalBlocks*25}`;
+
+  const fire=document.getElementById('streak-fire');
+  fire.style.fontSize=Math.min(2.5+streak*0.3,5)+'rem';
+
+  streakCard.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-function resetAll() {
-  state = { goal:'', desc:'', lifestyle:'', workStart:'', workEnd:'', commute:0, productivity:'', wake:'06:00', bed:'22:30', prefs:[] };
-  document.querySelectorAll('.goal-card,.lifestyle-card,.prod-card,.pref-chip').forEach(c => c.classList.remove('selected'));
-  document.querySelectorAll('.inline-fields').forEach(f => f.classList.remove('show'));
-  document.querySelectorAll('.next-btn').forEach(b => b.classList.remove('ready'));
-  document.getElementById('goal-desc').value = '';
-  document.getElementById('schedule-view').style.display = 'none';
-  document.getElementById('steps-container').style.display = 'flex';
-  document.getElementById('progress-bar').style.display = 'flex';
+function checkStreak(){
+  const today=new Date().toDateString();
+  if(lastDay===today){streak=parseInt(localStorage.getItem('planner_streak')||'0')}
+  else{
+    const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+    if(lastDay!==yesterday.toDateString()){streak=0;localStorage.setItem('planner_streak','0')}
+  }
+}
+
+function resetAll(){
+  state={goal:'',desc:'',lifestyle:'',workStart:'',workEnd:'',commute:0,productivity:'',wake:'06:00',bed:'22:30',prefs:[]};
+  document.querySelectorAll('.goal-card,.lifestyle-card,.prod-card,.pref-chip').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.inline-fields').forEach(f=>f.classList.remove('show'));
+  document.querySelectorAll('.next-btn').forEach(b=>b.classList.remove('ready'));
+  document.getElementById('goal-desc').value='';
+  document.getElementById('schedule-view').style.display='none';
+  document.getElementById('streak-card').classList.remove('show');
+  document.getElementById('steps-container').style.display='flex';
+  document.getElementById('progress-bar').style.display='flex';
   showStep(1);
 }
 
