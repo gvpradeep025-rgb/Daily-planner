@@ -188,6 +188,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .streak-stat .ss-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
 .trophy-anim{font-size:3rem;display:block;margin-bottom:12px;animation:trophyBounce 0.6s cubic-bezier(0.16,1,0.3,1)}
 @keyframes trophyBounce{0%{transform:scale(0) rotate(-20deg)}60%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-4px)}20%,40%,60%,80%{transform:translateX(4px)}}
+.shake{animation:shake 0.4s ease-in-out}
 
 .improve-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px}
 .improve-box h3{font-size:0.82rem;color:var(--rose);margin-bottom:12px;font-weight:600}
@@ -787,22 +789,43 @@ function renderTimeline(completedTitles){
 
 function completeTask(btn,idx){
   const block=btn.closest('.t-block');
-  if(btn.classList.contains('checked')){
-    btn.classList.remove('checked');
-    block.classList.remove('done');
-    completedCount=Math.max(0,completedCount-1);
-    updateDash();
-    const today=new Date().toISOString().split('T')[0];
-    const completedTitles=scheduleBlocks.filter((_,i)=>document.querySelector(`.t-block[data-idx="${i}"] .t-check`)?.classList.contains('checked')).map(b=>b.title);
-    saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
-    return;
-  }
   const item=scheduleBlocks[idx];
   const now=new Date();const cm=now.getHours()*60+now.getMinutes();
-  if(cm<item.start+item.dur){
+  const notDoneYet=cm<item.start+item.dur;
+
+  if(btn.classList.contains('checked')){
+    if(notDoneYet){
+      btn.classList.remove('checked');
+      block.classList.remove('done');
+      completedCount=Math.max(0,completedCount-1);
+      updateDash();
+      block.classList.remove('shake');void block.offsetWidth;block.classList.add('shake');
+      const toast=document.getElementById('encourage-toast');
+      document.getElementById('e-emoji').textContent='⏰';
+      document.getElementById('e-text').textContent="Time's still left. Focus.";
+      toast.classList.remove('done','low');
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),3000);
+      const today=new Date().toISOString().split('T')[0];
+      const completedTitles=scheduleBlocks.filter((_,i)=>document.querySelector(`.t-block[data-idx="${i}"] .t-check`)?.classList.contains('checked')).map(b=>b.title);
+      saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
+    }else{
+      btn.classList.remove('checked');
+      block.classList.remove('done');
+      completedCount=Math.max(0,completedCount-1);
+      updateDash();
+      const today=new Date().toISOString().split('T')[0];
+      const completedTitles=scheduleBlocks.filter((_,i)=>document.querySelector(`.t-block[data-idx="${i}"] .t-check`)?.classList.contains('checked')).map(b=>b.title);
+      saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
+    }
+    return;
+  }
+
+  if(notDoneYet){
+    block.classList.remove('shake');void block.offsetWidth;block.classList.add('shake');
     const toast=document.getElementById('encourage-toast');
-    document.getElementById('e-emoji').textContent='🚫';
-    document.getElementById('e-text').textContent="Don't cheat. Wait for it to finish.";
+    document.getElementById('e-emoji').textContent='⏰';
+    document.getElementById('e-text').textContent="Time's still left. Focus.";
     toast.classList.remove('done','low');
     toast.classList.add('show');
     setTimeout(()=>toast.classList.remove('show'),3000);
