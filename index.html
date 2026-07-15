@@ -787,6 +787,20 @@ function renderTimeline(completedTitles){
   });
 }
 
+function refreshTimeline(){
+  const now=new Date();const cm=now.getHours()*60+now.getMinutes();
+  document.querySelectorAll('.t-block').forEach((el,i)=>{
+    const item=scheduleBlocks[i];if(!item)return;
+    const end=item.start+item.dur;
+    const wasDone=el.classList.contains('done');
+    const isCurrentlyDone=wasDone||cm>=end;
+    const isCurrentlyActive=!isCurrentlyDone&&cm>=item.start&&cm<end;
+    el.classList.toggle('done',isCurrentlyDone);
+    el.classList.toggle('active',isCurrentlyActive);
+  });
+}
+setInterval(refreshTimeline,30000);
+
 function completeTask(btn,idx){
   const block=btn.closest('.t-block');
   const item=scheduleBlocks[idx];
