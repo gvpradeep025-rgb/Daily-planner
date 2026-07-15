@@ -196,19 +196,24 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .p-header{margin-bottom:28px}
 .p-header h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-0.02em}
 .p-sub{font-size:0.85rem;color:var(--muted);margin-top:4px}
-.p-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-.p-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;text-align:center}
-.p-card-hero{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(192,132,252,0.06));border-color:rgba(139,92,246,0.3)}
-.p-card-icon{font-size:1.4rem;margin-bottom:8px}
-.p-card-val{font-size:1.6rem;font-weight:700;letter-spacing:-0.02em}
-.p-card-label{font-size:0.72rem;color:var(--muted);margin-top:4px;font-weight:500}
-.p-deadline-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
-.p-deadline-label{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:4px}
-.p-deadline-date{font-size:1.3rem;font-weight:700;margin-bottom:16px}
-.p-deadline-bar-wrap{margin-bottom:8px}
-.p-deadline-bar{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
-.p-deadline-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width 0.8s cubic-bezier(0.16,1,0.3,1)}
-.p-deadline-sub{font-size:0.82rem;color:var(--muted)}
+.p-goal-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px}
+.p-goal-top{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.p-goal-icon{font-size:2.4rem}
+.p-goal-title{font-size:1.15rem;font-weight:700}
+.p-goal-desc{font-size:0.82rem;color:var(--muted);margin-top:2px}
+.p-countdown{text-align:center;padding:20px 0;margin-bottom:20px;background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(192,132,252,0.04));border-radius:var(--radius-sm)}
+.p-countdown-big{display:flex;align-items:baseline;justify-content:center;gap:8px}
+.p-countdown-num{font-size:2.8rem;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.p-countdown-label{font-size:0.9rem;color:var(--muted);font-weight:500}
+.p-countdown-sub{font-size:0.8rem;color:var(--muted);margin-top:4px}
+.p-progress-bar-wrap{margin-bottom:20px}
+.p-progress-bar{height:10px;background:var(--surface2);border-radius:5px;overflow:hidden}
+.p-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:5px;transition:width 0.8s cubic-bezier(0.16,1,0.3,1)}
+.p-progress-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:0.7rem;color:var(--muted)}
+.p-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.p-stat{text-align:center;padding:12px 8px;background:rgba(63,63,70,0.15);border-radius:var(--radius-sm)}
+.p-stat-val{font-size:1.3rem;font-weight:700;letter-spacing:-0.02em}
+.p-stat-label{font-size:0.68rem;color:var(--muted);margin-top:2px;font-weight:500}
 .p-month-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
 .p-month-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .p-month-header h3{font-size:0.95rem;font-weight:600}
@@ -241,7 +246,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .p-week-label{font-size:0.65rem;color:var(--muted);font-weight:500}
 .p-week-pct{font-size:0.6rem;color:var(--muted)}
 @media(max-width:600px){
-  .p-cards{grid-template-columns:1fr 1fr}
+  .p-stats-row{grid-template-columns:1fr 1fr}
   .p-cal-head,.p-cal-day{font-size:0.6rem}
 }
 </style>
@@ -378,17 +383,28 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
   <div id="progress-view" style="display:none;padding:80px 24px 100px">
     <div class="progress-inner">
       <div class="p-header"><h1>Your Journey</h1><div class="p-sub" id="p-sub"></div></div>
-      <div class="p-cards">
-        <div class="p-card p-card-hero"><div class="p-card-icon">📅</div><div class="p-card-val" id="p-days-active">0</div><div class="p-card-label">Days Active</div></div>
-        <div class="p-card"><div class="p-card-icon">🔥</div><div class="p-card-val" id="p-streak">0</div><div class="p-card-label">Day Streak</div></div>
-        <div class="p-card"><div class="p-card-icon">✅</div><div class="p-card-val" id="p-total-done">0</div><div class="p-card-label">Tasks Completed</div></div>
-        <div class="p-card"><div class="p-card-icon">📊</div><div class="p-card-val" id="p-avg-pct">0%</div><div class="p-card-label">Avg Completion</div></div>
-      </div>
-      <div class="p-deadline-card" id="p-deadline-card" style="display:none">
-        <div class="p-deadline-label">Deadline</div>
-        <div class="p-deadline-date" id="p-deadline-date"></div>
-        <div class="p-deadline-bar-wrap"><div class="p-deadline-bar"><div class="p-deadline-fill" id="p-deadline-fill"></div></div></div>
-        <div class="p-deadline-sub" id="p-deadline-sub"></div>
+      <div class="p-goal-section" id="p-goal-section">
+        <div class="p-goal-top">
+          <div class="p-goal-icon" id="p-goal-icon">🎯</div>
+          <div class="p-goal-info">
+            <div class="p-goal-title" id="p-goal-title">Your Goal</div>
+            <div class="p-goal-desc" id="p-goal-desc"></div>
+          </div>
+        </div>
+        <div class="p-countdown" id="p-countdown">
+          <div class="p-countdown-big"><span class="p-countdown-num" id="p-days-left-num">0</span><span class="p-countdown-label">days left</span></div>
+          <div class="p-countdown-sub" id="p-countdown-sub"></div>
+        </div>
+        <div class="p-progress-bar-wrap">
+          <div class="p-progress-bar"><div class="p-progress-fill" id="p-goal-fill"></div></div>
+          <div class="p-progress-labels"><span id="p-progress-started">Started</span><span id="p-progress-pct">0%</span><span id="p-progress-deadline">Deadline</span></div>
+        </div>
+        <div class="p-stats-row">
+          <div class="p-stat"><div class="p-stat-val" id="p-days-active">0</div><div class="p-stat-label">Days Active</div></div>
+          <div class="p-stat"><div class="p-stat-val" id="p-streak">0</div><div class="p-stat-label">Streak</div></div>
+          <div class="p-stat"><div class="p-stat-val" id="p-total-done">0</div><div class="p-stat-label">Tasks Done</div></div>
+          <div class="p-stat"><div class="p-stat-val" id="p-avg-pct">0%</div><div class="p-stat-label">Avg Score</div></div>
+        </div>
       </div>
       <div class="p-month-section">
         <div class="p-month-header"><h3 id="p-month-title">This Month</h3></div>
@@ -669,14 +685,23 @@ function renderTimeline(){
 }
 
 function completeTask(btn,idx){
-  if(btn.classList.contains('checked'))return;
+  const block=btn.closest('.t-block');
+  if(btn.classList.contains('checked')){
+    btn.classList.remove('checked');
+    block.classList.remove('done');
+    completedCount=Math.max(0,completedCount-1);
+    updateDash();
+    const today=new Date().toISOString().split('T')[0];
+    const completedTitles=scheduleBlocks.filter((_,i)=>document.querySelector(`.t-block[data-idx="${i}"] .t-check`)?.classList.contains('checked')).map(b=>b.title);
+    saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
+    return;
+  }
   btn.classList.add('checked');
   playClick();haptic();
 
   const ripple=document.createElement('span');ripple.className='ripple';btn.appendChild(ripple);
   setTimeout(()=>ripple.remove(),500);
 
-  const block=btn.closest('.t-block');
   block.classList.add('completing');
   setTimeout(()=>block.classList.remove('completing'),400);
 
@@ -785,60 +810,66 @@ function renderProgressPage(){
   const daily=getDailyCompletions();
   const dates=Object.keys(daily).sort();
   const daysActive=dates.length;
-  document.getElementById('p-days-active').textContent=daysActive;
-  document.getElementById('p-streak').textContent=streak;
+  const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
+  const goalIcons={fitness:'🏋️',study:'📚',coding:'💻',business:'🚀',creative:'🎨',productivity:'⚡',mental:'🧠',custom:'🎯'};
+  document.getElementById('p-goal-title').textContent=gn[state.goal]||'Your Goal';
+  document.getElementById('p-goal-desc').textContent=state.desc||'';
+  document.getElementById('p-goal-icon').textContent=goalIcons[state.goal]||'🎯';
+  document.getElementById('p-sub').textContent=`Started ${state.startDate?new Date(state.startDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'today'}`;
+
   let totalTasks=0,completedTasks=0;
   dates.forEach(d=>{totalTasks+=daily[d].total;completedTasks+=daily[d].count});
+  document.getElementById('p-days-active').textContent=daysActive;
+  document.getElementById('p-streak').textContent=streak;
   document.getElementById('p-total-done').textContent=completedTasks;
   const avgPct=totalTasks?Math.round((completedTasks/totalTasks)*100):0;
   document.getElementById('p-avg-pct').textContent=avgPct+'%';
-  const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
-  document.getElementById('p-sub').textContent=`${gn[state.goal]||'Your goal'} · Started ${state.startDate?new Date(state.startDate).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'today'}`;
 
+  const now=new Date();
+  const startD=state.startDate?new Date(state.startDate):now;
   if(state.deadline){
-    document.getElementById('p-deadline-card').style.display='block';
     const dl=new Date(state.deadline);
-    const now=new Date();
-    const startD=state.startDate?new Date(state.startDate):now;
-    const totalDays=Math.ceil((dl-startD)/(1000*60*60*24));
+    const totalDays=Math.max(1,Math.ceil((dl-startD)/(1000*60*60*24)));
     const daysPassed=Math.ceil((now-startD)/(1000*60*60*24));
     const daysLeft=Math.ceil((dl-now)/(1000*60*60*24));
     const progress=Math.min(100,Math.round((daysPassed/totalDays)*100));
-    document.getElementById('p-deadline-date').textContent=dl.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-    document.getElementById('p-deadline-fill').style.width=progress+'%';
-    document.getElementById('p-deadline-sub').textContent=daysLeft>0?`${daysLeft} days left · ${progress}% of time elapsed`:'Deadline has passed';
+    document.getElementById('p-days-left-num').textContent=daysLeft>0?daysLeft:'0';
+    document.getElementById('p-countdown-sub').textContent=daysLeft>0?`until ${dl.toLocaleDateString('en-US',{month:'long',day:'numeric'})}`:'Deadline has passed';
+    document.getElementById('p-progress-pct').textContent=progress+'% time gone';
+    document.getElementById('p-progress-deadline').textContent=dl.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    document.getElementById('p-goal-fill').style.width=progress+'%';
+  }else{
+    document.getElementById('p-days-left-num').textContent='—';
+    document.getElementById('p-countdown-sub').textContent='No deadline set';
+    document.getElementById('p-progress-pct').textContent='';
+    document.getElementById('p-progress-deadline').textContent='';
+    document.getElementById('p-goal-fill').style.width=(daysActive?Math.min(100,daysActive*10):0)+'%';
   }
+  document.getElementById('p-progress-started').textContent=state.startDate?new Date(state.startDate).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'Start';
 
-  const now=new Date();
   const year=now.getFullYear(),month=now.getMonth();
-  const monthName=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-  document.getElementById('p-month-title').textContent=monthName;
+  document.getElementById('p-month-title').textContent=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
   const firstDay=new Date(year,month,1).getDay();
   const daysInMonth=new Date(year,month+1,0).getDate();
   const todayDate=now.getDate();
   const cal=document.getElementById('p-calendar');
   cal.innerHTML='';
-  const heads=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  heads.forEach(h=>{const el=document.createElement('div');el.className='p-cal-head';el.textContent=h;cal.appendChild(el)});
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(h=>{const el=document.createElement('div');el.className='p-cal-head';el.textContent=h;cal.appendChild(el)});
   for(let i=0;i<firstDay;i++){const el=document.createElement('div');el.className='p-cal-day empty';cal.appendChild(el)}
   for(let d=1;d<=daysInMonth;d++){
     const el=document.createElement('div');el.className='p-cal-day';
     el.textContent=d;
     const dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     if(d===todayDate)el.classList.add('today');
-    if(d>todayDate){el.classList.add('future')}
-    else if(daily[dateStr]){
-      const p=daily[dateStr].pct;
-      if(p===100)el.classList.add('done');
-      else if(p>=50)el.classList.add('partial');
-      else el.classList.add('missed');
-    }else{el.classList.add('missed')}
+    if(d>todayDate)el.classList.add('future');
+    else if(daily[dateStr]){const p=daily[dateStr].pct;if(p===100)el.classList.add('done');else if(p>=50)el.classList.add('partial');else el.classList.add('missed')}
+    else el.classList.add('missed');
     cal.appendChild(el);
   }
 
   const weekBars=document.getElementById('p-week-bars');
   weekBars.innerHTML='';
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   for(let i=6;i>=0;i--){
     const d=new Date();d.setDate(d.getDate()-i);
     const ds=d.toISOString().split('T')[0];
@@ -852,7 +883,7 @@ function renderProgressPage(){
     else if(p>=40)fill.classList.add('mid');
     else if(p>0)fill.classList.add('low');
     else fill.classList.add('empty');
-    const label=document.createElement('div');label.className='p-week-label';label.textContent=days[d.getDay()];
+    const label=document.createElement('div');label.className='p-week-label';label.textContent=dayNames[d.getDay()];
     const pctEl=document.createElement('div');pctEl.className='p-week-pct';pctEl.textContent=p?dayData.count+'/'+dayData.total:'-';
     bar.appendChild(fill);bar.appendChild(label);bar.appendChild(pctEl);
     weekBars.appendChild(bar);
