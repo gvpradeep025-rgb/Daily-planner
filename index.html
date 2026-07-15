@@ -372,13 +372,18 @@
         <option value="productivity">Be More Productive</option>
         <option value="mental">Improve Mental Health</option>
         <option value="creative">Creative Project (Art, Music, Writing)</option>
+        <option value="exams">Prepare for Exams / Certification</option>
+        <option value="language">Learn a New Language</option>
+        <option value="music">Learn an Instrument</option>
+        <option value="freelance">Build a Freelance Career</option>
+        <option value="content">Content Creation / YouTube / Blog</option>
+        <option value="social">Improve Social Life</option>
+        <option value="sleep">Fix Sleep Schedule</option>
         <option value="custom">Custom Goal</option>
       </select>
 
-      <div id="custom-goal-wrap" style="display:none">
-        <label>Describe your goal</label>
-        <textarea id="custom-goal" placeholder="e.g. Learn piano in 3 months, write a novel..."></textarea>
-      </div>
+      <label>Describe what you want to achieve (this shapes your schedule)</label>
+      <textarea id="custom-goal" placeholder="e.g. Learn piano in 3 months, lose 10kg by December, pass AWS certification, build a SaaS app..."></textarea>
 
       <label>Your Wake-Up Time</label>
       <div class="time-row">
@@ -390,20 +395,14 @@
         <input type="time" id="bed-time" value="22:30">
       </div>
 
-      <label>Priority Areas (pick up to 3)</label>
-      <div class="goals-grid" id="priority-grid">
-        <div class="goal-chip" data-val="health">Health</div>
-        <div class="goal-chip" data-val="career">Career</div>
-        <div class="goal-chip" data-val="learning">Learning</div>
-        <div class="goal-chip" data-val="fitness">Fitness</div>
-        <div class="goal-chip" data-val="social">Social</div>
-        <div class="goal-chip" data-val="rest">Rest & Recovery</div>
-        <div class="goal-chip" data-val="creativity">Creativity</div>
-        <div class="goal-chip" data-val="finance">Finance</div>
+      <label>Work / Commitment Hours (if any)</label>
+      <div class="time-row">
+        <input type="time" id="work-start" placeholder="Start">
+        <input type="time" id="work-end" placeholder="End">
       </div>
 
-      <label>Any notes or preferences?</label>
-      <textarea id="notes" placeholder="e.g. I have work from 9-5, I prefer to exercise in the morning..."></textarea>
+      <label>Notes & Preferences</label>
+      <textarea id="notes" placeholder="e.g. I prefer working out in the morning, I have a 9-5 job, I learn best at night, I want at least 1 hour of free time..."></textarea>
 
       <button class="btn btn-primary" onclick="generateSchedule()">Generate My Day</button>
     </div>
@@ -448,16 +447,11 @@ priorityChips.forEach(chip => {
     if (priorities.has(val)) {
       priorities.delete(val);
       chip.classList.remove('selected');
-    } else if (priorities.size < 3) {
+    } else {
       priorities.add(val);
       chip.classList.add('selected');
     }
   });
-});
-
-document.getElementById('goal-type').addEventListener('change', e => {
-  document.getElementById('custom-goal-wrap').style.display =
-    e.target.value === 'custom' ? 'block' : 'none';
 });
 
 const quotes = [
@@ -495,186 +489,202 @@ function formatTime12(t) {
   return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
 }
 
-function getSchedules(goal, prioritiesSet) {
-  const p = [...prioritiesSet];
-
-  const templates = {
-    fitness: [
-      { time: '0,5', dur: 10, title: 'Morning Hydration', desc: 'Drink 500ml water with lemon', icon: '💧' },
-      { time: '5,25', dur: 20, title: 'Morning Stretching', desc: 'Light dynamic stretches to wake up the body', icon: '🧘' },
-      { time: '25,35', dur: 10, title: 'Plan Your Day', desc: 'Review goals, set top 3 priorities', icon: '📋' },
-      { time: '35,65', dur: 30, title: 'Morning Workout', desc: 'Cardio + strength training (follow a program)', icon: '💪' },
-      { time: '65,85', dur: 20, title: 'Post-Workout Meal', desc: 'High protein breakfast — eggs, oats, fruit', icon: '🍳' },
-      { time: '85,95', dur: 10, title: 'Shower & Get Ready', desc: 'Cold shower for recovery boost', icon: '🚿' },
-      { time: '95,215', dur: 120, title: 'Deep Work Block', desc: 'Focus on your most important task', icon: '💻' },
-      { time: '215,225', dur: 10, title: 'Break & Walk', desc: '10-min walk, stretch, hydrate', icon: '🚶' },
-      { time: '225,345', dur: 120, title: 'Continue Work', desc: 'Tackle secondary tasks', icon: '⚡' },
-      { time: '345,375', dur: 30, title: 'Lunch', desc: 'Balanced meal — lean protein, veggies, carbs', icon: '🥗' },
-      { time: '375,390', dur: 15, title: 'Power Nap / Rest', desc: 'Short rest to recharge', icon: '😴' },
-      { time: '390,510', dur: 120, title: 'Afternoon Work', desc: 'Meetings, admin, lighter tasks', icon: '📊' },
-      { time: '510,520', dur: 10, title: 'Afternoon Break', desc: 'Snack + stretch + hydrate', icon: '🍎' },
-      { time: '520,600', dur: 80, title: 'Evening Work / Learning', desc: 'Skill development or finishing tasks', icon: '📚' },
-      { time: '600,630', dur: 30, title: 'Evening Workout', desc: 'Yoga, mobility, or light cardio', icon: '🧘' },
-      { time: '630,660', dur: 30, title: 'Dinner', desc: 'Light balanced dinner', icon: '🍽️' },
-      { time: '660,690', dur: 30, title: 'Free Time', desc: 'Relax, hobbies, socialize', icon: '🎮' },
-      { time: '690,720', dur: 30, title: 'Wind Down', desc: 'No screens, reading, journaling', icon: '📖' },
-      { time: '720,750', dur: 30, title: 'Sleep Routine', desc: 'Prepare for bed, meditation, lights out', icon: '🌙' }
-    ],
-    study: [
-      { time: '0,5', dur: 5, title: 'Hydrate', desc: 'Glass of water', icon: '💧' },
-      { time: '5,20', dur: 15, title: 'Morning Routine', desc: 'Freshen up, light breakfast', icon: '☀️' },
-      { time: '20,35', dur: 15, title: 'Review Goals', desc: 'What will you learn today?', icon: '📋' },
-      { time: '35,95', dur: 60, title: 'Deep Study Session 1', desc: 'Hardest subject — active recall + notes', icon: '🧠' },
-      { time: '95,105', dur: 10, title: 'Break', desc: 'Walk, stretch, hydrate', icon: '🚶' },
-      { time: '105,165', dur: 60, title: 'Deep Study Session 2', desc: 'Practice problems or flashcards', icon: '📝' },
-      { time: '165,195', dur: 30, title: 'Lunch Break', desc: 'Eat and rest your brain', icon: '🍽️' },
-      { time: '195,255', dur: 60, title: 'Applied Learning', desc: 'Build something, write, or teach', icon: '🛠️' },
-      { time: '255,265', dur: 10, title: 'Break', desc: 'Step away from the desk', icon: '☕' },
-      { time: '265,325', dur: 60, title: 'Review & Anki', desc: 'Spaced repetition of today\'s material', icon: '🔄' },
-      { time: '325,385', dur: 60, title: 'Side Project / Practice', desc: 'Apply what you learned', icon: '💻' },
-      { time: '385,415', dur: 30, title: 'Exercise', desc: 'Workout, walk, or sport', icon: '🏋️' },
-      { time: '415,445', dur: 30, title: 'Dinner', desc: 'Eat well, relax', icon: '🍽️' },
-      { time: '445,505', dur: 60, title: 'Light Study / Reading', desc: 'Books, videos, passive learning', icon: '📖' },
-      { time: '505,535', dur: 30, title: 'Free Time', desc: 'Social, hobbies, relax', icon: '🎮' },
-      { time: '535,565', dur: 30, title: 'Wind Down', desc: 'Journal, reflect on what you learned', icon: '📝' },
-      { time: '565,580', dur: 15, title: 'Sleep Prep', desc: 'Screen off, lights out', icon: '🌙' }
-    ],
-    coding: [
-      { time: '0,5', dur: 5, title: 'Hydrate', desc: 'Water first thing', icon: '💧' },
-      { time: '5,20', dur: 15, title: 'Morning Routine', desc: 'Fresh up, eat something', icon: '☀️' },
-      { time: '20,35', dur: 15, title: 'Plan Today\'s Sprint', desc: 'Pick 2-3 tasks, write them down', icon: '📋' },
-      { time: '35,125', dur: 90, title: 'Deep Coding Block 1', desc: 'Build the hardest feature first', icon: '💻' },
-      { time: '125,135', dur: 10, title: 'Break', desc: 'Stretch eyes, move around', icon: '👁️' },
-      { time: '135,225', dur: 90, title: 'Deep Coding Block 2', desc: 'Continue building, debug', icon: '🐛' },
-      { time: '225,255', dur: 30, title: 'Lunch', desc: 'Eat and rest', icon: '🍽️' },
-      { time: '255,345', dur: 90, title: 'Code Review / Learning', desc: 'Review code, learn new patterns, tutorials', icon: '📚' },
-      { time: '345,355', dur: 10, title: 'Break', desc: 'Quick walk', icon: '🚶' },
-      { time: '355,445', dur: 90, title: 'Afternoon Coding', desc: 'Testing, refactoring, docs', icon: '🧪' },
-      { time: '445,475', dur: 30, title: 'Exercise', desc: 'Move your body', icon: '🏋️' },
-      { time: '475,505', dur: 30, title: 'Dinner', desc: 'Fuel up', icon: '🍽️' },
-      { time: '505,565', dur: 60, title: 'Open Source / Side Project', desc: 'Work on something you love', icon: '❤️' },
-      { time: '565,595', dur: 30, title: 'Free Time', desc: 'Relax, games, social', icon: '🎮' },
-      { time: '595,625', dur: 30, title: 'Wind Down', desc: 'Read, no screens', icon: '📖' },
-      { time: '625,640', dur: 15, title: 'Sleep', desc: 'Rest and recover', icon: '🌙' }
-    ],
-    productivity: [
-      { time: '0,10', dur: 10, title: 'Morning Routine', desc: 'Hydrate, freshen up', icon: '☀️' },
-      { time: '10,25', dur: 15, title: 'Plan & Prioritize', desc: 'Top 3 tasks, time-block your day', icon: '📋' },
-      { time: '25,85', dur: 60, title: 'MIT #1', desc: 'Most Important Task — deep focus', icon: '🎯' },
-      { time: '85,95', dur: 10, title: 'Break', desc: 'Quick stretch', icon: '🚶' },
-      { time: '95,155', dur: 60, title: 'MIT #2', desc: 'Second most important task', icon: '⚡' },
-      { time: '155,165', dur: 10, title: 'Break', desc: 'Hydrate, walk', icon: '💧' },
-      { time: '165,225', dur: 60, title: 'MIT #3', desc: 'Third important task', icon: '🔥' },
-      { time: '225,255', dur: 30, title: 'Lunch', desc: 'Eat well', icon: '🍽️' },
-      { time: '255,270', dur: 15, title: 'Power Nap', desc: 'Quick recharge', icon: '😴' },
-      { time: '270,330', dur: 60, title: 'Email & Admin', desc: 'Clear inbox, respond to messages', icon: '📧' },
-      { time: '330,390', dur: 60, title: 'Meetings / Collaboration', desc: 'Calls, syncs, team work', icon: '🤝' },
-      { time: '390,400', dur: 10, title: 'Break', desc: 'Walk around', icon: '🚶' },
-      { time: '400,460', dur: 60, title: 'Creative / Strategic Work', desc: 'Think big, plan ahead', icon: '💡' },
-      { time: '460,490', dur: 30, title: 'Exercise', desc: 'Move your body', icon: '🏋️' },
-      { time: '490,520', dur: 30, title: 'Dinner', desc: 'Refuel', icon: '🍽️' },
-      { time: '520,550', dur: 30, title: 'Review Day', desc: 'What got done? Tomorrow\'s plan', icon: '📝' },
-      { time: '550,580', dur: 30, title: 'Free Time', desc: 'Relax, hobbies', icon: '🎮' },
-      { time: '580,600', dur: 20, title: 'Wind Down', desc: 'No screens, read', icon: '📖' },
-      { time: '600,615', dur: 15, title: 'Sleep', desc: 'Rest', icon: '🌙' }
-    ],
-    mental: [
-      { time: '0,15', dur: 15, title: 'Mindful Morning', desc: 'No phone. Just breathe, sit in silence', icon: '🧘' },
-      { time: '15,30', dur: 15, title: 'Journaling', desc: 'Write 3 things you\'re grateful for', icon: '📝' },
-      { time: '30,45', dur: 15, title: 'Gentle Movement', desc: 'Stretch, yoga, or a short walk', icon: '🧘' },
-      { time: '45,60', dur: 15, title: 'Healthy Breakfast', desc: 'Eat slowly, enjoy it', icon: '🥣' },
-      { time: '60,120', dur: 60, title: 'Meaningful Work', desc: 'Work on something that matters to you', icon: '💼' },
-      { time: '120,130', dur: 10, title: 'Breathing Break', desc: '4-7-8 breathing technique', icon: '🌬️' },
-      { time: '130,190', dur: 60, title: 'Continue Work', desc: 'Stay present, one task at a time', icon: '✨' },
-      { time: '190,220', dur: 30, title: 'Lunch', desc: 'Eat mindfully, no screens', icon: '🍽️' },
-      { time: '220,250', dur: 30, title: 'Nature Walk', desc: 'Get outside, feel the sun', icon: '🌳' },
-      { time: '250,310', dur: 60, title: 'Afternoon Work', desc: 'Lighter tasks, be kind to yourself', icon: '💫' },
-      { time: '310,320', dur: 10, title: 'Check-In', desc: 'How are you feeling? Adjust if needed', icon: '💭' },
-      { time: '320,380', dur: 60, title: 'Creative Expression', desc: 'Art, music, writing, anything expressive', icon: '🎨' },
-      { time: '380,410', dur: 30, title: 'Exercise', desc: 'Movement is medicine', icon: '🏃' },
-      { time: '410,440', dur: 30, title: 'Dinner', desc: 'Nourishing food', icon: '🍽️' },
-      { time: '440,470', dur: 30, title: 'Social Connection', desc: 'Call a friend, be with loved ones', icon: '💬' },
-      { time: '470,500', dur: 30, title: 'Wind Down', desc: 'Reading, gentle music, no screens', icon: '🎶' },
-      { time: '500,520', dur: 20, title: 'Evening Reflection', desc: 'What went well today? Self-compassion', icon: '🌙' },
-      { time: '520,535', dur: 15, title: 'Sleep Routine', desc: 'Meditation, lights out', icon: '😴' }
-    ],
-    business: [
-      { time: '0,10', dur: 10, title: 'Morning Routine', desc: 'Hydrate, move, freshen up', icon: '☀️' },
-      { time: '10,25', dur: 15, title: 'Vision Check', desc: 'Review your big goal, stay aligned', icon: '🎯' },
-      { time: '25,85', dur: 60, title: 'Revenue Activity', desc: 'Sales, outreach, content creation', icon: '💰' },
-      { time: '85,95', dur: 10, title: 'Break', desc: 'Stretch and hydrate', icon: '🚶' },
-      { time: '95,155', dur: 60, title: 'Build / Create', desc: 'Product, service, or content work', icon: '🛠️' },
-      { time: '155,165', dur: 10, title: 'Break', desc: 'Quick walk', icon: '☕' },
-      { time: '165,225', dur: 60, title: 'Marketing & Growth', desc: 'Social media, ads, SEO, networking', icon: '📈' },
-      { time: '225,255', dur: 30, title: 'Lunch', desc: 'Eat and recharge', icon: '🍽️' },
-      { time: '255,315', dur: 60, title: 'Admin & Operations', desc: 'Finance, planning, systems', icon: '📊' },
-      { time: '315,325', dur: 10, title: 'Break', desc: 'Move around', icon: '🚶' },
-      { time: '325,385', dur: 60, title: 'Learning', desc: 'Courses, books, mentors', icon: '📚' },
-      { time: '385,415', dur: 30, title: 'Exercise', desc: 'Stay sharp and energized', icon: '🏋️' },
-      { time: '415,445', dur: 30, title: 'Dinner', desc: 'Refuel', icon: '🍽️' },
-      { time: '445,475', dur: 30, title: 'Networking', desc: 'Connect with peers, community', icon: '🤝' },
-      { time: '475,505', dur: 30, title: 'Free Time', desc: 'Decompress', icon: '🎮' },
-      { time: '505,525', dur: 20, title: 'Review & Plan', desc: 'What worked? Tomorrow\'s priorities', icon: '📝' },
-      { time: '525,540', dur: 15, title: 'Wind Down', desc: 'No screens, relax', icon: '🌙' }
-    ],
-    creative: [
-      { time: '0,15', dur: 15, title: 'Gentle Wake', desc: 'No phone. Stretch, breathe', icon: '🌅' },
-      { time: '15,30', dur: 15, title: 'Morning Pages', desc: 'Stream of consciousness writing', icon: '📝' },
-      { time: '30,45', dur: 15, title: 'Inspiration', desc: 'Look at art, listen to music, read', icon: '✨' },
-      { time: '45,60', dur: 15, title: 'Breakfast', desc: 'Simple and nourishing', icon: '🥣' },
-      { time: '60,150', dur: 90, title: 'Deep Creative Work', desc: 'Your main creative project', icon: '🎨' },
-      { time: '150,160', dur: 10, title: 'Break', desc: 'Step away, let ideas simmer', icon: '🚶' },
-      { time: '160,220', dur: 60, title: 'Continue Creating', desc: 'Refine, iterate, experiment', icon: '🔧' },
-      { time: '220,250', dur: 30, title: 'Lunch', desc: 'Eat well', icon: '🍽️' },
-      { time: '250,280', dur: 30, title: 'Input Time', desc: 'Consume inspiring content', icon: '📺' },
-      { time: '280,340', dur: 60, title: 'Skill Practice', desc: 'Technique drills, tutorials', icon: '🎯' },
-      { time: '340,350', dur: 10, title: 'Break', desc: 'Move', icon: '🚶' },
-      { time: '350,410', dur: 60, title: 'Collaboration / Sharing', desc: 'Share work, get feedback', icon: '💬' },
-      { time: '410,440', dur: 30, title: 'Exercise', desc: 'Move your body', icon: '🏃' },
-      { time: '440,470', dur: 30, title: 'Dinner', desc: 'Nourish', icon: '🍽️' },
-      { time: '470,500', dur: 30, title: 'Free Creation', desc: 'Play, experiment, have fun', icon: '🎮' },
-      { time: '500,530', dur: 30, title: 'Wind Down', desc: 'Reading, music, journal', icon: '📖' },
-      { time: '530,545', dur: 15, title: 'Sleep', desc: 'Rest the creative mind', icon: '🌙' }
-    ],
-    custom: [
-      { time: '0,10', dur: 10, title: 'Morning Routine', desc: 'Hydrate, freshen up', icon: '☀️' },
-      { time: '10,25', dur: 15, title: 'Plan Your Day', desc: 'Set intentions and priorities', icon: '📋' },
-      { time: '25,85', dur: 60, title: 'Focus Block 1', desc: 'Work on your main goal', icon: '🎯' },
-      { time: '85,95', dur: 10, title: 'Break', desc: 'Stretch, hydrate', icon: '🚶' },
-      { time: '95,155', dur: 60, title: 'Focus Block 2', desc: 'Continue deep work', icon: '⚡' },
-      { time: '155,165', dur: 10, title: 'Break', desc: 'Quick walk', icon: '☕' },
-      { time: '165,225', dur: 60, title: 'Learning', desc: 'Study, read, grow', icon: '📚' },
-      { time: '225,255', dur: 30, title: 'Lunch', desc: 'Eat well', icon: '🍽️' },
-      { time: '255,315', dur: 60, title: 'Afternoon Work', desc: 'Secondary tasks', icon: '💻' },
-      { time: '315,325', dur: 10, title: 'Break', desc: 'Move around', icon: '🚶' },
-      { time: '325,385', dur: 60, title: 'Project Work', desc: 'Build, create, execute', icon: '🛠️' },
-      { time: '385,415', dur: 30, title: 'Exercise', desc: 'Stay healthy', icon: '🏋️' },
-      { time: '415,445', dur: 30, title: 'Dinner', desc: 'Refuel', icon: '🍽️' },
-      { time: '445,505', dur: 60, title: 'Personal Time', desc: 'Hobbies, social, relax', icon: '🎮' },
-      { time: '505,535', dur: 30, title: 'Review & Plan', desc: 'Reflect, plan tomorrow', icon: '📝' },
-      { time: '535,550', dur: 15, title: 'Wind Down', desc: 'No screens, relax', icon: '🌙' }
-    ]
+function parseNotes(notes) {
+  const lower = notes.toLowerCase();
+  return {
+    morningWorkout: /morning|early|first thing|before work|am workout/.test(lower),
+    eveningWorkout: /evening|after work|night|pm workout|later/.test(lower),
+    hasWorkHours: /\b(9-5|9 to 5|work|job|office|shift|class)\b/.test(lower),
+    prefersShortBreaks: /short break|quick break|pomodoro/.test(lower),
+    prefersLongBreaks: /long break|rest more|relax/.test(lower),
+    wantsMeditation: /meditat|mindful|yoga|breathe|calm/.test(lower),
+    wantsReading: /read|book|library/.test(lower),
+    wantsExercise: /gym|exercise|workout|run|cardio|strength|lift/.test(lower),
+    wantsFreeTime: /free time|fun|hobby|game|relax|chill/.test(lower),
+    wantsLearning: /learn|course|tutorial|study|read/.test(lower),
+    wantsSocial: /friend|social|call|hangout|family|people/.test(lower),
+    nightOwl: /night|late|owl|nightow/.test(lower),
+    earlyBird: /early|morning person|dawn/.test(lower)
   };
-
-  return templates[goal] || templates.custom;
 }
 
-function generateSchedule() {
+function parseGoalDesc(desc) {
+  const lower = (desc || '').toLowerCase();
+  return {
+    text: desc || '',
+    isFitness: /lose weight|fit|gym|muscle|fat|cardio|strength|body|exercise|workout|run|swim|yoga/.test(lower),
+    isStudy: /study|learn|exam|course|tutorial|read|book|class|school|university|college/.test(lower),
+    isCoding: /code|program|app|software|website|build|develop|api|database|frontend|backend/.test(lower),
+    isBusiness: /business|startup|revenue|customer|sell|marketing|brand|profit|freelance|client/.test(lower),
+    isCreative: /art|music|write|novel|song|paint|draw|design|film|photo|creative|compose/.test(lower),
+    isLanguage: /language|spanish|french|german|japanese|chinese|korean|english|hindi|speak/.test(lower),
+    isInstrument: /piano|guitar|violin|drum|flute|instrument|music|chord|melody/.test(lower),
+    hasDeadline: /deadline|by \w+|\d+ (week|month|day|year)/.test(lower)
+  };
+}
+
+function buildSchedule() {
   const goalType = document.getElementById('goal-type').value;
   if (!goalType) { alert('Please select a goal category!'); return; }
 
-  const goalLabel = goalType === 'custom'
-    ? (document.getElementById('custom-goal').value || 'Custom Goal')
-    : document.getElementById('goal-type').options[document.getElementById('goal-type').selectedIndex].text;
-
+  const goalDesc = document.getElementById('custom-goal').value;
   const wakeTime = document.getElementById('wake-time').value;
   const bedTime = document.getElementById('bed-time').value;
+  const workStart = document.getElementById('work-start').value;
+  const workEnd = document.getElementById('work-end').value;
   const notes = document.getElementById('notes').value;
 
   const wakeMin = timeToMin(wakeTime);
   const bedMin = timeToMin(bedTime) > wakeMin ? timeToMin(bedTime) : timeToMin(bedTime) + 1440;
+  const totalMinutes = bedMin - wakeMin;
 
-  const template = getSchedules(goalType, priorities);
+  const notePrefs = parseNotes(notes);
+  const goalInfo = parseGoalDesc(goalDesc);
+
+  const hasWorkBlock = workStart && workEnd;
+  const workStartMin = hasWorkBlock ? timeToMin(workStart) : null;
+  const workEndMin = hasWorkBlock ? timeToMin(workEnd) : null;
+
+  const goalLabel = goalDesc || document.getElementById('goal-type').options[document.getElementById('goal-type').selectedIndex].text;
+
+  let blocks = [];
+
+  if (notePrefs.earlyBird) {
+    blocks.push({ rel: 0, dur: 5, title: 'Early Rise', desc: 'Up before the world. Drink water.', icon: '🌅' });
+    blocks.push({ rel: 5, dur: 15, title: 'Morning Silence', desc: 'No phone. Just breathe and be present.', icon: '🧘' });
+  } else if (notePrefs.nightOwl) {
+    blocks.push({ rel: 0, dur: 10, title: 'Gentle Wake', desc: 'Ease into it. Hydrate, no rush.', icon: '☀️' });
+  } else {
+    blocks.push({ rel: 0, dur: 5, title: 'Hydrate', desc: 'Drink a glass of water first thing.', icon: '💧' });
+    blocks.push({ rel: 5, dur: 15, title: 'Morning Routine', desc: 'Freshen up, quick breakfast.', icon: '☀️' });
+  }
+
+  if (notePrefs.wantsMeditation) {
+    blocks.push({ rel: 20, dur: 15, title: 'Meditation', desc: 'Sit quietly, focus on breath. 10-15 min.', icon: '🧘' });
+  }
+
+  blocks.push({ rel: blocks.length > 2 ? 35 : 20, dur: 10, title: 'Plan Your Day', desc: 'Set 3 priorities. Visualize success.', icon: '📋' });
+
+  if (goalInfo.isFitness || goalType === 'fitness') {
+    if (notePrefs.morningWorkout || !notePrefs.eveningWorkout) {
+      blocks.push({ rel: 45, dur: 45, title: 'Morning Workout', desc: goalDesc ? `Train for: ${goalDesc}` : 'Cardio + strength. Push yourself.', icon: '💪' });
+      blocks.push({ rel: 90, dur: 20, title: 'Post-Workout Meal', desc: 'Protein-rich breakfast. Fuel recovery.', icon: '🍳' });
+    } else {
+      blocks.push({ rel: 45, dur: 20, title: 'Light Morning Stretch', desc: 'Wake up the body gently.', icon: '🧘' });
+    }
+  } else if (goalInfo.isCoding || goalType === 'coding') {
+    blocks.push({ rel: 45, dur: 90, title: 'Deep Coding Block', desc: goalDesc ? `Build: ${goalDesc}` : 'Focus mode. Build the hardest feature.', icon: '💻' });
+    blocks.push({ rel: 135, dur: 10, title: 'Break', desc: 'Rest your eyes. Stand up.', icon: '👁️' });
+    blocks.push({ rel: 145, dur: 90, title: 'Coding Block 2', desc: 'Debug, test, iterate.', icon: '🐛' });
+  } else if (goalInfo.isStudy || goalType === 'study' || goalType === 'exams') {
+    blocks.push({ rel: 45, dur: 60, title: 'Deep Study Session', desc: goalDesc ? `Study: ${goalDesc}` : 'Active recall + practice problems.', icon: '🧠' });
+    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Walk, hydrate.', icon: '🚶' });
+    blocks.push({ rel: 115, dur: 60, title: 'Study Session 2', desc: 'Flashcards, notes, review.', icon: '📝' });
+  } else if (goalInfo.isLanguage || goalType === 'language') {
+    blocks.push({ rel: 45, dur: 30, title: 'Vocabulary Drills', desc: goalDesc ? `Practice: ${goalDesc}` : 'Flashcards, Anki, word lists.', icon: '📇' });
+    blocks.push({ rel: 75, dur: 30, title: 'Grammar & Structure', desc: 'Textbook, exercises, patterns.', icon: '📖' });
+    blocks.push({ rel: 105, dur: 30, title: 'Listening Practice', desc: 'Podcasts, shows, music in target language.', icon: '🎧' });
+    blocks.push({ rel: 135, dur: 20, title: 'Speaking Practice', desc: 'Talk to yourself, shadowing, or language partner.', icon: '🗣️' });
+  } else if (goalInfo.isInstrument || goalType === 'music') {
+    blocks.push({ rel: 45, dur: 30, title: 'Technique Drills', desc: goalDesc ? `Practice: ${goalDesc}` : 'Scales, chords, finger exercises.', icon: '🎯' });
+    blocks.push({ rel: 75, dur: 30, title: 'Song Practice', desc: 'Work on a specific piece or song.', icon: '🎵' });
+    blocks.push({ rel: 105, dur: 20, title: 'Theory & Ear Training', desc: 'Interval recognition, chord progressions.', icon: '🎼' });
+  } else if (goalInfo.isCreative || goalType === 'creative') {
+    blocks.push({ rel: 45, dur: 60, title: 'Creative Work', desc: goalDesc ? `Create: ${goalDesc}` : 'Deep focus on your creative project.', icon: '🎨' });
+    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Let ideas simmer.', icon: '🚶' });
+    blocks.push({ rel: 115, dur: 60, title: 'Continue Creating', desc: 'Refine, iterate, experiment.', icon: '🔧' });
+  } else if (goalInfo.isBusiness || goalType === 'business' || goalType === 'freelance') {
+    blocks.push({ rel: 45, dur: 60, title: 'Revenue Activity', desc: goalDesc ? `Work on: ${goalDesc}` : 'Sales, outreach, content.', icon: '💰' });
+    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Stretch, hydrate.', icon: '🚶' });
+    blocks.push({ rel: 115, dur: 60, title: 'Build & Create', desc: 'Product, service, or content.', icon: '🛠️' });
+  } else if (goalType === 'content') {
+    blocks.push({ rel: 45, dur: 60, title: 'Content Creation', desc: goalDesc ? `Create: ${goalDesc}` : 'Write, film, or design content.', icon: '📱' });
+    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Step away.', icon: '🚶' });
+    blocks.push({ rel: 115, dur: 60, title: 'Editing & Publishing', desc: 'Polish and post your content.', icon: '🎬' });
+  } else if (goalType === 'social') {
+    blocks.push({ rel: 45, dur: 30, title: 'Social Skill Building', desc: 'Practice conversation, read about body language.', icon: '💬' });
+    blocks.push({ rel: 75, dur: 60, title: 'Outreach', desc: 'Message friends, make plans, connect.', icon: '🤝' });
+  } else if (goalType === 'sleep') {
+    blocks.push({ rel: 45, dur: 30, title: 'Light Activity', desc: 'Gentle movement, no screens soon.', icon: '🧘' });
+  } else {
+    blocks.push({ rel: 45, dur: 60, title: 'Focus Block 1', desc: goalDesc ? `Work on: ${goalDesc}` : 'Deep work on your main goal.', icon: '🎯' });
+    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Stretch, hydrate.', icon: '🚶' });
+    blocks.push({ rel: 115, dur: 60, title: 'Focus Block 2', desc: 'Continue or tackle secondary tasks.', icon: '⚡' });
+  }
+
+  if (hasWorkBlock) {
+    const wsRel = workStartMin - wakeMin;
+    const weRel = workEndMin - wakeMin;
+    blocks.push({ rel: wsRel, dur: weRel - wsRel, title: 'Work / Commitment', desc: `Your scheduled block: ${formatTime12(workStart)} - ${formatTime12(workEnd)}`, icon: '💼' });
+  }
+
+  if (notePrefs.wantsExercise && !goalInfo.isFitness && goalType !== 'fitness') {
+    const exerciseTime = notePrefs.morningWorkout ? 50 : (notePrefs.eveningWorkout ? totalMinutes - 120 : totalMinutes - 180);
+    blocks.push({ rel: Math.max(exerciseTime, 60), dur: 30, title: 'Exercise', desc: 'Move your body. Walk, gym, stretch.', icon: '🏋️' });
+  }
+
+  if (notePrefs.wantsLearning && !goalInfo.isStudy && goalType !== 'study') {
+    blocks.push({ rel: totalMinutes - 180, dur: 40, title: 'Learning Time', desc: 'Read, watch tutorials, grow.', icon: '📚' });
+  }
+
+  if (notePrefs.wantsReading) {
+    blocks.push({ rel: totalMinutes - 90, dur: 30, title: 'Reading', desc: 'Read a book or article.', icon: '📖' });
+  }
+
+  if (notePrefs.wantsSocial) {
+    blocks.push({ rel: totalMinutes - 150, dur: 30, title: 'Social Time', desc: 'Call a friend, be with people.', icon: '💬' });
+  }
+
+  blocks.push({ rel: totalMinutes - 120, dur: 30, title: 'Lunch', desc: 'Eat a balanced meal. Step away from screens.', icon: '🍽️' });
+
+  if (notePrefs.morningWorkout && (goalInfo.isFitness || goalType === 'fitness')) {
+    blocks.push({ rel: totalMinutes - 100, dur: 30, title: 'Evening Stretch', desc: 'Light yoga or mobility work.', icon: '🧘' });
+  } else if (notePrefs.eveningWorkout || (!notePrefs.morningWorkout && (goalInfo.isFitness || goalType === 'fitness'))) {
+    blocks.push({ rel: totalMinutes - 100, dur: 45, title: 'Workout', desc: goalDesc ? `Train for: ${goalDesc}` : 'Cardio, strength, or sport.', icon: '💪' });
+  }
+
+  if (notePrefs.wantsFreeTime) {
+    blocks.push({ rel: totalMinutes - 60, dur: 30, title: 'Free Time', desc: 'Do whatever you enjoy. Decompress.', icon: '🎮' });
+  }
+
+  if (notePrefs.nightOwl) {
+    blocks.push({ rel: totalMinutes - 30, dur: 15, title: 'Wind Down', desc: 'Dim lights, no screens, read.', icon: '📖' });
+    blocks.push({ rel: totalMinutes - 15, dur: 15, title: 'Sleep', desc: 'Rest and recover.', icon: '🌙' });
+  } else {
+    blocks.push({ rel: totalMinutes - 40, dur: 15, title: 'Review Day', desc: 'What got done? What\'s tomorrow?', icon: '📝' });
+    blocks.push({ rel: totalMinutes - 25, dur: 15, title: 'Wind Down', desc: 'No screens. Breathe.', icon: '📖' });
+    blocks.push({ rel: totalMinutes - 10, dur: 10, title: 'Sleep', desc: 'Lights out. You earned this.', icon: '🌙' });
+  }
+
+  blocks.sort((a, b) => a.rel - b.rel);
+
+  const merged = [];
+  for (const b of blocks) {
+    if (merged.length > 0) {
+      const last = merged[merged.length - 1];
+      const lastEnd = last.rel + last.dur;
+      if (b.rel < lastEnd) {
+        last.dur = Math.max(last.dur, (b.rel + b.dur) - last.rel);
+        continue;
+      }
+    }
+    merged.push({ ...b });
+  }
+
+  return merged;
+}
+
+function generateSchedule() {
+  const blocks = buildSchedule();
+  const goalType = document.getElementById('goal-type').value;
+  const goalDesc = document.getElementById('custom-goal').value;
+  const wakeTime = document.getElementById('wake-time').value;
+  const bedTime = document.getElementById('bed-time').value;
+
+  const wakeMin = timeToMin(wakeTime);
+  const bedMin = timeToMin(bedTime) > wakeMin ? timeToMin(bedTime) : timeToMin(bedTime) + 1440;
+
+  const goalLabel = goalDesc || document.getElementById('goal-type').options[document.getElementById('goal-type').selectedIndex].text;
 
   const timeline = document.getElementById('timeline');
   timeline.innerHTML = '';
@@ -682,14 +692,11 @@ function generateSchedule() {
   const now = new Date();
   const currentMin = now.getHours() * 60 + now.getMinutes();
 
-  let completedCount = 0;
+  blocks.forEach((item, i) => {
+    const absStart = wakeMin + item.rel;
+    const absEnd = wakeMin + item.rel + item.dur;
 
-  template.forEach((item, i) => {
-    const [startRel, endRel] = item.time.split(',').map(Number);
-    const absStart = wakeMin + startRel;
-    const absEnd = wakeMin + endRel;
-
-    if (absEnd > bedMin + 60) return;
+    if (absEnd > bedMin + 30) return;
 
     const block = document.createElement('div');
     block.className = 'time-block';
@@ -702,7 +709,7 @@ function generateSchedule() {
       <div class="block-title">${item.title}</div>
       <div class="block-desc">${item.desc}</div>
       <div class="block-icon">${item.icon}</div>
-      <button class="check-btn ${currentMin >= absEnd ? 'checked' : ''}" onclick="toggleCheck(this)" data-idx="${i}">✓</button>
+      <button class="check-btn ${currentMin >= absEnd ? 'checked' : ''}" onclick="toggleCheck(this)">✓</button>
     `;
 
     timeline.appendChild(block);
@@ -724,6 +731,8 @@ function toggleCheck(btn) {
   if (btn.classList.contains('checked')) {
     block.classList.add('done');
     block.classList.remove('active');
+  } else {
+    block.classList.remove('done');
   }
   updateProgress();
 }
