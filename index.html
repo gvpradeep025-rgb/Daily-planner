@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Goal Planner</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0f0f1a;
+    --card: #1a1a2e;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --text: #e0e0e0;
+    --muted: #8888aa;
+    --border: #2a2a4a;
+    --success: #00c9a7;
+    --warning: #ffc107;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    padding: 30px 0 20px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
+
+  .setup-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 24px;
+  }
+
+  .setup-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 18px;
+    color: var(--accent);
+  }
+
+  label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+
+  label:first-of-type { margin-top: 0; }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #12121f;
+    color: var(--text);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+  }
+
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+
+  .time-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .goals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .goal-chip {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #12121f;
+    cursor: pointer;
+    font-size: 0.85rem;
+    text-align: center;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .goal-chip:hover { border-color: var(--accent); }
+  .goal-chip.selected {
+    border-color: var(--accent);
+    background: rgba(108, 99, 255, 0.15);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 22px;
+    width: 100%;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    color: #fff;
+  }
+
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--text); }
+
+  /* Schedule Display */
+  #schedule-view { display: none; }
+
+  .schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .schedule-header h2 {
+    font-size: 1.2rem;
+    color: var(--accent);
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(108, 99, 255, 0.15);
+    color: var(--accent);
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .time-block {
+    position: relative;
+    margin-bottom: 12px;
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .time-block:hover { border-color: var(--accent); transform: translateX(4px); }
+
+  .time-block::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 18px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  .time-block.active::before { background: var(--success); box-shadow: 0 0 8px var(--success); }
+  .time-block.done::before { background: var(--muted); }
+
+  .block-time {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .block-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 4px 0 2px;
+  }
+
+  .block-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .block-icon {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    font-size: 1.2rem;
+  }
+
+  .check-btn {
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.7rem;
+    color: transparent;
+  }
+
+  .check-btn:hover { border-color: var(--success); }
+  .check-btn.checked {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+  }
+
+  .progress-section {
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .progress-section h3 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 8px;
+    background: #12121f;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--success));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .progress-text {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 6px;
+    text-align: right;
+  }
+
+  .motivational {
+    text-align: center;
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(255,101,132,0.1));
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  @media (max-width: 500px) {
+    .time-row, .goals-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Daily Goal Planner</h1>
+    <p>Set your goal, and I'll plan your entire day</p>
+  </header>
+
+  <!-- Setup Form -->
+  <div id="setup-view">
+    <div class="setup-card">
+      <h2>What's your goal?</h2>
+
+      <label>Main Goal</label>
+      <select id="goal-type">
+        <option value="">Select a goal category...</option>
+        <option value="fitness">Lose Weight / Get Fit</option>
+        <option value="study">Study / Learn Something New</option>
+        <option value="coding">Build a Coding Project</option>
+        <option value="business">Start a Side Business</option>
+        <option value="productivity">Be More Productive</option>
+        <option value="mental">Improve Mental Health</option>
+        <option value="creative">Creative Project (Art, Music, Writing)</option>
+        <option value="custom">Custom Goal</option>
+      </select>
+
+      <div id="custom-goal-wrap" style="display:none">
+        <label>Describe your goal</label>
+        <textarea id="custom-goal" placeholder="e.g. Learn piano in 3 months, write a novel..."></textarea>
+      </div>
+
+      <label>Your Wake-Up Time</label>
+      <div class="time-row">
+        <input type="time" id="wake-time" value="06:00">
+      </div>
+
+      <label>Bedtime</label>
+      <div class="time-row">
+        <input type="time" id="bed-time" value="22:30">
+      </div>
+
+      <label>Priority Areas (pick up to 3)</label>
+      <div class="goals-grid" id="priority-grid">
+        <div class="goal-chip" data-val="health">Health</div>
+        <div class="goal-chip" data-val="career">Career</div>
+        <div class="goal-chip" data-val="learning">Learning</div>
+        <div class="goal-chip" data-val="fitness">Fitness</div>
+        <div class="goal-chip" data-val="social">Social</div>
+        <div class="goal-chip" data-val="rest">Rest & Recovery</div>
+        <div class="goal-chip" data-val="creativity">Creativity</div>
+        <div class="goal-chip" data-val="finance">Finance</div>
+      </div>
+
+      <label>Any notes or preferences?</label>
+      <textarea id="notes" placeholder="e.g. I have work from 9-5, I prefer to exercise in the morning..."></textarea>
+
+      <button class="btn btn-primary" onclick="generateSchedule()">Generate My Day</button>
+    </div>
+  </div>
+
+  <!-- Schedule View -->
+  <div id="schedule-view">
+    <div class="schedule-header">
+      <h2 id="schedule-title">Your Day</h2>
+      <div>
+        <span class="tag" id="goal-tag"></span>
+      </div>
+    </div>
+
+    <div class="timeline" id="timeline"></div>
+
+    <div class="progress-section">
+      <h3>Today's Progress</h3>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-text" id="progress-text">0 / 0 completed</div>
+    </div>
+
+    <div class="motivational" id="quote"></div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Upcoming</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--success)"></div>Current</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--muted)"></div>Done</div>
+    </div>
+
+    <button class="btn btn-secondary" onclick="resetForm()">Edit Settings</button>
+  </div>
+</div>
+
+<script>
+const priorityChips = document.querySelectorAll('.goal-chip');
+const priorities = new Set();
+
+priorityChips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    const val = chip.dataset.val;
+    if (priorities.has(val)) {
+      priorities.delete(val);
+      chip.classList.remove('selected');
+    } else if (priorities.size < 3) {
+      priorities.add(val);
+      chip.classList.add('selected');
+    }
+  });
+});
+
+document.getElementById('goal-type').addEventListener('change', e => {
+  document.getElementById('custom-goal-wrap').style.display =
+    e.target.value === 'custom' ? 'block' : 'none';
+});
+
+const quotes = [
+  "The secret of getting ahead is getting started. — Mark Twain",
+  "Small daily improvements are the key to staggering long-term results.",
+  "You don't have to be extreme, just consistent.",
+  "Discipline is choosing between what you want now and what you want most.",
+  "A year from now you'll wish you had started today.",
+  "The only bad workout is the one that didn't happen.",
+  "Progress, not perfection.",
+  "What you do every day matters more than what you do once in a while.",
+  "Start where you are. Use what you have. Do what you can.",
+  "Your future self will thank you."
+];
+
+function randomQuote() {
+  return quotes[Math.floor(Math.random() * quotes.length)];
+}
+
+function timeToMin(t) {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function minToTime(m) {
+  const h = Math.floor(m / 60) % 24;
+  const mm = m % 60;
+  return `${String(h).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+}
+
+function formatTime12(t) {
+  let [h, m] = t.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+
+function getSchedules(goal, prioritiesSet) {
+  const p = [...prioritiesSet];
+
+  const templates = {
+    fitness: [
+      { time: '0,5', dur: 10, title: 'Morning Hydration', desc: 'Drink 500ml water with lemon', icon: '💧' },
+      { time: '5,25', dur: 20, title: 'Morning Stretching', desc: 'Light dynamic stretches to wake up the body', icon: '🧘' },
+      { time: '25,35', dur: 10, title: 'Plan Your Day', desc: 'Review goals, set top 3 priorities', icon: '📋' },
+      { time: '35,65', dur: 30, title: 'Morning Workout', desc: 'Cardio + strength training (follow a program)', icon: '💪' },
+      { time: '65,85', dur: 20, title: 'Post-Workout Meal', desc: 'High protein breakfast — eggs, oats, fruit', icon: '🍳' },
+      { time: '85,95', dur: 10, title: 'Shower & Get Ready', desc: 'Cold shower for recovery boost', icon: '🚿' },
+      { time: '95,215', dur: 120, title: 'Deep Work Block', desc: 'Focus on your most important task', icon: '💻' },
+      { time: '215,225', dur: 10, title: 'Break & Walk', desc: '10-min walk, stretch, hydrate', icon: '🚶' },
+      { time: '225,345', dur: 120, title: 'Continue Work', desc: 'Tackle secondary tasks', icon: '⚡' },
+      { time: '345,375', dur: 30, title: 'Lunch', desc: 'Balanced meal — lean protein, veggies, carbs', icon: '🥗' },
+      { time: '375,390', dur: 15, title: 'Power Nap / Rest', desc: 'Short rest to recharge', icon: '😴' },
+      { time: '390,510', dur: 120, title: 'Afternoon Work', desc: 'Meetings, admin, lighter tasks', icon: '📊' },
+      { time: '510,520', dur: 10, title: 'Afternoon Break', desc: 'Snack + stretch + hydrate', icon: '🍎' },
+      { time: '520,600', dur: 80, title: 'Evening Work / Learning', desc: 'Skill development or finishing tasks', icon: '📚' },
+      { time: '600,630', dur: 30, title: 'Evening Workout', desc: 'Yoga, mobility, or light cardio', icon: '🧘' },
+      { time: '630,660', dur: 30, title: 'Dinner', desc: 'Light balanced dinner', icon: '🍽️' },
+      { time: '660,690', dur: 30, title: 'Free Time', desc: 'Relax, hobbies, socialize', icon: '🎮' },
+      { time: '690,720', dur: 30, title: 'Wind Down', desc: 'No screens, reading, journaling', icon: '📖' },
+      { time: '720,750', dur: 30, title: 'Sleep Routine', desc: 'Prepare for bed, meditation, lights out', icon: '🌙' }
+    ],
+    study: [
+      { time: '0,5', dur: 5, title: 'Hydrate', desc: 'Glass of water', icon: '💧' },
+      { time: '5,20', dur: 15, title: 'Morning Routine', desc: 'Freshen up, light breakfast', icon: '☀️' },
+      { time: '20,35', dur: 15, title: 'Review Goals', desc: 'What will you learn today?', icon: '📋' },
+      { time: '35,95', dur: 60, title: 'Deep Study Session 1', desc: 'Hardest subject — active recall + notes', icon: '🧠' },
+      { time: '95,105', dur: 10, title: 'Break', desc: 'Walk, stretch, hydrate', icon: '🚶' },
+      { time: '105,165', dur: 60, title: 'Deep Study Session 2', desc: 'Practice problems or flashcards', icon: '📝' },
+      { time: '165,195', dur: 30, title: 'Lunch Break', desc: 'Eat and rest your brain', icon: '🍽️' },
+      { time: '195,255', dur: 60, title: 'Applied Learning', desc: 'Build something, write, or teach', icon: '🛠️' },
+      { time: '255,265', dur: 10, title: 'Break', desc: 'Step away from the desk', icon: '☕' },
+      { time: '265,325', dur: 60, title: 'Review & Anki', desc: 'Spaced repetition of today\'s material', icon: '🔄' },
+      { time: '325,385', dur: 60, title: 'Side Project / Practice', desc: 'Apply what you learned', icon: '💻' },
+      { time: '385,415', dur: 30, title: 'Exercise', desc: 'Workout, walk, or sport', icon: '🏋️' },
+      { time: '415,445', dur: 30, title: 'Dinner', desc: 'Eat well, relax', icon: '🍽️' },
+      { time: '445,505', dur: 60, title: 'Light Study / Reading', desc: 'Books, videos, passive learning', icon: '📖' },
+      { time: '505,535', dur: 30, title: 'Free Time', desc: 'Social, hobbies, relax', icon: '🎮' },
+      { time: '535,565', dur: 30, title: 'Wind Down', desc: 'Journal, reflect on what you learned', icon: '📝' },
+      { time: '565,580', dur: 15, title: 'Sleep Prep', desc: 'Screen off, lights out', icon: '🌙' }
+    ],
+    coding: [
+      { time: '0,5', dur: 5, title: 'Hydrate', desc: 'Water first thing', icon: '💧' },
+      { time: '5,20', dur: 15, title: 'Morning Routine', desc: 'Fresh up, eat something', icon: '☀️' },
+      { time: '20,35', dur: 15, title: 'Plan Today\'s Sprint', desc: 'Pick 2-3 tasks, write them down', icon: '📋' },
+      { time: '35,125', dur: 90, title: 'Deep Coding Block 1', desc: 'Build the hardest feature first', icon: '💻' },
+      { time: '125,135', dur: 10, title: 'Break', desc: 'Stretch eyes, move around', icon: '👁️' },
+      { time: '135,225', dur: 90, title: 'Deep Coding Block 2', desc: 'Continue building, debug', icon: '🐛' },
+      { time: '225,255', dur: 30, title: 'Lunch', desc: 'Eat and rest', icon: '🍽️' },
+      { time: '255,345', dur: 90, title: 'Code Review / Learning', desc: 'Review code, learn new patterns, tutorials', icon: '📚' },
+      { time: '345,355', dur: 10, title: 'Break', desc: 'Quick walk', icon: '🚶' },
+      { time: '355,445', dur: 90, title: 'Afternoon Coding', desc: 'Testing, refactoring, docs', icon: '🧪' },
+      { time: '445,475', dur: 30, title: 'Exercise', desc: 'Move your body', icon: '🏋️' },
+      { time: '475,505', dur: 30, title: 'Dinner', desc: 'Fuel up', icon: '🍽️' },
+      { time: '505,565', dur: 60, title: 'Open Source / Side Project', desc: 'Work on something you love', icon: '❤️' },
+      { time: '565,595', dur: 30, title: 'Free Time', desc: 'Relax, games, social', icon: '🎮' },
+      { time: '595,625', dur: 30, title: 'Wind Down', desc: 'Read, no screens', icon: '📖' },
+      { time: '625,640', dur: 15, title: 'Sleep', desc: 'Rest and recover', icon: '🌙' }
+    ],
+    productivity: [
+      { time: '0,10', dur: 10, title: 'Morning Routine', desc: 'Hydrate, freshen up', icon: '☀️' },
+      { time: '10,25', dur: 15, title: 'Plan & Prioritize', desc: 'Top 3 tasks, time-block your day', icon: '📋' },
+      { time: '25,85', dur: 60, title: 'MIT #1', desc: 'Most Important Task — deep focus', icon: '🎯' },
+      { time: '85,95', dur: 10, title: 'Break', desc: 'Quick stretch', icon: '🚶' },
+      { time: '95,155', dur: 60, title: 'MIT #2', desc: 'Second most important task', icon: '⚡' },
+      { time: '155,165', dur: 10, title: 'Break', desc: 'Hydrate, walk', icon: '💧' },
+      { time: '165,225', dur: 60, title: 'MIT #3', desc: 'Third important task', icon: '🔥' },
+      { time: '225,255', dur: 30, title: 'Lunch', desc: 'Eat well', icon: '🍽️' },
+      { time: '255,270', dur: 15, title: 'Power Nap', desc: 'Quick recharge', icon: '😴' },
+      { time: '270,330', dur: 60, title: 'Email & Admin', desc: 'Clear inbox, respond to messages', icon: '📧' },
+      { time: '330,390', dur: 60, title: 'Meetings / Collaboration', desc: 'Calls, syncs, team work', icon: '🤝' },
+      { time: '390,400', dur: 10, title: 'Break', desc: 'Walk around', icon: '🚶' },
+      { time: '400,460', dur: 60, title: 'Creative / Strategic Work', desc: 'Think big, plan ahead', icon: '💡' },
+      { time: '460,490', dur: 30, title: 'Exercise', desc: 'Move your body', icon: '🏋️' },
+      { time: '490,520', dur: 30, title: 'Dinner', desc: 'Refuel', icon: '🍽️' },
+      { time: '520,550', dur: 30, title: 'Review Day', desc: 'What got done? Tomorrow\'s plan', icon: '📝' },
+      { time: '550,580', dur: 30, title: 'Free Time', desc: 'Relax, hobbies', icon: '🎮' },
+      { time: '580,600', dur: 20, title: 'Wind Down', desc: 'No screens, read', icon: '📖' },
+      { time: '600,615', dur: 15, title: 'Sleep', desc: 'Rest', icon: '🌙' }
+    ],
+    mental: [
+      { time: '0,15', dur: 15, title: 'Mindful Morning', desc: 'No phone. Just breathe, sit in silence', icon: '🧘' },
+      { time: '15,30', dur: 15, title: 'Journaling', desc: 'Write 3 things you\'re grateful for', icon: '📝' },
+      { time: '30,45', dur: 15, title: 'Gentle Movement', desc: 'Stretch, yoga, or a short walk', icon: '🧘' },
+      { time: '45,60', dur: 15, title: 'Healthy Breakfast', desc: 'Eat slowly, enjoy it', icon: '🥣' },
+      { time: '60,120', dur: 60, title: 'Meaningful Work', desc: 'Work on something that matters to you', icon: '💼' },
+      { time: '120,130', dur: 10, title: 'Breathing Break', desc: '4-7-8 breathing technique', icon: '🌬️' },
+      { time: '130,190', dur: 60, title: 'Continue Work', desc: 'Stay present, one task at a time', icon: '✨' },
+      { time: '190,220', dur: 30, title: 'Lunch', desc: 'Eat mindfully, no screens', icon: '🍽️' },
+      { time: '220,250', dur: 30, title: 'Nature Walk', desc: 'Get outside, feel the sun', icon: '🌳' },
+      { time: '250,310', dur: 60, title: 'Afternoon Work', desc: 'Lighter tasks, be kind to yourself', icon: '💫' },
+      { time: '310,320', dur: 10, title: 'Check-In', desc: 'How are you feeling? Adjust if needed', icon: '💭' },
+      { time: '320,380', dur: 60, title: 'Creative Expression', desc: 'Art, music, writing, anything expressive', icon: '🎨' },
+      { time: '380,410', dur: 30, title: 'Exercise', desc: 'Movement is medicine', icon: '🏃' },
+      { time: '410,440', dur: 30, title: 'Dinner', desc: 'Nourishing food', icon: '🍽️' },
+      { time: '440,470', dur: 30, title: 'Social Connection', desc: 'Call a friend, be with loved ones', icon: '💬' },
+      { time: '470,500', dur: 30, title: 'Wind Down', desc: 'Reading, gentle music, no screens', icon: '🎶' },
+      { time: '500,520', dur: 20, title: 'Evening Reflection', desc: 'What went well today? Self-compassion', icon: '🌙' },
+      { time: '520,535', dur: 15, title: 'Sleep Routine', desc: 'Meditation, lights out', icon: '😴' }
+    ],
+    business: [
+      { time: '0,10', dur: 10, title: 'Morning Routine', desc: 'Hydrate, move, freshen up', icon: '☀️' },
+      { time: '10,25', dur: 15, title: 'Vision Check', desc: 'Review your big goal, stay aligned', icon: '🎯' },
+      { time: '25,85', dur: 60, title: 'Revenue Activity', desc: 'Sales, outreach, content creation', icon: '💰' },
+      { time: '85,95', dur: 10, title: 'Break', desc: 'Stretch and hydrate', icon: '🚶' },
+      { time: '95,155', dur: 60, title: 'Build / Create', desc: 'Product, service, or content work', icon: '🛠️' },
+      { time: '155,165', dur: 10, title: 'Break', desc: 'Quick walk', icon: '☕' },
+      { time: '165,225', dur: 60, title: 'Marketing & Growth', desc: 'Social media, ads, SEO, networking', icon: '📈' },
+      { time: '225,255', dur: 30, title: 'Lunch', desc: 'Eat and recharge', icon: '🍽️' },
+      { time: '255,315', dur: 60, title: 'Admin & Operations', desc: 'Finance, planning, systems', icon: '📊' },
+      { time: '315,325', dur: 10, title: 'Break', desc: 'Move around', icon: '🚶' },
+      { time: '325,385', dur: 60, title: 'Learning', desc: 'Courses, books, mentors', icon: '📚' },
+      { time: '385,415', dur: 30, title: 'Exercise', desc: 'Stay sharp and energized', icon: '🏋️' },
+      { time: '415,445', dur: 30, title: 'Dinner', desc: 'Refuel', icon: '🍽️' },
+      { time: '445,475', dur: 30, title: 'Networking', desc: 'Connect with peers, community', icon: '🤝' },
+      { time: '475,505', dur: 30, title: 'Free Time', desc: 'Decompress', icon: '🎮' },
+      { time: '505,525', dur: 20, title: 'Review & Plan', desc: 'What worked? Tomorrow\'s priorities', icon: '📝' },
+      { time: '525,540', dur: 15, title: 'Wind Down', desc: 'No screens, relax', icon: '🌙' }
+    ],
+    creative: [
+      { time: '0,15', dur: 15, title: 'Gentle Wake', desc: 'No phone. Stretch, breathe', icon: '🌅' },
+      { time: '15,30', dur: 15, title: 'Morning Pages', desc: 'Stream of consciousness writing', icon: '📝' },
+      { time: '30,45', dur: 15, title: 'Inspiration', desc: 'Look at art, listen to music, read', icon: '✨' },
+      { time: '45,60', dur: 15, title: 'Breakfast', desc: 'Simple and nourishing', icon: '🥣' },
+      { time: '60,150', dur: 90, title: 'Deep Creative Work', desc: 'Your main creative project', icon: '🎨' },
+      { time: '150,160', dur: 10, title: 'Break', desc: 'Step away, let ideas simmer', icon: '🚶' },
+      { time: '160,220', dur: 60, title: 'Continue Creating', desc: 'Refine, iterate, experiment', icon: '🔧' },
+      { time: '220,250', dur: 30, title: 'Lunch', desc: 'Eat well', icon: '🍽️' },
+      { time: '250,280', dur: 30, title: 'Input Time', desc: 'Consume inspiring content', icon: '📺' },
+      { time: '280,340', dur: 60, title: 'Skill Practice', desc: 'Technique drills, tutorials', icon: '🎯' },
+      { time: '340,350', dur: 10, title: 'Break', desc: 'Move', icon: '🚶' },
+      { time: '350,410', dur: 60, title: 'Collaboration / Sharing', desc: 'Share work, get feedback', icon: '💬' },
+      { time: '410,440', dur: 30, title: 'Exercise', desc: 'Move your body', icon: '🏃' },
+      { time: '440,470', dur: 30, title: 'Dinner', desc: 'Nourish', icon: '🍽️' },
+      { time: '470,500', dur: 30, title: 'Free Creation', desc: 'Play, experiment, have fun', icon: '🎮' },
+      { time: '500,530', dur: 30, title: 'Wind Down', desc: 'Reading, music, journal', icon: '📖' },
+      { time: '530,545', dur: 15, title: 'Sleep', desc: 'Rest the creative mind', icon: '🌙' }
+    ],
+    custom: [
+      { time: '0,10', dur: 10, title: 'Morning Routine', desc: 'Hydrate, freshen up', icon: '☀️' },
+      { time: '10,25', dur: 15, title: 'Plan Your Day', desc: 'Set intentions and priorities', icon: '📋' },
+      { time: '25,85', dur: 60, title: 'Focus Block 1', desc: 'Work on your main goal', icon: '🎯' },
+      { time: '85,95', dur: 10, title: 'Break', desc: 'Stretch, hydrate', icon: '🚶' },
+      { time: '95,155', dur: 60, title: 'Focus Block 2', desc: 'Continue deep work', icon: '⚡' },
+      { time: '155,165', dur: 10, title: 'Break', desc: 'Quick walk', icon: '☕' },
+      { time: '165,225', dur: 60, title: 'Learning', desc: 'Study, read, grow', icon: '📚' },
+      { time: '225,255', dur: 30, title: 'Lunch', desc: 'Eat well', icon: '🍽️' },
+      { time: '255,315', dur: 60, title: 'Afternoon Work', desc: 'Secondary tasks', icon: '💻' },
+      { time: '315,325', dur: 10, title: 'Break', desc: 'Move around', icon: '🚶' },
+      { time: '325,385', dur: 60, title: 'Project Work', desc: 'Build, create, execute', icon: '🛠️' },
+      { time: '385,415', dur: 30, title: 'Exercise', desc: 'Stay healthy', icon: '🏋️' },
+      { time: '415,445', dur: 30, title: 'Dinner', desc: 'Refuel', icon: '🍽️' },
+      { time: '445,505', dur: 60, title: 'Personal Time', desc: 'Hobbies, social, relax', icon: '🎮' },
+      { time: '505,535', dur: 30, title: 'Review & Plan', desc: 'Reflect, plan tomorrow', icon: '📝' },
+      { time: '535,550', dur: 15, title: 'Wind Down', desc: 'No screens, relax', icon: '🌙' }
+    ]
+  };
+
+  return templates[goal] || templates.custom;
+}
+
+function generateSchedule() {
+  const goalType = document.getElementById('goal-type').value;
+  if (!goalType) { alert('Please select a goal category!'); return; }
+
+  const goalLabel = goalType === 'custom'
+    ? (document.getElementById('custom-goal').value || 'Custom Goal')
+    : document.getElementById('goal-type').options[document.getElementById('goal-type').selectedIndex].text;
+
+  const wakeTime = document.getElementById('wake-time').value;
+  const bedTime = document.getElementById('bed-time').value;
+  const notes = document.getElementById('notes').value;
+
+  const wakeMin = timeToMin(wakeTime);
+  const bedMin = timeToMin(bedTime) > wakeMin ? timeToMin(bedTime) : timeToMin(bedTime) + 1440;
+
+  const template = getSchedules(goalType, priorities);
+
+  const timeline = document.getElementById('timeline');
+  timeline.innerHTML = '';
+
+  const now = new Date();
+  const currentMin = now.getHours() * 60 + now.getMinutes();
+
+  let completedCount = 0;
+
+  template.forEach((item, i) => {
+    const [startRel, endRel] = item.time.split(',').map(Number);
+    const absStart = wakeMin + startRel;
+    const absEnd = wakeMin + endRel;
+
+    if (absEnd > bedMin + 60) return;
+
+    const block = document.createElement('div');
+    block.className = 'time-block';
+
+    if (currentMin >= absEnd) block.classList.add('done');
+    else if (currentMin >= absStart && currentMin < absEnd) block.classList.add('active');
+
+    block.innerHTML = `
+      <div class="block-time">${formatTime12(minToTime(absStart % 1440))} — ${formatTime12(minToTime(absEnd % 1440))}</div>
+      <div class="block-title">${item.title}</div>
+      <div class="block-desc">${item.desc}</div>
+      <div class="block-icon">${item.icon}</div>
+      <button class="check-btn ${currentMin >= absEnd ? 'checked' : ''}" onclick="toggleCheck(this)" data-idx="${i}">✓</button>
+    `;
+
+    timeline.appendChild(block);
+  });
+
+  document.getElementById('goal-tag').textContent = goalLabel;
+  document.getElementById('schedule-title').textContent = 'Your Day';
+  document.getElementById('quote').textContent = randomQuote();
+
+  document.getElementById('setup-view').style.display = 'none';
+  document.getElementById('schedule-view').style.display = 'block';
+
+  updateProgress();
+}
+
+function toggleCheck(btn) {
+  btn.classList.toggle('checked');
+  const block = btn.closest('.time-block');
+  if (btn.classList.contains('checked')) {
+    block.classList.add('done');
+    block.classList.remove('active');
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.check-btn').length;
+  const checked = document.querySelectorAll('.check-btn.checked').length;
+  const pct = total ? (checked / total) * 100 : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${checked} / ${total} completed`;
+}
+
+function resetForm() {
+  document.getElementById('setup-view').style.display = 'block';
+  document.getElementById('schedule-view').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
