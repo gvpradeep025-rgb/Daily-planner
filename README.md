@@ -18,10 +18,3 @@ Open `index.html` in any browser. No server needed.
 ## Privacy
 
 All data stays in your browser's memory. Nothing is saved, sent, or stored. Close the tab and everything disappears.
-
-## Deploy to GitHub Pages
-
-1. Push this repo to GitHub
-2. Go to **Settings → Pages**
-3. Set source to **main** branch
-4. Your site will be live at `https://yourusername.github.io/daily-planner/`
