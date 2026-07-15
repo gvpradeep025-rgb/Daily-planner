@@ -98,6 +98,25 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .sound-toggle{background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:0.75rem;color:var(--muted);cursor:pointer;transition:all 0.2s;font-family:inherit;display:flex;align-items:center;gap:6px}
 .sound-toggle:hover{border-color:var(--accent);color:var(--text)}
 .sound-toggle.active{border-color:var(--accent);color:var(--accent)}
+.s-header-btns{display:flex;gap:8px;align-items:center}
+.music-player{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.mp-info{flex:1;min-width:120px}
+.mp-title{font-size:0.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.mp-artist{font-size:0.72rem;color:var(--muted);margin-top:2px}
+.mp-controls{display:flex;align-items:center;gap:4px}
+.mp-btn{background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:6px;border-radius:8px;transition:all 0.2s;line-height:1}
+.mp-btn:hover{color:var(--text);background:var(--surface2)}
+.mp-play{font-size:1.2rem;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;border-radius:50%}
+.mp-play:hover{background:var(--accent2);color:#fff}
+.mp-progress-wrap{flex:1;min-width:150px;display:flex;align-items:center;gap:10px}
+.mp-progress{flex:1;height:4px;background:var(--surface2);border-radius:2px;cursor:pointer;position:relative}
+.mp-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.1s linear;width:0%}
+.mp-time{font-size:0.68rem;color:var(--muted);min-width:36px;text-align:right;font-variant-numeric:tabular-nums}
+.mp-vol-wrap{display:flex;align-items:center;gap:6px}
+.mp-vol-icon{font-size:0.8rem}
+.mp-vol{width:70px;height:4px;-webkit-appearance:none;appearance:none;background:var(--surface2);border-radius:2px;outline:none;cursor:pointer}
+.mp-vol::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer}
+.mp-vol::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer;border:none}
 
 /* Progress ring */
 .progress-dashboard{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
@@ -347,7 +366,21 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     <div class="schedule-inner">
       <div class="s-header">
         <div><h1>Today</h1><div class="s-tag" id="s-tag"></div></div>
-        <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()">🔊 Sound</button>
+        <div class="s-header-btns">
+          <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()">🔊 Sound</button>
+          <label class="sound-toggle" for="music-import" style="cursor:pointer">🎵 Music</label>
+          <input type="file" id="music-import" accept="audio/*" multiple style="display:none" onchange="importMusic(event)">
+        </div>
+      </div>
+      <div class="music-player" id="music-player" style="display:none">
+        <div class="mp-info"><div class="mp-title" id="mp-title">No track</div><div class="mp-artist" id="mp-artist"></div></div>
+        <div class="mp-controls">
+          <button class="mp-btn" onclick="prevTrack()">⏮</button>
+          <button class="mp-btn mp-play" id="mp-play" onclick="togglePlay()">▶</button>
+          <button class="mp-btn" onclick="nextTrack()">⏭</button>
+        </div>
+        <div class="mp-progress-wrap"><div class="mp-progress" id="mp-progress" onclick="seekMusic(event)"><div class="mp-progress-fill" id="mp-progress-fill"></div></div><div class="mp-time" id="mp-time">0:00</div></div>
+        <div class="mp-vol-wrap"><span class="mp-vol-icon">🔊</span><input type="range" class="mp-vol" id="mp-vol" min="0" max="100" value="70" oninput="setVolume(this.value)"></div>
       </div>
       <div class="progress-dashboard" id="progress-dashboard">
         <div class="dash-card">
@@ -430,6 +463,11 @@ let streak=parseInt(localStorage.getItem('planner_streak')||'0');
 let lastDay=localStorage.getItem('planner_last_day');
 let audioCtx=null;
 let activeTab='schedule';
+let musicTracks=[];
+let currentTrack=-1;
+let musicAudio=new Audio();
+musicAudio.volume=0.7;
+let musicPlaying=false;
 
 function saveState(){localStorage.setItem('planner_state',JSON.stringify(state))}
 function loadState(){
@@ -449,6 +487,61 @@ function playClick(){if(!soundEnabled)return;try{const ctx=getAudioCtx();const o
 function playSuccess(){if(!soundEnabled)return;try{const ctx=getAudioCtx();[523.25,659.25,783.99].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=0.08;g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.15+i*0.1);o.start(ctx.currentTime+i*0.1);o.stop(ctx.currentTime+0.15+i*0.1)})}catch(e){}}
 function playDayComplete(){if(!soundEnabled)return;try{const ctx=getAudioCtx();[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=0.07;g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.2+i*0.12);o.start(ctx.currentTime+i*0.12);o.stop(ctx.currentTime+0.2+i*0.12)})}catch(e){}}
 function toggleSound(){soundEnabled=!soundEnabled;const btn=document.getElementById('sound-toggle');btn.textContent=soundEnabled?'🔊 Sound':'🔇 Muted';btn.classList.toggle('active',soundEnabled)}
+
+function importMusic(e){
+  const files=Array.from(e.target.files);
+  files.forEach(f=>{
+    const url=URL.createObjectURL(f);
+    musicTracks.push({name:f.name.replace(/\.[^.]+$/,''),url:url});
+  });
+  if(musicTracks.length&&!musicPlaying){
+    currentTrack=0;
+    loadTrack(0);
+  }
+  document.getElementById('music-player').style.display='flex';
+  e.target.value='';
+}
+function loadTrack(idx){
+  if(idx<0||idx>=musicTracks.length)return;
+  currentTrack=idx;
+  musicAudio.src=musicTracks[idx].url;
+  document.getElementById('mp-title').textContent=musicTracks[idx].name;
+  document.getElementById('mp-artist').textContent=`Track ${idx+1} of ${musicTracks.length}`;
+  musicAudio.load();
+}
+function togglePlay(){
+  if(!musicTracks.length)return;
+  if(musicPlaying){musicAudio.pause();musicPlaying=false;document.getElementById('mp-play').textContent='▶'}
+  else{musicAudio.play();musicPlaying=true;document.getElementById('mp-play').textContent='⏸'}
+}
+function nextTrack(){
+  if(!musicTracks.length)return;
+  const next=(currentTrack+1)%musicTracks.length;
+  loadTrack(next);
+  if(musicPlaying)musicAudio.play();
+}
+function prevTrack(){
+  if(!musicTracks.length)return;
+  const prev=(currentTrack-1+musicTracks.length)%musicTracks.length;
+  loadTrack(prev);
+  if(musicPlaying)musicAudio.play();
+}
+function setVolume(v){musicAudio.volume=v/100}
+function seekMusic(e){
+  if(!musicAudio.duration)return;
+  const rect=e.target.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  musicAudio.currentTime=pct*musicAudio.duration;
+}
+musicAudio.addEventListener('timeupdate',()=>{
+  if(!musicAudio.duration)return;
+  const pct=(musicAudio.currentTime/musicAudio.duration)*100;
+  document.getElementById('mp-progress-fill').style.width=pct+'%';
+  const m=Math.floor(musicAudio.currentTime/60);
+  const s=Math.floor(musicAudio.currentTime%60);
+  document.getElementById('mp-time').textContent=m+':'+String(s).padStart(2,'0');
+});
+musicAudio.addEventListener('ended',()=>nextTrack());
 
 const quotes=["The secret of getting ahead is getting started. — Mark Twain","Small daily improvements lead to staggering results.","You don't have to be extreme, just consistent.","Discipline is choosing between what you want now and what you want most.","A year from now you'll wish you had started today.","Progress, not perfection.","What you do daily matters more than what you do occasionally.","Start where you are. Use what you have. Do what you can.","Your future self will thank you.","The body achieves what the mind believes."];
 
