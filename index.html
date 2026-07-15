@@ -754,7 +754,12 @@ function buildSchedule(){
   document.getElementById('improve-list').innerHTML=improvements.length?improvements.map(s=>`<li>${s}</li>`).join(''):'<li>Schedule looks solid. Trust it.</li>';
   document.getElementById('quote-box').textContent=quotes[Math.floor(Math.random()*quotes.length)];
 
-  renderTimeline();updateDash();checkStreak();window.scrollTo({top:0,behavior:'smooth'});
+  const today=new Date().toISOString().split('T')[0];
+  const daily=getDailyCompletions();
+  const todayData=daily[today];
+  completedCount=0;
+  renderTimeline(todayData?todayData.completed:[]);
+  updateDash();checkStreak();window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function getGoalBlock(time){
@@ -763,17 +768,20 @@ function getGoalBlock(time){
   return m[state.goal]||m.custom;
 }
 
-function renderTimeline(){
+function renderTimeline(completedTitles){
   const tl=document.getElementById('timeline');tl.innerHTML='';
   const now=new Date();const cm=now.getHours()*60+now.getMinutes();
+  const doneSet=new Set(completedTitles||[]);
   scheduleBlocks.forEach((item,i)=>{
     const end=item.start+item.dur;
     const el=document.createElement('div');
     el.className='t-block';el.dataset.idx=i;
-    if(cm>=end)el.classList.add('done');
+    const isDone=doneSet.has(item.title);
+    if(isDone||cm>=end)el.classList.add('done');
     else if(cm>=item.start&&cm<end)el.classList.add('active');
-    el.innerHTML=`<div class="t-time">${fmtTime(item.start)} — ${fmtTime(end)} · ${durStr(item.dur)}</div><div class="t-title">${item.title}</div><div class="t-desc">${item.desc}</div>${item.reason?`<div class="t-reason">${item.reason}</div>`:''}<div class="t-icon">${item.icon}</div><button class="t-check" onclick="completeTask(this,${i})">✓</button>`;
+    el.innerHTML=`<div class="t-time">${fmtTime(item.start)} — ${fmtTime(end)} · ${durStr(item.dur)}</div><div class="t-title">${item.title}</div><div class="t-desc">${item.desc}</div>${item.reason?`<div class="t-reason">${item.reason}</div>`:''}<div class="t-icon">${item.icon}</div><button class="t-check${isDone?' checked':''}" onclick="completeTask(this,${i})">✓</button>`;
     tl.appendChild(el);
+    if(isDone)completedCount++;
   });
 }
 
