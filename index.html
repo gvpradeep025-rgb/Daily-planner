@@ -114,6 +114,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .encourage-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:10px 24px;font-size:0.85rem;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:200;display:flex;align-items:center;gap:8px;opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;white-space:nowrap}
 .encourage-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .encourage-toast .e-emoji{font-size:1.1rem}
+.encourage-toast.done{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:#22c55e;color:#fff;font-weight:600;font-size:1rem;padding:14px 32px}
+.encourage-toast.low{border-color:#f59e0b;background:rgba(245,158,11,0.1)}
 
 /* XP float */
 .xp-float{position:fixed;z-index:200;font-size:0.85rem;font-weight:700;color:var(--accent);pointer-events:none;animation:xpUp 1.2s cubic-bezier(0.16,1,0.3,1) forwards}
@@ -330,8 +332,15 @@ const quotes=["The secret of getting ahead is getting started. — Mark Twain","
 const encourageFirst=[{e:'🌅',t:'And just like that, you started.'},{e:'💪',t:"You showed up. That's half the battle."},{e:'🎯',t:'First one down.'},{e:'⭐',t:'Off to a real start.'},{e:'🚀',t:'And we\'re off.'}];
 const encourageMid=[{e:'🔥',t:'Still going. That matters.'},{e:'⚡',t:'Consistency > intensity.'},{e:'📈',t:'You\'re doing better than you think.'},{e:'💎',t:'Real progress, not just busywork.'},{e:'🏆',t:'Look at you actually doing this.'}];
 const encourageEnd=[{e:'🏁',t:'Almost home.'},{e:'💪',t:'Finish this one strong.'},{e:'🔥',t:'Just a little more.'},{e:'⭐',t:'Your evening self will thank you.'}];
+const encourageGood=[{e:'✨',t:'You\'re in a groove. Keep going.'},{e:'🎯',t:'Over halfway. This is working.'},{e:'💪',t:'Real momentum now.'},{e:'⭐',t:'You\'re proving something to yourself.'}];
+const encourageLow=[{e:'🤔',t:'Don\'t you want things to change?'},{e:'⏳',t:'Every task skipped is a day longer.'},{e:'😤',t:'You\'re better than this.'},{e:'👀',t:'The gap between where you are and where you want to be is built here.'},{e:'💭',t:'What would your future self say right now?'}];
+const encourageDone=[{e:'🎉',t:'Done for the day. You earned this rest.'},{e:'🏆',t:'Every single task. That\'s rare.'},{e:'✨',t:'Day complete. Go enjoy your evening.'},{e:'💪',t:'All done. That took discipline.'}];
 
 function getRandomEncouragement(pct){
+  const p=pct*100;
+  if(p>=100)return encourageDone[Math.floor(Math.random()*encourageDone.length)];
+  if(p>=70)return encourageGood[Math.floor(Math.random()*encourageGood.length)];
+  if(p<50)return encourageLow[Math.floor(Math.random()*encourageLow.length)];
   if(pct<=0.2)return encourageFirst[Math.floor(Math.random()*encourageFirst.length)];
   if(pct<=0.7)return encourageMid[Math.floor(Math.random()*encourageMid.length)];
   return encourageEnd[Math.floor(Math.random()*encourageEnd.length)];
@@ -342,8 +351,12 @@ function showEncouragement(pct){
   const toast=document.getElementById('encourage-toast');
   document.getElementById('e-emoji').textContent=msg.e;
   document.getElementById('e-text').textContent=msg.t;
+  toast.classList.remove('done','low');
+  if(pct>=1)toast.classList.add('done');
+  else if(pct<0.5)toast.classList.add('low');
   toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),2500);
+  const dur=pct>=1?3500:pct>=0.7?3000:2500;
+  setTimeout(()=>toast.classList.remove('show'),dur);
 }
 
 function showXP(x,y){
