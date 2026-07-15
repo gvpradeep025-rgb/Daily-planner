@@ -780,6 +780,7 @@ function resetAll(){
   document.querySelectorAll('.goal-card,.lifestyle-card,.prod-card,.pref-chip').forEach(c=>c.classList.remove('selected'));
   document.querySelectorAll('.inline-fields').forEach(f=>f.classList.remove('show'));
   document.querySelectorAll('.next-btn').forEach(b=>b.classList.remove('ready'));
+  document.getElementById('next5').classList.add('ready');
   document.getElementById('goal-desc').value='';
   document.getElementById('deadline').value='';
   document.getElementById('schedule-view').style.display='none';
