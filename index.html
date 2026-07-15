@@ -797,6 +797,17 @@ function completeTask(btn,idx){
     saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
     return;
   }
+  const item=scheduleBlocks[idx];
+  const now=new Date();const cm=now.getHours()*60+now.getMinutes();
+  if(cm<item.start+item.dur){
+    const toast=document.getElementById('encourage-toast');
+    document.getElementById('e-emoji').textContent='🚫';
+    document.getElementById('e-text').textContent="Don't cheat. Wait for it to finish.";
+    toast.classList.remove('done','low');
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),3000);
+    return;
+  }
   btn.classList.add('checked');
   playClick();haptic();
 
