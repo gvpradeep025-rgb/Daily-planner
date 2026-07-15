@@ -477,8 +477,8 @@ function timeToMin(t) {
 }
 
 function minToTime(m) {
-  const h = Math.floor(m / 60) % 24;
-  const mm = m % 60;
+  const h = Math.floor(((m % 1440) + 1440) % 1440 / 60);
+  const mm = ((m % 1440) + 1440) % 1440 % 60;
   return `${String(h).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 }
 
@@ -490,42 +490,42 @@ function formatTime12(t) {
 }
 
 function parseNotes(notes) {
-  const lower = notes.toLowerCase();
+  const l = notes.toLowerCase();
   return {
-    morningWorkout: /morning|early|first thing|before work|am workout/.test(lower),
-    eveningWorkout: /evening|after work|night|pm workout|later/.test(lower),
-    hasWorkHours: /\b(9-5|9 to 5|work|job|office|shift|class)\b/.test(lower),
-    prefersShortBreaks: /short break|quick break|pomodoro/.test(lower),
-    prefersLongBreaks: /long break|rest more|relax/.test(lower),
-    wantsMeditation: /meditat|mindful|yoga|breathe|calm/.test(lower),
-    wantsReading: /read|book|library/.test(lower),
-    wantsExercise: /gym|exercise|workout|run|cardio|strength|lift/.test(lower),
-    wantsFreeTime: /free time|fun|hobby|game|relax|chill/.test(lower),
-    wantsLearning: /learn|course|tutorial|study|read/.test(lower),
-    wantsSocial: /friend|social|call|hangout|family|people/.test(lower),
-    nightOwl: /night|late|owl|nightow/.test(lower),
-    earlyBird: /early|morning person|dawn/.test(lower)
+    morningWorkout: /morning|early|first thing|before work|am workout/.test(l),
+    eveningWorkout: /evening|after work|night|pm workout|later/.test(l),
+    wantsMeditation: /meditat|mindful|yoga|breathe|calm|prayer/.test(l),
+    wantsReading: /read|book|library/.test(l),
+    wantsExercise: /gym|exercise|workout|run|cardio|strength|lift|walk/.test(l),
+    wantsFreeTime: /free time|fun|hobby|game|relax|chill|leisure/.test(l),
+    wantsLearning: /learn|course|tutorial|grow/.test(l),
+    wantsSocial: /friend|social|call|hangout|family|people|party/.test(l),
+    wantsCooking: /cook|meal prep|kitchen/.test(l),
+    wantsJournal: /journal|write|reflect|diary/.test(l),
+    nightOwl: /night owl|late|nightow|night person/.test(l),
+    earlyBird: /early|morning person|dawn/.test(l)
   };
 }
 
 function parseGoalDesc(desc) {
-  const lower = (desc || '').toLowerCase();
+  const l = (desc || '').toLowerCase();
   return {
     text: desc || '',
-    isFitness: /lose weight|fit|gym|muscle|fat|cardio|strength|body|exercise|workout|run|swim|yoga/.test(lower),
-    isStudy: /study|learn|exam|course|tutorial|read|book|class|school|university|college/.test(lower),
-    isCoding: /code|program|app|software|website|build|develop|api|database|frontend|backend/.test(lower),
-    isBusiness: /business|startup|revenue|customer|sell|marketing|brand|profit|freelance|client/.test(lower),
-    isCreative: /art|music|write|novel|song|paint|draw|design|film|photo|creative|compose/.test(lower),
-    isLanguage: /language|spanish|french|german|japanese|chinese|korean|english|hindi|speak/.test(lower),
-    isInstrument: /piano|guitar|violin|drum|flute|instrument|music|chord|melody/.test(lower),
-    hasDeadline: /deadline|by \w+|\d+ (week|month|day|year)/.test(lower)
+    isFitness: /lose weight|fit|gym|muscle|fat|cardio|strength|body|exercise|workout|run|swim|yoga|abs|chest|legs|bulk|cut|10kg|weight/.test(l),
+    isStudy: /study|learn|exam|course|tutorial|read|book|class|school|university|college|gate|upsc|neet|jee|sat|gre|gmat/.test(l),
+    isCoding: /code|program|app|software|website|build|develop|api|database|frontend|backend|javascript|python|react|node/.test(l),
+    isBusiness: /business|startup|revenue|customer|sell|marketing|brand|profit|freelance|client|saas|agency/.test(l),
+    isCreative: /art|music|write|novel|song|paint|draw|design|film|photo|creative|compose|youtube|blog|content/.test(l),
+    isLanguage: /language|spanish|french|german|japanese|chinese|korean|english|hindi|speak|fluent/.test(l),
+    isInstrument: /piano|guitar|violin|drum|flute|instrument|ukulele|keyboard|chord|melody/.test(l),
+    hasDeadline: /deadline|by \w+|\d+ (week|month|day|year)/.test(l),
+    specificTask: desc || ''
   };
 }
 
 function buildSchedule() {
   const goalType = document.getElementById('goal-type').value;
-  if (!goalType) { alert('Please select a goal category!'); return; }
+  if (!goalType) { alert('Please select a goal category!'); return null; }
 
   const goalDesc = document.getElementById('custom-goal').value;
   const wakeTime = document.getElementById('wake-time').value;
@@ -534,156 +534,236 @@ function buildSchedule() {
   const workEnd = document.getElementById('work-end').value;
   const notes = document.getElementById('notes').value;
 
-  const wakeMin = timeToMin(wakeTime);
-  const bedMin = timeToMin(bedTime) > wakeMin ? timeToMin(bedTime) : timeToMin(bedTime) + 1440;
-  const totalMinutes = bedMin - wakeMin;
-
+  const wake = timeToMin(wakeTime);
+  const bed = timeToMin(bedTime) > wake ? timeToMin(bedTime) : timeToMin(bedTime) + 1440;
   const notePrefs = parseNotes(notes);
   const goalInfo = parseGoalDesc(goalDesc);
-
   const hasWorkBlock = workStart && workEnd;
-  const workStartMin = hasWorkBlock ? timeToMin(workStart) : null;
-  const workEndMin = hasWorkBlock ? timeToMin(workEnd) : null;
-
-  const goalLabel = goalDesc || document.getElementById('goal-type').options[document.getElementById('goal-type').selectedIndex].text;
+  const workS = hasWorkBlock ? timeToMin(workStart) : null;
+  const workE = hasWorkBlock ? timeToMin(workEnd) : null;
 
   let blocks = [];
 
-  if (notePrefs.earlyBird) {
-    blocks.push({ rel: 0, dur: 5, title: 'Early Rise', desc: 'Up before the world. Drink water.', icon: '🌅' });
-    blocks.push({ rel: 5, dur: 15, title: 'Morning Silence', desc: 'No phone. Just breathe and be present.', icon: '🧘' });
-  } else if (notePrefs.nightOwl) {
-    blocks.push({ rel: 0, dur: 10, title: 'Gentle Wake', desc: 'Ease into it. Hydrate, no rush.', icon: '☀️' });
-  } else {
-    blocks.push({ rel: 0, dur: 5, title: 'Hydrate', desc: 'Drink a glass of water first thing.', icon: '💧' });
-    blocks.push({ rel: 5, dur: 15, title: 'Morning Routine', desc: 'Freshen up, quick breakfast.', icon: '☀️' });
+  function add(startMin, durMin, title, desc, icon) {
+    blocks.push({ start: startMin, dur: durMin, title, desc, icon });
   }
+
+  // === MORNING BLOCKS ===
+  if (notePrefs.earlyBird) {
+    add(wake, 5, 'Early Rise', 'Up before the world. Hydrate.', '🌅');
+    add(wake + 5, 15, 'Morning Silence', 'No phone. Breathe. Be present.', '🧘');
+  } else if (notePrefs.nightOwl) {
+    add(wake, 10, 'Gentle Wake', 'No rush. Hydrate, get oriented.', '☀️');
+  } else {
+    add(wake, 5, 'Hydrate', 'Glass of water. Wake up your body.', '💧');
+    add(wake + 5, 15, 'Morning Routine', 'Freshen up, brush, get ready.', '☀️');
+  }
+
+  const afterMorning = wake + 20;
 
   if (notePrefs.wantsMeditation) {
-    blocks.push({ rel: 20, dur: 15, title: 'Meditation', desc: 'Sit quietly, focus on breath. 10-15 min.', icon: '🧘' });
+    add(afterMorning, 15, 'Meditation', 'Sit quietly. Focus on breath.', '🧘');
   }
 
-  blocks.push({ rel: blocks.length > 2 ? 35 : 20, dur: 10, title: 'Plan Your Day', desc: 'Set 3 priorities. Visualize success.', icon: '📋' });
+  if (notePrefs.wantsJournal) {
+    add(afterMorning + (notePrefs.wantsMeditation ? 15 : 0), 10, 'Journaling', 'Write thoughts, goals, gratitude.', '📝');
+  }
 
-  if (goalInfo.isFitness || goalType === 'fitness') {
-    if (notePrefs.morningWorkout || !notePrefs.eveningWorkout) {
-      blocks.push({ rel: 45, dur: 45, title: 'Morning Workout', desc: goalDesc ? `Train for: ${goalDesc}` : 'Cardio + strength. Push yourself.', icon: '💪' });
-      blocks.push({ rel: 90, dur: 20, title: 'Post-Workout Meal', desc: 'Protein-rich breakfast. Fuel recovery.', icon: '🍳' });
-    } else {
-      blocks.push({ rel: 45, dur: 20, title: 'Light Morning Stretch', desc: 'Wake up the body gently.', icon: '🧘' });
+  // === BREAKFAST ===
+  const breakfastTime = afterMorning + (notePrefs.wantsMeditation ? 15 : 0) + (notePrefs.wantsJournal ? 10 : 0);
+  add(breakfastTime, 20, 'Breakfast', 'Eat a proper meal. Fuel your day.', '🍳');
+
+  // === WORKOUT (morning preference or fitness goal) ===
+  const afterBreakfast = breakfastTime + 20;
+  const isFitnessGoal = goalInfo.isFitness || goalType === 'fitness';
+  const wantsWorkout = notePrefs.wantsExercise || isFitnessGoal;
+
+  if (wantsWorkout && (notePrefs.morningWorkout || (!notePrefs.eveningWorkout && isFitnessGoal))) {
+    add(afterBreakfast, 45, 'Workout', goalDesc ? `Train for: ${goalDesc}` : 'Cardio + strength. Push yourself.', '💪');
+    add(afterBreakfast + 45, 15, 'Post-Workout Snack', 'Protein shake or light snack.', '🥤');
+  }
+
+  // === MORNING GOAL WORK ===
+  const goalWorkStart = afterBreakfast + (wantsWorkout && (notePrefs.morningWorkout || (!notePrefs.eveningWorkout && isFitnessGoal)) ? 60 : 0);
+
+  if (hasWorkBlock && workS > goalWorkStart) {
+    const availableBeforeWork = workS - goalWorkStart;
+    if (availableBeforeWork >= 30) {
+      const goalBlocks = getGoalBlocks(goalType, goalInfo, goalDesc, notePrefs, 'morning');
+      goalBlocks.forEach((g, i) => {
+        add(goalWorkStart + (i * g.dur), g.dur, g.title, g.desc, g.icon);
+      });
     }
-  } else if (goalInfo.isCoding || goalType === 'coding') {
-    blocks.push({ rel: 45, dur: 90, title: 'Deep Coding Block', desc: goalDesc ? `Build: ${goalDesc}` : 'Focus mode. Build the hardest feature.', icon: '💻' });
-    blocks.push({ rel: 135, dur: 10, title: 'Break', desc: 'Rest your eyes. Stand up.', icon: '👁️' });
-    blocks.push({ rel: 145, dur: 90, title: 'Coding Block 2', desc: 'Debug, test, iterate.', icon: '🐛' });
-  } else if (goalInfo.isStudy || goalType === 'study' || goalType === 'exams') {
-    blocks.push({ rel: 45, dur: 60, title: 'Deep Study Session', desc: goalDesc ? `Study: ${goalDesc}` : 'Active recall + practice problems.', icon: '🧠' });
-    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Walk, hydrate.', icon: '🚶' });
-    blocks.push({ rel: 115, dur: 60, title: 'Study Session 2', desc: 'Flashcards, notes, review.', icon: '📝' });
-  } else if (goalInfo.isLanguage || goalType === 'language') {
-    blocks.push({ rel: 45, dur: 30, title: 'Vocabulary Drills', desc: goalDesc ? `Practice: ${goalDesc}` : 'Flashcards, Anki, word lists.', icon: '📇' });
-    blocks.push({ rel: 75, dur: 30, title: 'Grammar & Structure', desc: 'Textbook, exercises, patterns.', icon: '📖' });
-    blocks.push({ rel: 105, dur: 30, title: 'Listening Practice', desc: 'Podcasts, shows, music in target language.', icon: '🎧' });
-    blocks.push({ rel: 135, dur: 20, title: 'Speaking Practice', desc: 'Talk to yourself, shadowing, or language partner.', icon: '🗣️' });
-  } else if (goalInfo.isInstrument || goalType === 'music') {
-    blocks.push({ rel: 45, dur: 30, title: 'Technique Drills', desc: goalDesc ? `Practice: ${goalDesc}` : 'Scales, chords, finger exercises.', icon: '🎯' });
-    blocks.push({ rel: 75, dur: 30, title: 'Song Practice', desc: 'Work on a specific piece or song.', icon: '🎵' });
-    blocks.push({ rel: 105, dur: 20, title: 'Theory & Ear Training', desc: 'Interval recognition, chord progressions.', icon: '🎼' });
-  } else if (goalInfo.isCreative || goalType === 'creative') {
-    blocks.push({ rel: 45, dur: 60, title: 'Creative Work', desc: goalDesc ? `Create: ${goalDesc}` : 'Deep focus on your creative project.', icon: '🎨' });
-    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Let ideas simmer.', icon: '🚶' });
-    blocks.push({ rel: 115, dur: 60, title: 'Continue Creating', desc: 'Refine, iterate, experiment.', icon: '🔧' });
-  } else if (goalInfo.isBusiness || goalType === 'business' || goalType === 'freelance') {
-    blocks.push({ rel: 45, dur: 60, title: 'Revenue Activity', desc: goalDesc ? `Work on: ${goalDesc}` : 'Sales, outreach, content.', icon: '💰' });
-    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Stretch, hydrate.', icon: '🚶' });
-    blocks.push({ rel: 115, dur: 60, title: 'Build & Create', desc: 'Product, service, or content.', icon: '🛠️' });
-  } else if (goalType === 'content') {
-    blocks.push({ rel: 45, dur: 60, title: 'Content Creation', desc: goalDesc ? `Create: ${goalDesc}` : 'Write, film, or design content.', icon: '📱' });
-    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Step away.', icon: '🚶' });
-    blocks.push({ rel: 115, dur: 60, title: 'Editing & Publishing', desc: 'Polish and post your content.', icon: '🎬' });
-  } else if (goalType === 'social') {
-    blocks.push({ rel: 45, dur: 30, title: 'Social Skill Building', desc: 'Practice conversation, read about body language.', icon: '💬' });
-    blocks.push({ rel: 75, dur: 60, title: 'Outreach', desc: 'Message friends, make plans, connect.', icon: '🤝' });
-  } else if (goalType === 'sleep') {
-    blocks.push({ rel: 45, dur: 30, title: 'Light Activity', desc: 'Gentle movement, no screens soon.', icon: '🧘' });
-  } else {
-    blocks.push({ rel: 45, dur: 60, title: 'Focus Block 1', desc: goalDesc ? `Work on: ${goalDesc}` : 'Deep work on your main goal.', icon: '🎯' });
-    blocks.push({ rel: 105, dur: 10, title: 'Break', desc: 'Stretch, hydrate.', icon: '🚶' });
-    blocks.push({ rel: 115, dur: 60, title: 'Focus Block 2', desc: 'Continue or tackle secondary tasks.', icon: '⚡' });
+  } else if (!hasWorkBlock) {
+    const goalBlocks = getGoalBlocks(goalType, goalInfo, goalDesc, notePrefs, 'morning');
+    goalBlocks.forEach((g, i) => {
+      add(goalWorkStart + (i * g.dur), g.dur, g.title, g.desc, g.icon);
+    });
   }
 
+  // === WORK BLOCK ===
   if (hasWorkBlock) {
-    const wsRel = workStartMin - wakeMin;
-    const weRel = workEndMin - wakeMin;
-    blocks.push({ rel: wsRel, dur: weRel - wsRel, title: 'Work / Commitment', desc: `Your scheduled block: ${formatTime12(workStart)} - ${formatTime12(workEnd)}`, icon: '💼' });
+    add(workS, workE - workS, 'Work / Commitment', `Your block: ${formatTime12(workStart)} - ${formatTime12(workEnd)}`, '💼');
   }
 
-  if (notePrefs.wantsExercise && !goalInfo.isFitness && goalType !== 'fitness') {
-    const exerciseTime = notePrefs.morningWorkout ? 50 : (notePrefs.eveningWorkout ? totalMinutes - 120 : totalMinutes - 180);
-    blocks.push({ rel: Math.max(exerciseTime, 60), dur: 30, title: 'Exercise', desc: 'Move your body. Walk, gym, stretch.', icon: '🏋️' });
+  // === LUNCH (fixed at 12:00-12:30 or 1 hour after work starts if work hours overlap) ===
+  let lunchTime;
+  if (hasWorkBlock && workS >= timeToMin('11:00') && workS <= timeToMin('13:00')) {
+    lunchTime = workS + Math.min((workE - workS) / 2, 120);
+  } else {
+    lunchTime = Math.max(timeToMin('12:00'), wake + 300);
+  }
+  if (lunchTime < wake) lunchTime += 1440;
+  add(lunchTime, 30, 'Lunch', 'Balanced meal. Step away from screens.', '🍽️');
+
+  // === AFTERNOON GOAL WORK ===
+  const afternoonStart = lunchTime + 30;
+  if (!hasWorkBlock || workE <= afternoonStart) {
+    const goalBlocks = getGoalBlocks(goalType, goalInfo, goalDesc, notePrefs, 'afternoon');
+    goalBlocks.forEach((g, i) => {
+      add(afternoonStart + (i * g.dur), g.dur, g.title, g.desc, g.icon);
+    });
+  } else if (hasWorkBlock && workE > afternoonStart) {
+    const afterWork = workE;
+    const goalBlocks = getGoalBlocks(goalType, goalInfo, goalDesc, notePrefs, 'afternoon');
+    goalBlocks.forEach((g, i) => {
+      add(afterWork + (i * g.dur), g.dur, g.title, g.desc, g.icon);
+    });
   }
 
-  if (notePrefs.wantsLearning && !goalInfo.isStudy && goalType !== 'study') {
-    blocks.push({ rel: totalMinutes - 180, dur: 40, title: 'Learning Time', desc: 'Read, watch tutorials, grow.', icon: '📚' });
+  // === EVENING WORKOUT (if preferred) ===
+  const eveningBase = hasWorkBlock ? workE : afternoonStart + 120;
+  if (wantsWorkout && notePrefs.eveningWorkout) {
+    add(eveningBase, 45, 'Workout', goalDesc ? `Train for: ${goalDesc}` : 'Cardio, strength, or sport.', '💪');
   }
 
-  if (notePrefs.wantsReading) {
-    blocks.push({ rel: totalMinutes - 90, dur: 30, title: 'Reading', desc: 'Read a book or article.', icon: '📖' });
+  // === DINNER (fixed around 7-8pm or 30min after evening workout) ===
+  let dinnerTime;
+  if (wantsWorkout && notePrefs.eveningWorkout) {
+    dinnerTime = eveningBase + 45;
+  } else {
+    dinnerTime = Math.max(timeToMin('19:00'), eveningBase);
+  }
+  if (dinnerTime < wake) dinnerTime += 1440;
+  add(dinnerTime, 30, 'Dinner', 'Nourishing meal. Eat slowly.', '🍽️');
+
+  // === EXTRA BLOCKS BASED ON NOTES ===
+  const postDinner = dinnerTime + 30;
+
+  if (notePrefs.wantsLearning && !goalInfo.isStudy && goalType !== 'study' && goalType !== 'exams') {
+    add(postDinner, 40, 'Learning Time', 'Watch tutorials, read, grow.', '📚');
   }
 
   if (notePrefs.wantsSocial) {
-    blocks.push({ rel: totalMinutes - 150, dur: 30, title: 'Social Time', desc: 'Call a friend, be with people.', icon: '💬' });
-  }
-
-  blocks.push({ rel: totalMinutes - 120, dur: 30, title: 'Lunch', desc: 'Eat a balanced meal. Step away from screens.', icon: '🍽️' });
-
-  if (notePrefs.morningWorkout && (goalInfo.isFitness || goalType === 'fitness')) {
-    blocks.push({ rel: totalMinutes - 100, dur: 30, title: 'Evening Stretch', desc: 'Light yoga or mobility work.', icon: '🧘' });
-  } else if (notePrefs.eveningWorkout || (!notePrefs.morningWorkout && (goalInfo.isFitness || goalType === 'fitness'))) {
-    blocks.push({ rel: totalMinutes - 100, dur: 45, title: 'Workout', desc: goalDesc ? `Train for: ${goalDesc}` : 'Cardio, strength, or sport.', icon: '💪' });
+    add(postDinner, 30, 'Social Time', 'Call a friend, be with people.', '💬');
   }
 
   if (notePrefs.wantsFreeTime) {
-    blocks.push({ rel: totalMinutes - 60, dur: 30, title: 'Free Time', desc: 'Do whatever you enjoy. Decompress.', icon: '🎮' });
+    add(postDinner, 30, 'Free Time', 'Do whatever you enjoy. Decompress.', '🎮');
   }
 
-  if (notePrefs.nightOwl) {
-    blocks.push({ rel: totalMinutes - 30, dur: 15, title: 'Wind Down', desc: 'Dim lights, no screens, read.', icon: '📖' });
-    blocks.push({ rel: totalMinutes - 15, dur: 15, title: 'Sleep', desc: 'Rest and recover.', icon: '🌙' });
-  } else {
-    blocks.push({ rel: totalMinutes - 40, dur: 15, title: 'Review Day', desc: 'What got done? What\'s tomorrow?', icon: '📝' });
-    blocks.push({ rel: totalMinutes - 25, dur: 15, title: 'Wind Down', desc: 'No screens. Breathe.', icon: '📖' });
-    blocks.push({ rel: totalMinutes - 10, dur: 10, title: 'Sleep', desc: 'Lights out. You earned this.', icon: '🌙' });
+  if (notePrefs.wantsReading) {
+    add(postDinner, 30, 'Reading', 'Read a book or article.', '📖');
   }
 
-  blocks.sort((a, b) => a.rel - b.rel);
+  if (notePrefs.wantsCooking) {
+    add(postDinner, 30, 'Meal Prep', 'Prepare meals for tomorrow.', '👨‍🍳');
+  }
 
-  const merged = [];
+  // === WIND DOWN ===
+  const windDown = bed - 40;
+  add(windDown, 15, 'Review Day', 'What got done? What\'s tomorrow?', '📝');
+  add(windDown + 15, 15, 'Wind Down', 'No screens. Breathe. Relax.', '📖');
+  add(windDown + 30, 10, 'Sleep', 'Lights out. You earned this.', '🌙');
+
+  // Sort and remove overlaps
+  blocks.sort((a, b) => a.start - b.start);
+
+  const clean = [];
   for (const b of blocks) {
-    if (merged.length > 0) {
-      const last = merged[merged.length - 1];
-      const lastEnd = last.rel + last.dur;
-      if (b.rel < lastEnd) {
-        last.dur = Math.max(last.dur, (b.rel + b.dur) - last.rel);
+    if (b.start < wake || b.start >= bed) continue;
+    if (clean.length > 0) {
+      const last = clean[clean.length - 1];
+      if (b.start < last.start + last.dur) {
+        last.dur = Math.max(last.dur, (b.start + b.dur) - last.start);
         continue;
       }
     }
-    merged.push({ ...b });
+    clean.push({ ...b });
   }
 
-  return merged;
+  return clean;
+}
+
+function getGoalBlocks(goalType, goalInfo, goalDesc, notePrefs, timeOfDay) {
+  const specific = goalDesc || '';
+  const dur = timeOfDay === 'morning' ? 90 : 60;
+
+  const goalMap = {
+    fitness: [
+      { dur: 45, title: 'Goal Work', desc: specific ? `${specific}` : 'Focused training session.', icon: '💪' },
+      { dur: 15, title: 'Rest & Review', desc: 'Track progress. What improved?', icon: '📊' }
+    ],
+    study: [
+      { dur: 60, title: 'Deep Study', desc: specific ? `Study: ${specific}` : 'Active recall + practice problems.', icon: '🧠' },
+      { dur: 10, title: 'Break', desc: 'Walk, hydrate.', icon: '🚶' },
+      { dur: 20, title: 'Flashcard Review', desc: 'Spaced repetition.', icon: '📝' }
+    ],
+    exams: [
+      { dur: 60, title: 'Exam Prep', desc: specific ? `Prepare: ${specific}` : 'Solve past papers, revise notes.', icon: '📚' },
+      { dur: 10, title: 'Break', desc: 'Rest your brain.', icon: '☕' },
+      { dur: 20, title: 'Weak Areas', desc: 'Focus on what you get wrong.', icon: '🎯' }
+    ],
+    coding: [
+      { dur: 90, title: 'Deep Coding', desc: specific ? `Build: ${specific}` : 'Build the hardest feature first.', icon: '💻' },
+      { dur: 10, title: 'Break', desc: 'Rest your eyes. Stand up.', icon: '👁️' }
+    ],
+    business: [
+      { dur: 45, title: 'Revenue Activity', desc: specific ? `${specific}` : 'Sales, outreach, content.', icon: '💰' },
+      { dur: 45, title: 'Build & Create', desc: 'Product, service, content.', icon: '🛠️' }
+    ],
+    creative: [
+      { dur: 60, title: 'Creative Work', desc: specific ? `${specific}` : 'Deep focus on your project.', icon: '🎨' },
+      { dur: 30, title: 'Refine & Iterate', desc: 'Polish, experiment, improve.', icon: '🔧' }
+    ],
+    language: [
+      { dur: 20, title: 'Vocabulary', desc: specific ? `Practice: ${specific}` : 'Flashcards, Anki.', icon: '📇' },
+      { dur: 20, title: 'Grammar', desc: 'Textbook, exercises.', icon: '📖' },
+      { dur: 20, title: 'Listening', desc: 'Podcasts, shows.', icon: '🎧' },
+      { dur: 20, title: 'Speaking', desc: 'Shadowing, conversation.', icon: '🗣️' }
+    ],
+    music: [
+      { dur: 30, title: 'Technique', desc: specific ? `Practice: ${specific}` : 'Scales, chords, exercises.', icon: '🎯' },
+      { dur: 30, title: 'Song Practice', desc: 'Work on a piece.', icon: '🎵' }
+    ],
+    content: [
+      { dur: 60, title: 'Create Content', desc: specific ? `${specific}` : 'Write, film, design.', icon: '📱' },
+      { dur: 30, title: 'Edit & Publish', desc: 'Polish and post.', icon: '🎬' }
+    ],
+    freelance: [
+      { dur: 60, title: 'Client Work', desc: specific ? `${specific}` : 'Deliver on commitments.', icon: '💼' },
+      { dur: 30, title: 'Find Clients', desc: 'Outreach, proposals, networking.', icon: '🤝' }
+    ],
+    social: [
+      { dur: 30, title: 'Social Skills', desc: 'Practice conversation, body language.', icon: '💬' },
+      { dur: 60, title: 'Connect', desc: 'Message friends, make plans.', icon: '🤝' }
+    ],
+    sleep: [
+      { dur: 30, title: 'Wind Down Early', desc: 'No screens. Gentle activity.', icon: '🧘' }
+    ]
+  };
+
+  return goalMap[goalType] || [
+    { dur: dur, title: 'Goal Work', desc: specific ? `Work on: ${specific}` : 'Focus on your main goal.', icon: '🎯' }
+  ];
 }
 
 function generateSchedule() {
   const blocks = buildSchedule();
+  if (!blocks) return;
+
   const goalType = document.getElementById('goal-type').value;
   const goalDesc = document.getElementById('custom-goal').value;
-  const wakeTime = document.getElementById('wake-time').value;
-  const bedTime = document.getElementById('bed-time').value;
-
-  const wakeMin = timeToMin(wakeTime);
-  const bedMin = timeToMin(bedTime) > wakeMin ? timeToMin(bedTime) : timeToMin(bedTime) + 1440;
-
   const goalLabel = goalDesc || document.getElementById('goal-type').options[document.getElementById('goal-type').selectedIndex].text;
 
   const timeline = document.getElementById('timeline');
@@ -692,24 +772,20 @@ function generateSchedule() {
   const now = new Date();
   const currentMin = now.getHours() * 60 + now.getMinutes();
 
-  blocks.forEach((item, i) => {
-    const absStart = wakeMin + item.rel;
-    const absEnd = wakeMin + item.rel + item.dur;
-
-    if (absEnd > bedMin + 30) return;
-
+  blocks.forEach((item) => {
+    const endMin = item.start + item.dur;
     const block = document.createElement('div');
     block.className = 'time-block';
 
-    if (currentMin >= absEnd) block.classList.add('done');
-    else if (currentMin >= absStart && currentMin < absEnd) block.classList.add('active');
+    if (currentMin >= endMin) block.classList.add('done');
+    else if (currentMin >= item.start && currentMin < endMin) block.classList.add('active');
 
     block.innerHTML = `
-      <div class="block-time">${formatTime12(minToTime(absStart % 1440))} — ${formatTime12(minToTime(absEnd % 1440))}</div>
+      <div class="block-time">${formatTime12(minToTime(item.start))} — ${formatTime12(minToTime(endMin))}</div>
       <div class="block-title">${item.title}</div>
       <div class="block-desc">${item.desc}</div>
       <div class="block-icon">${item.icon}</div>
-      <button class="check-btn ${currentMin >= absEnd ? 'checked' : ''}" onclick="toggleCheck(this)">✓</button>
+      <button class="check-btn ${currentMin >= endMin ? 'checked' : ''}" onclick="toggleCheck(this)">✓</button>
     `;
 
     timeline.appendChild(block);
