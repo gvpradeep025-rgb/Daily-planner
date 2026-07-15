@@ -205,10 +205,10 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 }
 
 /* Navigation tabs */
-.nav-tabs{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;background:rgba(9,9,11,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(63,63,70,0.4);padding:0}
-.nav-tab{flex:1;padding:14px 0;border:none;background:none;color:var(--muted);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit;position:relative}
+.nav-tabs{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;background:rgba(9,9,11,0.98);backdrop-filter:blur(20px);border-top:1px solid rgba(63,63,70,0.5);padding:0;box-shadow:0 -4px 20px rgba(0,0,0,0.4)}
+.nav-tab{flex:1;padding:16px 0;border:none;background:none;color:var(--muted);font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;position:relative;text-transform:uppercase;letter-spacing:0.5px}
 .nav-tab.active{color:var(--accent)}
-.nav-tab.active::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--accent);border-radius:0 0 2px 2px}
+.nav-tab.active::after{content:'';position:absolute;top:0;left:15%;right:15%;height:3px;background:var(--accent);border-radius:0 0 3px 3px}
 
 /* Progress view */
 .progress-inner{max-width:700px;margin:0 auto}
