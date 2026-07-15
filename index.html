@@ -196,8 +196,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
   <div class="steps" id="steps-container">
     <div class="step active" data-step="1">
       <div class="step-eyebrow">Step 1</div>
-      <h1>What are you working towards?</h1>
-      <p>Pick the goal that matters most right now.</p>
+      <h1>What matters to you right now?</h1>
+      <p>One thing. The one you keep coming back to.</p>
       <div class="goal-grid">
         <div class="goal-card" data-val="fitness" onclick="selectGoal(this)"><span class="icon">🏋️</span><div class="label">Get Fit</div><div class="sub">Lose weight, build muscle</div></div>
         <div class="goal-card" data-val="study" onclick="selectGoal(this)"><span class="icon">📚</span><div class="label">Learn a Skill</div><div class="sub">Study, courses, certs</div></div>
@@ -212,16 +212,16 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     </div>
     <div class="step" data-step="2">
       <div class="step-eyebrow">Step 2</div>
-      <h1>What exactly do you want to achieve?</h1>
-      <p>The more specific, the better your plan.</p>
-      <textarea class="big-textarea" id="goal-desc" placeholder="e.g. Pass AWS certification by March, lose 10kg, learn piano..." oninput="checkDesc()"></textarea>
+      <h1>What does that look like?</h1>
+      <p>The clearer you are, the better I can help.</p>
+      <textarea class="big-textarea" id="goal-desc" placeholder="What would make today feel worthwhile?" oninput="checkDesc()"></textarea>
       <div class="examples"><span class="example-tag" onclick="fillDesc(this)">Pass AWS certification</span><span class="example-tag" onclick="fillDesc(this)">Lose 10kg in 3 months</span><span class="example-tag" onclick="fillDesc(this)">Learn Spanish to B2</span><span class="example-tag" onclick="fillDesc(this)">Build and launch a SaaS</span><span class="example-tag" onclick="fillDesc(this)">Get a software job</span><span class="example-tag" onclick="fillDesc(this)">Write a novel</span></div>
       <div class="next-wrap"><button class="next-btn" id="next2" onclick="nextStep()">Continue →</button></div>
     </div>
     <div class="step" data-step="3">
       <div class="step-eyebrow">Step 3</div>
-      <h1>Tell me about your day</h1>
-      <p>This helps me work around your schedule.</p>
+      <h1>How does your day usually go?</h1>
+      <p>I'll build around what's already there.</p>
       <div class="lifestyle-grid">
         <div class="lifestyle-card" data-val="free" onclick="selectLifestyle(this)"><span class="l-icon">🌅</span><div class="l-content"><div class="l-title">I'm free most of the day</div><div class="l-desc">No fixed commitments</div></div><span class="l-check">✓</span></div>
         <div class="lifestyle-card" data-val="student" onclick="selectLifestyle(this)"><span class="l-icon">🎓</span><div class="l-content"><div class="l-title">I'm a student</div><div class="l-desc">Classes, lectures</div></div><span class="l-check">✓</span></div>
@@ -235,8 +235,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     </div>
     <div class="step" data-step="4">
       <div class="step-eyebrow">Step 4</div>
-      <h1>When are you most productive?</h1>
-      <p>I'll schedule your hardest work during peak hours.</p>
+      <h1>When does your brain work best?</h1>
+      <p>I'll put the hard stuff when you're sharpest.</p>
       <div class="prod-grid">
         <div class="prod-card" data-val="morning" onclick="selectProd(this)"><div class="p-icon">🌅</div><div class="p-label">Morning Person</div><div class="p-time">Peak: 6 AM – 12 PM</div></div>
         <div class="prod-card" data-val="afternoon" onclick="selectProd(this)"><div class="p-icon">☀️</div><div class="p-label">Afternoon</div><div class="p-time">Peak: 12 PM – 6 PM</div></div>
@@ -248,8 +248,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     </div>
     <div class="step" data-step="5">
       <div class="step-eyebrow">Step 5</div>
-      <h1>Any preferences?</h1>
-      <p>Select what matters. All optional.</p>
+      <h1>What makes your day feel good?</h1>
+      <p>The things that keep you going. Pick what fits.</p>
       <div class="pref-grid">
         <div class="pref-chip" data-val="morning-workout" onclick="togglePref(this)"><span>💪</span>Morning Workout</div>
         <div class="pref-chip" data-val="evening-workout" onclick="togglePref(this)"><span>🏃</span>Evening Workout</div>
@@ -268,17 +268,17 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     </div>
     <div class="step" data-step="6">
       <div class="step-eyebrow">Your Plan</div>
-      <h1>Here's what I'll build</h1>
-      <p>Review, then let's create your day.</p>
+      <h1>Here's what I'm thinking</h1>
+      <p>Take a look. Adjust anything that doesn't feel right.</p>
       <div class="summary-card" id="summary-card"></div>
-      <div class="cta-wrap"><button class="cta-btn" onclick="buildSchedule()">✨ Build My Perfect Plan</button></div>
+      <div class="cta-wrap"><button class="cta-btn" onclick="buildSchedule()">Build my day</button></div>
     </div>
   </div>
 
   <div id="schedule-view">
     <div class="schedule-inner">
       <div class="s-header">
-        <div><h1>Your Optimized Day</h1><div class="s-tag" id="s-tag"></div></div>
+        <div><h1>Today</h1><div class="s-tag" id="s-tag"></div></div>
         <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()">🔊 Sound</button>
       </div>
       <div class="progress-dashboard" id="progress-dashboard">
@@ -289,12 +289,12 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <div class="dash-card"><div class="dash-value" id="tasks-left">0</div><div class="dash-label">Tasks Left</div></div>
         <div class="dash-card"><div class="dash-value" id="time-left">0h</div><div class="dash-label">Time Left</div></div>
       </div>
-      <div class="strategy-box" id="strategy-box"><h3>Strategy</h3><ul id="strategy-list"></ul></div>
+      <div class="strategy-box" id="strategy-box"><h3>Why this works</h3><ul id="strategy-list"></ul></div>
       <div class="timeline" id="timeline"></div>
       <div class="streak-card" id="streak-card">
         <div class="streak-fire" id="streak-fire">🔥</div>
-        <div class="streak-title">Day Complete!</div>
-        <div class="streak-sub">Outstanding work. See you tomorrow.</div>
+        <div class="streak-title">You did it.</div>
+        <div class="streak-sub">Every task done. That took real effort.</div>
         <div class="streak-stats">
           <div class="streak-stat"><div class="ss-val" id="streak-count">1</div><div class="ss-label">Day Streak</div></div>
           <div class="streak-stat"><div class="ss-val" id="streak-pct">100%</div><div class="ss-label">Completed</div></div>
@@ -303,7 +303,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
       </div>
       <div class="improve-box" id="improve-box"><h3>Optimization Notes</h3><ul id="improve-list"></ul></div>
       <div class="quote-box" id="quote-box"></div>
-      <button class="edit-btn" onclick="resetAll()">← Edit Settings</button>
+      <button class="edit-btn" onclick="resetAll()">← Start over</button>
     </div>
   </div>
 </div>
@@ -327,9 +327,9 @@ function toggleSound(){soundEnabled=!soundEnabled;const btn=document.getElementB
 
 const quotes=["The secret of getting ahead is getting started. — Mark Twain","Small daily improvements lead to staggering results.","You don't have to be extreme, just consistent.","Discipline is choosing between what you want now and what you want most.","A year from now you'll wish you had started today.","Progress, not perfection.","What you do daily matters more than what you do occasionally.","Start where you are. Use what you have. Do what you can.","Your future self will thank you.","The body achieves what the mind believes."];
 
-const encourageFirst=[{e:'🌅',t:'Way to start the day off.'},{e:'💪',t:"You've got momentum."},{e:'🎯',t:'One step closer.'},{e:'⭐',t:'Great beginning.'},{e:'🚀',t:'Nice! Keep it rolling.'}];
-const encourageMid=[{e:'🔥',t:"You're building consistency."},{e:'⚡',t:'Momentum beats motivation.'},{e:'📈',t:"You're ahead of schedule."},{e:'💎',t:"You're making real progress."},{e:'🏆',t:'Look at you go!'}];
-const encourageEnd=[{e:'🏁',t:'Almost there.'},{e:'💪',t:'Finish strong.'},{e:'🔥',t:'One last push.'},{e:'⭐',t:"Today's future self will thank you."}];
+const encourageFirst=[{e:'🌅',t:'And just like that, you started.'},{e:'💪',t:"You showed up. That's half the battle."},{e:'🎯',t:'First one down.'},{e:'⭐',t:'Off to a real start.'},{e:'🚀',t:'And we\'re off.'}];
+const encourageMid=[{e:'🔥',t:'Still going. That matters.'},{e:'⚡',t:'Consistency > intensity.'},{e:'📈',t:'You\'re doing better than you think.'},{e:'💎',t:'Real progress, not just busywork.'},{e:'🏆',t:'Look at you actually doing this.'}];
+const encourageEnd=[{e:'🏁',t:'Almost home.'},{e:'💪',t:'Finish this one strong.'},{e:'🔥',t:'Just a little more.'},{e:'⭐',t:'Your evening self will thank you.'}];
 
 function getRandomEncouragement(pct){
   if(pct<=0.2)return encourageFirst[Math.floor(Math.random()*encourageFirst.length)];
@@ -423,9 +423,9 @@ function showSummary(){
   const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
   const ln={free:'Free most of the day',student:'Student',working:'Working full time',parttime:'Part-time / shifts'};
   const pn={morning:'Morning Person',afternoon:'Afternoon',night:'Night Owl',flexible:'Flexible'};
-  let html=`<div class="summary-row"><span class="summary-label">Goal</span><span class="summary-value">${gn[state.goal]||state.goal}</span></div><div class="summary-row"><span class="summary-label">Specific Goal</span><span class="summary-value">${state.desc||'Not specified'}</span></div><div class="summary-row"><span class="summary-label">Lifestyle</span><span class="summary-value">${ln[state.lifestyle]||'-'}</span></div>`;
-  if(state.workStart)html+=`<div class="summary-row"><span class="summary-label">Commitments</span><span class="summary-value">${fmtTime(timeToMin(state.workStart))} – ${fmtTime(timeToMin(state.workEnd))}</span></div>`;
-  html+=`<div class="summary-row"><span class="summary-label">Peak Hours</span><span class="summary-value">${pn[state.productivity]||'-'}</span></div><div class="summary-row"><span class="summary-label">Wake / Bed</span><span class="summary-value">${state.wake} / ${state.bed}</span></div>`;
+  let html=`<div class="summary-row"><span class="summary-label">Goal</span><span class="summary-value">${gn[state.goal]||state.goal}</span></div><div class="summary-row"><span class="summary-label">What you're after</span><span class="summary-value">${state.desc||'Not specified'}</span></div><div class="summary-row"><span class="summary-label">Your day</span><span class="summary-value">${ln[state.lifestyle]||'-'}</span></div>`;
+  if(state.workStart)html+=`<div class="summary-row"><span class="summary-label">Committed time</span><span class="summary-value">${fmtTime(timeToMin(state.workStart))} – ${fmtTime(timeToMin(state.workEnd))}</span></div>`;
+  html+=`<div class="summary-row"><span class="summary-label">Your peak</span><span class="summary-value">${pn[state.productivity]||'-'}</span></div><div class="summary-row"><span class="summary-label">Wake / Bed</span><span class="summary-value">${state.wake} / ${state.bed}</span></div>`;
   if(state.prefs.length)html+=`<div class="summary-row"><span class="summary-label">Preferences</span><span class="summary-value">${state.prefs.length} selected</span></div>`;
   document.getElementById('summary-card').innerHTML=html;
   showStep(6);
@@ -447,7 +447,7 @@ function buildSchedule(){
 
   add(wake,5,'Hydrate','500ml water. Rehydrate after sleep.','💧','Dehydration impairs cognition. Water first thing improves focus 14%.');
   add(wake+5,10,'Morning Routine','Freshen up. No phone yet.','☀️','No phone for 15 min prevents reactive mindset.');
-  add(wake+15,5,'Plan the Day','Set 3 priorities. Visualize success.','📋','Morning planning activates your RAS.');
+  add(wake+15,5,'Set Your Intention','What matters most today? Just one thing.','📋','Morning clarity activates your RAS.');
   let cursor=wake+20;
   if(prefs.includes('meditation')){add(cursor,15,'Meditation','Breathe. Focus. Be present.','🧘','13 min daily reduces cortisol, improves focus 4-6 hours.');cursor+=15}
   if(prefs.includes('journal')){add(cursor,10,'Journaling','Thoughts, goals, gratitude.','📝','Morning journaling clarifies thinking.');cursor+=10}
@@ -483,7 +483,7 @@ function buildSchedule(){
   if(prefs.includes('gaming')&&cursor<windDown){const g=Math.min(30,windDown-cursor);if(g>0){add(cursor,g,'Free Time','Decompress. Enjoy.','🎮','White space prevents burnout.');cursor+=g}}
   if(prefs.includes('free')&&cursor<windDown){const f=Math.min(30,windDown-cursor);if(f>0){add(cursor,f,'Free Time','Do whatever you want.','🎮','Unscheduled time fuels creativity.');cursor+=f}}
 
-  add(windDown,15,'Review Day','What got done? Celebrate wins.','📝','Evening reflection consolidates learning.');
+  add(windDown,15,'Review Day','What went well? What did you learn?','📝','Evening reflection consolidates learning.');
   add(windDown+15,15,'Wind Down','No screens. Dim lights. Breathe.','📖','Blue light suppresses melatonin 50%.');
   add(windDown+30,10,'Sleep','Lights out.','🌙','Consistent sleep times improve quality more than hours.');
 
@@ -516,7 +516,7 @@ function buildSchedule(){
   const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
   document.getElementById('s-tag').textContent=gn[state.goal]||state.goal;
   document.getElementById('strategy-list').innerHTML=strategies.map(s=>`<li>${s}</li>`).join('');
-  document.getElementById('improve-list').innerHTML=improvements.length?improvements.map(s=>`<li>${s}</li>`).join(''):'<li>Schedule is well-optimized.</li>';
+  document.getElementById('improve-list').innerHTML=improvements.length?improvements.map(s=>`<li>${s}</li>`).join(''):'<li>Schedule looks solid. Trust it.</li>';
   document.getElementById('quote-box').textContent=quotes[Math.floor(Math.random()*quotes.length)];
 
   renderTimeline();updateDash();checkStreak();window.scrollTo({top:0,behavior:'smooth'});
