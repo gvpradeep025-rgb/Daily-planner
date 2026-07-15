@@ -436,14 +436,33 @@ function appendMsg(type,text,choices,inputType,resolve){
   msg.innerHTML=html;chatEl.appendChild(msg);chatEl.scrollTop=chatEl.scrollHeight;
 
   if(choices){
-    msg.querySelectorAll('.chat-choice').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        msg.querySelectorAll('.chat-choice').forEach(b=>b.style.pointerEvents='none');
-        btn.classList.add('selected');
-        addMsg('user',btn.textContent);
-        setTimeout(()=>resolve(btn.dataset.val),300);
+    if(inputType==='multi'){
+      const selected=new Set();
+      const doneBtn=document.createElement('button');doneBtn.className='chat-choice';doneBtn.textContent='✓ Done';doneBtn.style.cssText='background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600';
+      choices.forEach(c=>{
+        const btn=document.createElement('button');btn.className='chat-choice';btn.dataset.val=c.val;btn.textContent=c.label;
+        btn.addEventListener('click',()=>{
+          if(selected.has(c.val)){selected.delete(c.val);btn.classList.remove('selected')}
+          else{selected.add(c.val);btn.classList.add('selected')}
+        });
+        msg.querySelector('.chat-choices').appendChild(btn);
       });
-    });
+      msg.querySelector('.chat-choices').appendChild(doneBtn);
+      doneBtn.addEventListener('click',()=>{
+        msg.querySelectorAll('.chat-choice').forEach(b=>b.style.pointerEvents='none');
+        addMsg('user',Array.from(selected).length?Array.from(selected).join(', '):'None');
+        setTimeout(()=>resolve(Array.from(selected)),300);
+      });
+    }else{
+      msg.querySelectorAll('.chat-choice').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          msg.querySelectorAll('.chat-choice').forEach(b=>b.style.pointerEvents='none');
+          btn.classList.add('selected');
+          addMsg('user',btn.textContent);
+          setTimeout(()=>resolve(btn.dataset.val),300);
+        });
+      });
+    }
   }else if(inputType==='text'){
     const wrap=document.createElement('div');wrap.className='chat-input-wrap';
     wrap.innerHTML=`<input class="chat-input" id="chat-in" placeholder="${inputType==='text'?'Type here...':''}" autofocus><button class="chat-send">Send</button>`;
@@ -467,69 +486,55 @@ async function runOnboarding(){
   chatEl.innerHTML='';inputArea.innerHTML='';
 
   await addMsg('ai',"Hey. I'm your planning assistant. I'll build a personalized daily schedule based on your goals — and learn from your progress over time.");
-  await addMsg('ai',"Let's start simple. What's your main goal right now?",[
+
+  chatInputs.goal=await addMsg('ai',"Let's start simple. What's your main goal right now?",[
     {val:'fitness',label:'🏋️ Get Fit'},{val:'study',label:'📚 Learn a Skill'},
     {val:'coding',label:'💻 Build Something'},{val:'business',label:'🚀 Start a Business'},
     {val:'creative',label:'🎨 Create'},{val:'productivity',label:'⚡ Be Productive'},
     {val:'mental',label:'🧠 Feel Better'},{val:'custom',label:'✨ Something Else'}
   ]);
-  chatInputs.goal=await p=>p;
 
   await addMsg('ai',"Got it. Now — what specifically do you want to achieve? Be as detailed as you can.");
-  await addMsg('ai',"For example: "Pass AWS certification by March", "Lose 10kg in 3 months", "Learn piano to grade 5"");
-  chatInputs.desc=await p=>p;
+  await addMsg('ai',"For example: Pass AWS certification by March, Lose 10kg in 3 months, Learn piano to grade 5");
+  chatInputs.desc=await addMsg('ai',"Type your specific goal below:","","text");
 
-  // AI thinking
-  const thinking=document.createElement('div');thinking.className='ai-thinking';
-  thinking.innerHTML=`<strong>AI:</strong> Analyzing your goal... I'll create milestones and daily tasks that contribute to "${chatInputs.desc}". Breaking this into achievable steps.`;
+  var thinking=document.createElement('div');thinking.className='ai-thinking';
+  thinking.innerHTML='<strong>AI:</strong> Analyzing your goal... I\'ll create milestones and daily tasks that contribute to "'+chatInputs.desc+'". Breaking this into achievable steps.';
   chatEl.appendChild(thinking);chatEl.scrollTop=chatEl.scrollHeight;
-  await new Promise(r=>setTimeout(r,1500));thinking.remove();
+  await new Promise(function(r){setTimeout(r,1500)});thinking.remove();
 
-  await addMsg('ai',"Tell me about your daily life. What best describes you?",[
+  chatInputs.lifestyle=await addMsg('ai',"Tell me about your daily life. What best describes you?",[
     {val:'free',label:'🌅 Free most of the day'},{val:'student',label:'🎓 Student'},
     {val:'working',label:'💼 Working full time'},{val:'parttime',label:'⏰ Part-time / shifts'}
   ]);
-  chatInputs.lifestyle=await p=>p;
 
   if(chatInputs.lifestyle==='working'||chatInputs.lifestyle==='student'){
-    const label=chatInputs.lifestyle==='working'?'What time does work/class start?':'What time does your first commitment start?';
-    await addMsg('ai',label);
-    chatInputs.workStart=await p=>p;
-    await addMsg('ai',"And when does it end?");
-    chatInputs.workEnd=await p=>p;
+    var label=chatInputs.lifestyle==='working'?'What time does work/class start?':'What time does your first commitment start?';
+    chatInputs.workStart=await addMsg('ai',label,"","time");
+    chatInputs.workEnd=await addMsg('ai',"And when does it end?","","time");
   }
 
-  await addMsg('ai',"When are you most mentally sharp?",[
+  chatInputs.productivity=await addMsg('ai',"When are you most mentally sharp?",[
     {val:'morning',label:'🌅 Morning (6-12)'},{val:'afternoon',label:'☀️ Afternoon (12-6)'},
     {val:'night',label:'🌙 Night (6-12)'},{val:'flexible',label:'🔄 Depends on the day'}
   ]);
-  chatInputs.productivity=await p=>p;
 
-  await addMsg('ai',"Almost done. Select anything you want included in your daily plan. All optional.",[
+  chatInputs.prefs=await addMsg('ai',"Almost done. Select anything you want in your daily plan. All optional.",[
     {val:'morning-workout',label:'💪 Morning Workout'},{val:'evening-workout',label:'🏃 Evening Workout'},
     {val:'meditation',label:'🧘 Meditation'},{val:'journal',label:'📝 Journaling'},
     {val:'reading',label:'📖 Reading'},{val:'social',label:'💬 Social Time'},
     {val:'music',label:'🎵 Music'},{val:'free',label:'🎮 Free Time'}
   ],'multi');
-  chatInputs.prefs=await p=>p;
 
-  // AI summary
   await addMsg('ai',"Perfect. Here's what I've learned about you:");
 
-  const summary=document.createElement('div');summary.className='ai-thinking';
-  const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
-  summary.innerHTML=`
-    <strong>Goal:</strong> ${gn[chatInputs.goal]} → ${chatInputs.desc}<br>
-    <strong>Lifestyle:</strong> ${chatInputs.lifestyle}<br>
-    <strong>Peak hours:</strong> ${chatInputs.productivity}<br>
-    <strong>I'll decide:</strong> wake time, bedtime, meal timing, breaks, and task order based on your goal and energy patterns.<br><br>
-    <em style="color:var(--accent)">Generating your optimized plan...</em>
-  `;
+  var summary=document.createElement('div');summary.className='ai-thinking';
+  var gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
+  summary.innerHTML='<strong>Goal:</strong> '+(gn[chatInputs.goal]||chatInputs.goal)+' → '+chatInputs.desc+'<br><strong>Lifestyle:</strong> '+chatInputs.lifestyle+'<br><strong>Peak hours:</strong> '+chatInputs.productivity+'<br><strong>I\'ll decide:</strong> wake time, bedtime, meal timing, breaks, and task order based on your goal and energy patterns.<br><br><em style="color:var(--accent)">Generating your optimized plan...</em>';
   chatEl.appendChild(summary);chatEl.scrollTop=chatEl.scrollHeight;
-  await new Promise(r=>setTimeout(r,2000));
+  await new Promise(function(r){setTimeout(r,2000)});
 
-  // Build profile and schedule
-  const profile=buildProfile(chatInputs);
+  var profile=buildProfile(chatInputs);
   data.profile=profile;
   saveData(data);
 
