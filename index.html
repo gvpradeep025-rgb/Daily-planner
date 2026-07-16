@@ -92,13 +92,45 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 /* ====== SCHEDULE VIEW ====== */
 #schedule-view{display:none;padding:80px 24px 100px}
 .schedule-inner{max-width:700px;margin:0 auto}
-.s-header{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.s-header h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-0.02em}
-.s-tag{display:inline-block;padding:4px 14px;border-radius:100px;font-size:0.72rem;font-weight:600;background:rgba(139,92,246,0.15);color:var(--accent);margin-top:4px}
+.s-header{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-left:8px}
+.s-header-left{display:flex;align-items:center;gap:16px}
+.s-header-text h1{font-size:clamp(1.8rem,4vw,2.4rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1}
+.s-greeting{font-size:0.85rem;color:var(--muted);margin-bottom:2px;font-weight:400}
+.s-tag{display:inline-block;padding:4px 14px;border-radius:100px;font-size:0.72rem;font-weight:600;background:rgba(139,92,246,0.15);color:var(--accent);margin-top:6px}
 .sound-toggle{background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:0.75rem;color:var(--muted);cursor:pointer;transition:all 0.2s;font-family:inherit;display:flex;align-items:center;gap:6px}
 .sound-toggle:hover{border-color:var(--accent);color:var(--text)}
 .sound-toggle.active{border-color:var(--accent);color:var(--accent)}
 .s-header-btns{display:flex;gap:8px;align-items:center}
+.profile-avatar-wrap{cursor:pointer;flex-shrink:0}
+.profile-avatar{width:72px;height:72px;border-radius:50%;border:2px solid rgba(139,92,246,0.4);overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);box-shadow:0 0 0 3px rgba(139,92,246,0.1)}
+.profile-avatar:hover{border-color:var(--accent);transform:scale(1.06);box-shadow:0 0 20px rgba(139,92,246,0.3)}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-avatar-initials{font-size:1.4rem;font-weight:700;color:var(--muted);user-select:none}
+.profile-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:299;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+.profile-panel-overlay.open{opacity:1;pointer-events:auto}
+.profile-panel{position:fixed;top:0;right:0;width:320px;max-width:90vw;height:100vh;background:var(--surface);border-left:1px solid var(--border);z-index:300;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);padding:32px 24px;overflow-y:auto;display:flex;flex-direction:column}
+.profile-panel.open{transform:translateX(0)}
+.pp-header{display:flex;flex-direction:column;align-items:center;margin-bottom:28px}
+.pp-avatar-wrap{position:relative;margin-bottom:16px}
+.pp-avatar{width:88px;height:88px;border-radius:50%;border:3px solid var(--accent);overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;transition:all 0.3s ease}
+.pp-avatar img{width:100%;height:100%;object-fit:cover;transition:opacity 0.3s ease}
+.pp-avatar-initials{font-size:1.8rem;font-weight:700;color:var(--muted);user-select:none}
+.pp-avatar-edit{position:absolute;bottom:0;right:0;width:30px;height:30px;border-radius:50%;background:var(--accent);border:2px solid var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.8rem;transition:all 0.2s}
+.pp-avatar-edit:hover{transform:scale(1.1);background:var(--accent2)}
+.pp-name{font-size:1.1rem;font-weight:700;text-align:center}
+.pp-stats{display:flex;gap:16px;justify-content:center;margin-bottom:24px;padding:16px;background:var(--bg);border-radius:var(--radius-sm)}
+.pp-stat{text-align:center;flex:1}
+.pp-stat-val{font-size:1.2rem;font-weight:700;color:var(--accent)}
+.pp-stat-label{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.pp-goal{font-size:0.85rem;color:var(--muted);text-align:center;margin-bottom:24px;padding:12px 16px;background:var(--bg);border-radius:var(--radius-sm);line-height:1.5}
+.pp-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.pp-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.85rem;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+.pp-btn:hover{border-color:var(--accent);background:rgba(139,92,246,0.08)}
+.pp-btn-secondary{background:var(--bg)}
+.pp-btn-danger{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);color:#ef4444;font-size:0.78rem}
+.pp-btn-danger:hover{background:rgba(239,68,68,0.15);border-color:#ef4444}
+@keyframes avatarFade{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.profile-avatar.img-change img,.pp-avatar.img-change img{animation:avatarFade 0.4s cubic-bezier(0.16,1,0.3,1)}
 .music-player{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .mp-info{flex:1;min-width:120px}
 .mp-title{font-size:0.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
@@ -140,11 +172,14 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .mission-badge.catching-up{background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.2)}
 .mission-badge.behind{background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.2)}
 .mission-sub{font-size:0.82rem;color:var(--muted);margin-bottom:14px;font-weight:500}
-.mission-progress-track{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden;margin-bottom:10px}
-.mission-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.8s cubic-bezier(0.16,1,0.3,1);width:0%}
-.mission-footer{display:flex;justify-content:space-between;align-items:center}
+.mission-progress-track{height:6px;background:var(--surface2);border-radius:6px;overflow:hidden;margin-bottom:8px;display:flex}
+.mission-progress-fill{height:100%;border-radius:6px 0 0 6px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.8s cubic-bezier(0.16,1,0.3,1);width:0%}
+.mission-progress-remaining{height:100%;border-radius:0 6px 6px 0;background:rgba(255,255,255,0.06);transition:flex 0.8s cubic-bezier(0.16,1,0.3,1);flex:1}
+.mission-labels{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.mission-label-left,.mission-label-right{font-size:0.72rem;color:var(--muted);font-weight:500}
+.mission-label-pct{font-weight:700;color:var(--text)}
+.mission-footer{display:flex;justify-content:center;align-items:center}
 .mission-footer span{font-size:0.72rem;color:var(--muted);font-weight:500}
-#mission-pct{color:var(--accent);font-weight:700}
 @keyframes missionPulse{0%,100%{opacity:1}50%{opacity:0.7}}
 .mission-badge{animation:missionPulse 2s ease-in-out infinite}
 @keyframes dayFlip{0%{transform:translateY(0) scale(1);opacity:1}30%{transform:translateY(-8px) scale(1.1);opacity:0.5}60%{transform:translateY(4px) scale(0.95);opacity:0.8}100%{transform:translateY(0) scale(1);opacity:1}}
@@ -423,7 +458,19 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
   <div id="schedule-view">
     <div class="schedule-inner">
       <div class="s-header">
-        <div><h1>Today</h1><div class="s-tag" id="s-tag"></div></div>
+        <div class="s-header-left">
+          <div class="profile-avatar-wrap" onclick="toggleProfilePanel()">
+            <div class="profile-avatar" id="profile-avatar">
+              <img id="profile-avatar-img" style="display:none">
+              <div class="profile-avatar-initials" id="profile-avatar-initials">?</div>
+            </div>
+          </div>
+          <div class="s-header-text">
+            <div class="s-greeting" id="s-greeting">Good Morning</div>
+            <h1>Today</h1>
+            <div class="s-tag" id="s-tag"></div>
+          </div>
+        </div>
         <div class="s-header-btns">
           <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()">🔊 Sound</button>
           <label class="sound-toggle" for="music-import" style="cursor:pointer">🎵 Music</label>
@@ -440,6 +487,31 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <div class="mp-progress-wrap"><div class="mp-progress" id="mp-progress" onclick="seekMusic(event)"><div class="mp-progress-fill" id="mp-progress-fill"></div></div><div class="mp-time" id="mp-time">0:00</div></div>
         <div class="mp-vol-wrap"><span class="mp-vol-icon">🔊</span><input type="range" class="mp-vol" id="mp-vol" min="0" max="100" value="70" oninput="setVolume(this.value)"></div>
       </div>
+      <div class="profile-panel-overlay" id="profile-panel-overlay" onclick="toggleProfilePanel()"></div>
+      <div class="profile-panel" id="profile-panel">
+        <div class="pp-header">
+          <div class="pp-avatar-wrap">
+            <div class="pp-avatar" id="pp-avatar">
+              <img id="pp-avatar-img" style="display:none">
+              <div class="pp-avatar-initials" id="pp-avatar-initials">?</div>
+            </div>
+            <button class="pp-avatar-edit" onclick="document.getElementById('avatar-upload').click()">📷</button>
+            <input type="file" id="avatar-upload" accept="image/png,image/jpeg,image/jpg,image/webp,image/gif" style="display:none" onchange="handleAvatarUpload(event)">
+          </div>
+          <div class="pp-name" id="pp-name">Your Name</div>
+        </div>
+        <div class="pp-stats">
+          <div class="pp-stat"><div class="pp-stat-val" id="pp-streak">0</div><div class="pp-stat-label">Streak</div></div>
+          <div class="pp-stat"><div class="pp-stat-val" id="pp-pct">0%</div><div class="pp-stat-label">Completed</div></div>
+          <div class="pp-stat"><div class="pp-stat-val" id="pp-state">—</div><div class="pp-stat-label">State</div></div>
+        </div>
+        <div class="pp-goal" id="pp-goal">No goal set</div>
+        <div class="pp-actions">
+          <button class="pp-btn pp-btn-secondary" onclick="openSettings()">⚙️ Settings</button>
+          <button class="pp-btn pp-btn-secondary" onclick="document.getElementById('avatar-upload').click()">🖼️ Change Picture</button>
+        </div>
+        <button class="pp-btn pp-btn-danger" onclick="removeAvatar()">Remove Picture</button>
+      </div>
       <div class="progress-dashboard" id="progress-dashboard">
         <div class="dash-card mission-card" id="mission-card">
           <div class="mission-top">
@@ -447,8 +519,15 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
             <div class="mission-badge" id="mission-badge">On Track</div>
           </div>
           <div class="mission-sub" id="mission-sub">Day 1 of 30</div>
-          <div class="mission-progress-track"><div class="mission-progress-fill" id="mission-fill"></div></div>
-          <div class="mission-footer"><span id="mission-remaining">29 days left</span><span id="mission-pct">3%</span></div>
+          <div class="mission-progress-track">
+            <div class="mission-progress-fill" id="mission-fill"></div>
+            <div class="mission-progress-remaining" id="mission-remaining-fill"></div>
+          </div>
+          <div class="mission-labels">
+            <span class="mission-label-left"><span class="mission-label-pct" id="mission-pct">0%</span> completed</span>
+            <span class="mission-label-right"><span class="mission-label-pct" id="mission-remaining-pct">100%</span> remaining</span>
+          </div>
+          <div class="mission-footer"><span id="mission-days-left">29 days left</span></div>
         </div>
         <div class="dash-card">
           <div class="ring-wrap"><svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" id="ring-fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="213.6"/></svg><div class="ring-text" id="ring-text">0%</div></div>
@@ -560,6 +639,88 @@ function loadState(){
   const s=localStorage.getItem('planner_state');
   if(s){try{const parsed=JSON.parse(s);state={...state,...parsed};return true}catch(e){}}
   return false;
+}
+function loadAvatar(){
+  const avatar=localStorage.getItem('planner_avatar');
+  if(avatar){
+    document.getElementById('profile-avatar-img').src=avatar;
+    document.getElementById('profile-avatar-img').style.display='block';
+    document.getElementById('profile-avatar-initials').style.display='none';
+    document.getElementById('pp-avatar-img').src=avatar;
+    document.getElementById('pp-avatar-img').style.display='block';
+    document.getElementById('pp-avatar-initials').style.display='none';
+  }
+}
+function handleAvatarUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const validTypes=['image/png','image/jpeg','image/jpg','image/webp','image/gif'];
+  if(!validTypes.includes(file.type)){alert('Please upload a PNG, JPG, JPEG, WEBP, or GIF file.');return}
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const dataUrl=ev.target.result;
+    localStorage.setItem('planner_avatar',dataUrl);
+    const headerImg=document.getElementById('profile-avatar-img');
+    const panelImg=document.getElementById('pp-avatar-img');
+    headerImg.src=dataUrl;
+    panelImg.src=dataUrl;
+    headerImg.style.display='block';
+    panelImg.style.display='block';
+    document.getElementById('profile-avatar-initials').style.display='none';
+    document.getElementById('pp-avatar-initials').style.display='none';
+    headerImg.classList.add('img-change');
+    panelImg.classList.add('img-change');
+    setTimeout(()=>{headerImg.classList.remove('img-change');panelImg.classList.remove('img-change')},500);
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+function removeAvatar(){
+  localStorage.removeItem('planner_avatar');
+  document.getElementById('profile-avatar-img').style.display='none';
+  document.getElementById('profile-avatar-initials').style.display='block';
+  document.getElementById('pp-avatar-img').style.display='none';
+  document.getElementById('pp-avatar-initials').style.display='block';
+  updateAvatarInitials();
+}
+function updateAvatarInitials(){
+  let initials='?';
+  if(state.goal){
+    const words=state.goal.split(' ');
+    initials=words.length>=2?(words[0][0]+words[1][0]).toUpperCase():words[0].substring(0,2).toUpperCase();
+  }
+  document.getElementById('profile-avatar-initials').textContent=initials;
+  document.getElementById('pp-avatar-initials').textContent=initials;
+  document.getElementById('pp-name').textContent=state.goal||'Your Name';
+}
+function updateGreeting(){
+  const h=new Date().getHours();
+  let greeting='Good Morning';
+  if(h>=12&&h<17)greeting='Good Afternoon';
+  else if(h>=17)greeting='Good Evening';
+  document.getElementById('s-greeting').textContent=greeting;
+}
+function toggleProfilePanel(){
+  const panel=document.getElementById('profile-panel');
+  const overlay=document.getElementById('profile-panel-overlay');
+  const isOpen=panel.classList.contains('open');
+  if(isOpen){
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+  }else{
+    updateProfilePanel();
+    panel.classList.add('open');
+    overlay.classList.add('open');
+  }
+}
+function updateProfilePanel(){
+  updateAvatarInitials();
+  document.getElementById('pp-streak').textContent=streak;
+  document.getElementById('pp-goal').textContent=state.goal?'🎯 '+state.goal:'No goal set';
+}
+function openSettings(){
+  toggleProfilePanel();
+  switchTab('progress');
 }
 function saveDailyCompletions(date,data){
   const all=JSON.parse(localStorage.getItem('planner_daily')||'{}');
@@ -915,7 +1076,7 @@ function buildSchedule(){
   const todayData=daily[today];
   completedCount=0;
   renderTimeline(todayData?todayData.completed:[]);
-  updateDash();checkStreak();window.scrollTo({top:0,behavior:'smooth'});
+  updateDash();checkStreak();updateAvatarInitials();updateGreeting();window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function getGoalBlock(time){
@@ -1056,8 +1217,9 @@ function updateDash(){
   if(dayNum!==lastDisplayedDay){dayEl.classList.remove('day-new');void dayEl.offsetWidth;dayEl.classList.add('day-new');lastDisplayedDay=dayNum}
   dayEl.textContent=dayNum;
   document.getElementById('mission-sub').textContent=`Day ${dayNum} of ${totalDays}`;
-  document.getElementById('mission-remaining').textContent=daysRemaining>0?`${daysRemaining} days left`:'Goal reached';
+  document.getElementById('mission-days-left').textContent=daysRemaining>0?`${daysRemaining} days left`:'Goal reached';
   document.getElementById('mission-pct').textContent=missionPct+'%';
+  document.getElementById('mission-remaining-pct').textContent=(100-missionPct)+'%';
   document.getElementById('mission-fill').style.width=missionPct+'%';
   const badge=document.getElementById('mission-badge');
   badge.textContent=status;
@@ -1092,6 +1254,13 @@ function updateDash(){
   document.getElementById('cs-bar-fill').style.width=pct+'%';
   const ill=document.getElementById('cs-illustration');
   if(ill.dataset.current!==currentState.svg){ill.innerHTML=`<img src="assets/states/${currentState.svg}" alt="${currentState.name}" style="width:100%;height:100%;object-fit:contain">`;ill.dataset.current=currentState.svg}
+  
+  // Update profile panel stats if open
+  if(document.getElementById('profile-panel').classList.contains('open')){
+    document.getElementById('pp-pct').textContent=pct+'%';
+    document.getElementById('pp-streak').textContent=streak;
+    document.getElementById('pp-state').textContent=currentState.name;
+  }
 }
 
 function dayComplete(){
@@ -1126,6 +1295,7 @@ function checkStreak(){
 function resetAll(){
   state={goal:'',desc:'',lifestyle:'',workStart:'',workEnd:'',commute:0,productivity:'',wake:'06:00',bed:'22:30',prefs:[],deadline:'',startDate:''};
   localStorage.removeItem('planner_state');
+  localStorage.removeItem('planner_avatar');
   document.querySelectorAll('.goal-card,.lifestyle-card,.prod-card,.pref-chip').forEach(c=>c.classList.remove('selected'));
   document.querySelectorAll('.inline-fields').forEach(f=>f.classList.remove('show'));
   document.querySelectorAll('.next-btn').forEach(b=>b.classList.remove('ready'));
@@ -1142,6 +1312,12 @@ function resetAll(){
   document.getElementById('streak-card').classList.remove('show');
   document.getElementById('steps-container').style.display='flex';
   document.getElementById('progress-bar').style.display='flex';
+  document.getElementById('profile-avatar-img').style.display='none';
+  document.getElementById('profile-avatar-initials').style.display='block';
+  document.getElementById('pp-avatar-img').style.display='none';
+  document.getElementById('pp-avatar-initials').style.display='block';
+  document.getElementById('profile-avatar-initials').textContent='?';
+  document.getElementById('pp-avatar-initials').textContent='?';
   showStep(1);
 }
 
@@ -1262,6 +1438,9 @@ if(loadState()&&state.goal){
   document.getElementById('progress-bar').style.display='none';
   document.getElementById('schedule-view').style.display='block';
   document.getElementById('nav-tabs').style.display='flex';
+  loadAvatar();
+  updateAvatarInitials();
+  updateGreeting();
   buildSchedule();
 }
 </script>
