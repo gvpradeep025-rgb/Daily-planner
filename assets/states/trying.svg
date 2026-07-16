@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Desk -->
+  <rect x="25" y="60" width="70" height="4" rx="2" stroke="#444" stroke-width="2" fill="none"/>
+  <path d="M30 64 L30 95 M90 64 L90 95" stroke="#444" stroke-width="2" stroke-linecap="round"/>
+  <!-- Laptop -->
+  <rect x="40" y="48" width="30" height="12" rx="2" stroke="#666" stroke-width="1.5" fill="none"/>
+  <path d="M38 60 L82 60" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Screen glow -->
+  <rect x="43" y="50" width="24" height="8" rx="1" fill="rgba(139,92,246,0.1)"/>
+  <!-- Stickman sitting at desk -->
+  <!-- Head -->
+  <circle cx="60" cy="32" r="8" stroke="#fff" stroke-width="2"/>
+  <!-- Body -->
+  <path d="M60 40 L60 60" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <!-- Legs -->
+  <path d="M60 60 L48 80 M60 60 L72 80" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <!-- Arms reaching for laptop -->
+  <path d="M60 48 L45 55 M60 48 L75 55" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <!-- Small effort lines -->
+  <path d="M72 30 L78 28 M74 35 L80 35" stroke="#f59e0b" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+</svg>

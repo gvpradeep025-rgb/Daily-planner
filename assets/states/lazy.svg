@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Couch -->
+  <path d="M15 75 Q15 65 25 65 L95 65 Q105 65 105 75 L105 85 L15 85 Z" stroke="#444" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M10 85 L10 95 M110 85 L110 95" stroke="#444" stroke-width="2" stroke-linecap="round"/>
+  <!-- Stickman lying -->
+  <!-- Head -->
+  <circle cx="35" cy="58" r="7" stroke="#fff" stroke-width="2"/>
+  <!-- Body lying -->
+  <path d="M42 58 L80 60" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <!-- Legs -->
+  <path d="M80 60 L95 68 M80 60 L92 55" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <!-- Arms -->
+  <path d="M50 58 L48 68 M65 59 L62 50" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <!-- Zzz -->
+  <text x="40" y="45" font-family="sans-serif" font-size="8" fill="#666" font-weight="bold">z</text>
+  <text x="48" y="38" font-family="sans-serif" font-size="10" fill="#555" font-weight="bold">z</text>
+  <text x="57" y="30" font-family="sans-serif" font-size="12" fill="#444" font-weight="bold">z</text>
+</svg>

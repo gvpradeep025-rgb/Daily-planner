@@ -129,6 +129,29 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .ring-fill{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1)}
 .ring-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700}
 
+/* Mission progress card */
+.mission-card{grid-column:1/-1;padding:24px 28px;text-align:left;position:relative;overflow:hidden}
+.mission-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);opacity:0.6}
+.mission-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.mission-day-num{font-size:2.8rem;font-weight:800;line-height:1;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mission-badge{padding:4px 12px;border-radius:100px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;margin-top:4px}
+.mission-badge.on-track{background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.2)}
+.mission-badge.ahead{background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.2)}
+.mission-badge.catching-up{background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.2)}
+.mission-badge.behind{background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.2)}
+.mission-sub{font-size:0.82rem;color:var(--muted);margin-bottom:14px;font-weight:500}
+.mission-progress-track{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden;margin-bottom:10px}
+.mission-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.8s cubic-bezier(0.16,1,0.3,1);width:0%}
+.mission-footer{display:flex;justify-content:space-between;align-items:center}
+.mission-footer span{font-size:0.72rem;color:var(--muted);font-weight:500}
+#mission-pct{color:var(--accent);font-weight:700}
+@keyframes missionPulse{0%,100%{opacity:1}50%{opacity:0.7}}
+.mission-badge{animation:missionPulse 2s ease-in-out infinite}
+@keyframes dayFlip{0%{transform:translateY(0) scale(1);opacity:1}30%{transform:translateY(-8px) scale(1.1);opacity:0.5}60%{transform:translateY(4px) scale(0.95);opacity:0.8}100%{transform:translateY(0) scale(1);opacity:1}}
+.mission-day-num.day-new{animation:dayFlip 0.6s cubic-bezier(0.16,1,0.3,1)}
+@keyframes barGrow{from{width:0%}to{width:var(--target-w)}}
+.mission-progress-fill{animation:barGrow 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
+
 /* Encouragement toast */
 .encourage-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:10px 24px;font-size:0.85rem;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:200;display:flex;align-items:center;gap:8px;opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;white-space:nowrap}
 .encourage-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -143,11 +166,48 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 /* Confetti canvas */
 #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:150}
 
-/* Strategy */
-.strategy-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
-.strategy-box h3{font-size:0.78rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-.strategy-box li{font-size:0.85rem;color:var(--muted);padding:5px 0 5px 18px;position:relative;line-height:1.5;list-style:none}
-.strategy-box li::before{content:'';position:absolute;left:0;top:12px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+/* Current State */
+.current-state-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px;transition:border-color 0.4s ease}
+.cs-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.cs-icon-wrap{width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cs-icon{width:18px;height:18px;color:var(--accent)}
+.cs-title{font-size:0.95rem;font-weight:700;color:var(--text)}
+.cs-sub{font-size:0.72rem;color:var(--muted);margin-top:2px}
+.cs-body{display:flex;align-items:center;gap:24px}
+.cs-illustration{width:120px;height:120px;flex-shrink:0;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:all 0.4s ease}
+.cs-illustration svg{width:100%;height:100%}
+.cs-info{flex:1;min-width:0}
+.cs-state-name{font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;transition:color 0.4s ease}
+.cs-state-desc{font-size:0.82rem;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.cs-completion{display:flex;align-items:baseline;gap:6px;margin-bottom:10px}
+.cs-pct{font-size:1.6rem;font-weight:800;transition:color 0.4s ease}
+.cs-pct-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
+.cs-bar{height:6px;background:var(--surface2);border-radius:6px;overflow:hidden}
+.cs-bar-fill{height:100%;border-radius:6px;transition:width 0.8s cubic-bezier(0.16,1,0.3,1),background 0.4s ease;width:0%}
+/* State colors */
+.cs-lazy .cs-state-name{color:#ef4444}.cs-lazy .cs-pct{color:#ef4444}.cs-lazy .cs-bar-fill{background:#ef4444}.cs-lazy{border-color:rgba(239,68,68,0.2)}
+.cs-easy .cs-state-name{color:#f59e0b}.cs-easy .cs-pct{color:#f59e0b}.cs-easy .cs-bar-fill{background:#f59e0b}.cs-easy{border-color:rgba(245,158,11,0.2)}
+.cs-trying .cs-state-name{color:#eab308}.cs-trying .cs-pct{color:#eab308}.cs-trying .cs-bar-fill{background:#eab308}.cs-trying{border-color:rgba(234,179,8,0.2)}
+.cs-active .cs-state-name{color:#22c55e}.cs-active .cs-pct{color:#22c55e}.cs-active .cs-bar-fill{background:#22c55e}.cs-active{border-color:rgba(34,197,94,0.2)}
+.cs-productive .cs-state-name{color:#3b82f6}.cs-productive .cs-pct{color:#3b82f6}.cs-productive .cs-bar-fill{background:#3b82f6}.cs-productive{border-color:rgba(59,130,246,0.2)}
+.cs-fire .cs-state-name{color:#f97316}.cs-fire .cs-pct{color:#f97316}.cs-fire .cs-bar-fill{background:linear-gradient(90deg,#f97316,#ef4444)}.cs-fire{border-color:rgba(249,115,22,0.2)}
+.cs-overwhelmed .cs-state-name{color:#ef4444}.cs-overwhelmed .cs-pct{color:#ef4444}.cs-overwhelmed .cs-bar-fill{background:#ef4444}.cs-overwhelmed{border-color:rgba(239,68,68,0.2)}
+
+/* Today's Strategy */
+.strategy-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px;position:relative;overflow:hidden}
+.strategy-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5}
+.strategy-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.strategy-icon{font-size:1rem}
+.strategy-box h3{font-size:0.82rem;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+.strategy-subtitle{font-size:0.75rem;color:var(--muted);margin-bottom:16px;font-style:italic}
+.strategy-box li{font-size:0.82rem;color:var(--text);padding:8px 0 8px 20px;position:relative;line-height:1.55;list-style:none;border-bottom:1px solid rgba(255,255,255,0.03)}
+.strategy-box li:last-child{border-bottom:none}
+.strategy-box li::before{content:'';position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.7}
+.strategy-box li.goal-ref{color:var(--accent);font-weight:500}
+.strategy-box li.tradeoff{color:#f59e0b}
+.strategy-box li.tradeoff::before{background:#f59e0b}
+.strategy-box li.positive{color:#22c55e}
+.strategy-box li.positive::before{background:#22c55e}
 
 /* Timeline */
 .timeline{position:relative;padding-left:32px}
@@ -191,10 +251,6 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 @keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-4px)}20%,40%,60%,80%{transform:translateX(4px)}}
 .shake{animation:shake 0.4s ease-in-out}
 
-.improve-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px}
-.improve-box h3{font-size:0.82rem;color:var(--rose);margin-bottom:12px;font-weight:600}
-.improve-box li{font-size:0.85rem;color:var(--muted);padding:5px 0 5px 18px;position:relative;line-height:1.5;list-style:none}
-.improve-box li::before{content:'!';position:absolute;left:0;top:5px;width:16px;height:16px;border-radius:50%;background:rgba(244,63,94,0.15);color:var(--rose);font-size:0.65rem;display:flex;align-items:center;justify-content:center;font-weight:700}
 .quote-box{text-align:center;margin-top:20px;padding:18px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(192,132,252,0.06));border:1px solid var(--border);font-size:0.88rem;color:var(--muted);font-style:italic}
 .edit-btn{display:block;margin:24px auto 0;padding:12px 32px;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--muted);font-size:0.88rem;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:inherit}
 .edit-btn:hover{border-color:var(--accent);color:var(--text)}
@@ -385,6 +441,15 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <div class="mp-vol-wrap"><span class="mp-vol-icon">🔊</span><input type="range" class="mp-vol" id="mp-vol" min="0" max="100" value="70" oninput="setVolume(this.value)"></div>
       </div>
       <div class="progress-dashboard" id="progress-dashboard">
+        <div class="dash-card mission-card" id="mission-card">
+          <div class="mission-top">
+            <div class="mission-day-num" id="day-count">1</div>
+            <div class="mission-badge" id="mission-badge">On Track</div>
+          </div>
+          <div class="mission-sub" id="mission-sub">Day 1 of 30</div>
+          <div class="mission-progress-track"><div class="mission-progress-fill" id="mission-fill"></div></div>
+          <div class="mission-footer"><span id="mission-remaining">29 days left</span><span id="mission-pct">3%</span></div>
+        </div>
         <div class="dash-card">
           <div class="ring-wrap"><svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" id="ring-fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="213.6"/></svg><div class="ring-text" id="ring-text">0%</div></div>
           <div class="dash-label">Progress</div>
@@ -392,7 +457,26 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <div class="dash-card"><div class="dash-value" id="tasks-left">0</div><div class="dash-label">Tasks Left</div></div>
         <div class="dash-card"><div class="dash-value" id="time-left">0h</div><div class="dash-label">Time Left</div></div>
       </div>
-      <div class="strategy-box" id="strategy-box"><h3>Why this works</h3><ul id="strategy-list"></ul></div>
+      <div class="current-state-card" id="current-state-card">
+        <div class="cs-header">
+          <div class="cs-icon-wrap"><svg class="cs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div><h3 class="cs-title">Current State</h3><div class="cs-sub">Your state is based on task completion and progress.</div></div>
+        </div>
+        <div class="cs-body">
+          <div class="cs-illustration" id="cs-illustration"></div>
+          <div class="cs-info">
+            <div class="cs-state-name" id="cs-state-name">Active</div>
+            <div class="cs-state-desc" id="cs-state-desc">You're on track and getting things done.</div>
+            <div class="cs-completion"><span class="cs-pct" id="cs-pct">0%</span><span class="cs-pct-label">Completion</span></div>
+            <div class="cs-bar"><div class="cs-bar-fill" id="cs-bar-fill"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="strategy-box" id="strategy-box">
+        <div class="strategy-header"><span class="strategy-icon">🧠</span><h3>Today's Strategy</h3></div>
+        <div class="strategy-subtitle" id="strategy-subtitle">Here's why your day is built this way.</div>
+        <ul id="strategy-list"></ul>
+      </div>
       <div class="timeline" id="timeline"></div>
       <div class="streak-card" id="streak-card">
         <div class="streak-fire" id="streak-fire">🔥</div>
@@ -404,15 +488,14 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
           <div class="streak-stat"><div class="ss-val" id="streak-xp">+200</div><div class="ss-label">XP Earned</div></div>
         </div>
       </div>
-      <div class="improve-box" id="improve-box"><h3>Optimization Notes</h3><ul id="improve-list"></ul></div>
       <div class="quote-box" id="quote-box"></div>
       <button class="edit-btn" onclick="resetAll()">← Start over</button>
     </div>
   </div>
 
   <div id="nav-tabs" class="nav-tabs" style="display:none">
-    <button class="nav-tab active" onclick="switchTab('schedule')">Today</button>
-    <button class="nav-tab" onclick="switchTab('progress')">Progress</button>
+    <button class="nav-tab active" onclick="switchTab('schedule',event)">Today</button>
+    <button class="nav-tab" onclick="switchTab('progress',event)">Progress</button>
   </div>
 
   <div id="progress-view" style="display:none;padding:80px 24px 100px">
@@ -463,6 +546,7 @@ let completedCount=0;
 let totalBlocks=0;
 let streak=parseInt(localStorage.getItem('planner_streak')||'0');
 let lastDay=localStorage.getItem('planner_last_day');
+let lastDisplayedDay=0;
 let audioCtx=null;
 let activeTab='schedule';
 let musicTracks=[];
@@ -652,7 +736,8 @@ function showSummary(){
   if(!state.startDate)state.startDate=new Date().toISOString().split('T')[0];
   if(state.lifestyle==='working'){state.workStart=document.getElementById('work-start')?.value||'';state.workEnd=document.getElementById('work-end')?.value||'';state.commute=parseInt(document.getElementById('commute2')?.value)||0}
   else if(state.lifestyle==='student'){state.workStart=document.getElementById('class-start')?.value||'';state.workEnd=document.getElementById('class-end')?.value||'';state.commute=parseInt(document.getElementById('commute')?.value)||0}
-  else if(state.lifestyle==='parttime'){state.workStart=document.getElementById('shift-start')?.value||'';state.workEnd=document.getElementById('shift-end')?.value||''}
+  else if(state.lifestyle==='parttime'){state.workStart=document.getElementById('shift-start')?.value||'';state.workEnd=document.getElementById('shift-end')?.value||'';state.commute=0}
+  else{state.workStart='';state.workEnd='';state.commute=0}
   const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
   const ln={free:'Free most of the day',student:'Student',working:'Working full time',parttime:'Part-time / shifts'};
   const pn={morning:'Morning Person',afternoon:'Afternoon',night:'Night Owl',flexible:'Flexible'};
@@ -729,35 +814,104 @@ function buildSchedule(){
 
   scheduleBlocks=clean;totalBlocks=clean.length;completedCount=0;
 
-  const strategies=[];const sleepHrs=((1440-(bed-wake))/60).toFixed(1);
-  strategies.push(`Sleep: ${sleepHrs}h. ${parseFloat(sleepHrs)>=7?'Within recommended range.':'Consider earlier bedtime.'}`);
-  if(isMorning)strategies.push('Deep work in morning — peak cortisol window.');
-  else if(isNight)strategies.push('Deep work shifted to evening — creative peak.');
-  else strategies.push('Deep work split morning + afternoon for balanced energy.');
-  strategies.push('Meals spaced 4-5 hours apart for stable blood sugar.');
-  strategies.push('90-min focus blocks match ultradian rhythm.');
-  if(hasCommit)strategies.push(`Commitments blocked ${fmtTime(commitS)}–${fmtTime(commitE)}.`);
-  if(hasWorkout&&morningWorkout)strategies.push('Morning workout for cortisol alignment.');
-  if(hasWorkout&&prefs.includes('evening-workout'))strategies.push('Evening workout: peak body temperature.');
-  if(prefs.includes('meditation'))strategies.push('Morning meditation primes prefrontal cortex.');
+  const daily=getDailyCompletions();
+  const todayStr=new Date().toISOString().split('T')[0];
+  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  const yesterdayStr=yesterday.toISOString().split('T')[0];
+  const yesterdayData=daily[yesterdayStr];
+  const prevPct=yesterdayData?yesterdayData.pct:0;
+  const prevCount=yesterdayData?yesterdayData.count:0;
 
-  const improvements=[];if(parseFloat(sleepHrs)<7)improvements.push(`Only ${sleepHrs}h sleep. Cognitive performance drops after 3 days of <7h.`);
-  if(!hasWorkout&&state.goal!=='mental')improvements.push('No exercise scheduled. Even 20 min walking improves focus 2+ hours.');
-  if(!prefs.includes('social'))improvements.push('No social time. 15 min daily connection compounds.');
+  const sleepHrs=((1440-(bed-wake))/60).toFixed(1);
+  const goalDesc=state.desc||'your goal';
+  const goalName={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'}[state.goal]||'your goal';
+  const totalTaskMin=clean.reduce((a,b)=>a+b.dur,0);
+  const deepWorkBlocks=clean.filter(b=>b.title.includes('Session')||b.title.includes('Study')||b.title.includes('Coding')||b.title.includes('Work')||b.title.includes('Activity')||b.title.includes('Creative'));
+  const deepWorkMin=deepWorkBlocks.reduce((a,b)=>a+b.dur,0);
+  const breakCount=clean.filter(b=>b.title==='Break'||b.title.includes('Break')).length;
+
+  const strategies=[];
+
+  if(prevPct>=80){
+    strategies.push({text:`You crushed ${prevPct}% of yesterday's tasks. Today keeps the same structure because what's working shouldn't be changed.`,cls:'positive'});
+  }else if(prevPct>=50){
+    strategies.push({text:`Yesterday you finished ${prevPct}% — solid effort. Today's schedule keeps your strongest blocks but gives you more breathing room between tasks.`,cls:''});
+  }else if(prevPct>0){
+    strategies.push({text:`Yesterday was tough at ${prevPct}%. Today reduces task density slightly so you can focus on quality over quantity.`,cls:'tradeoff'});
+  }else{
+    strategies.push({text:`Fresh start. Today's plan is built around your ${state.productivity==='morning'?'morning':state.productivity==='night'?'evening':'peak'} focus window to build momentum.`,cls:''});
+  }
+
+  const wakeHr=Math.floor(wake/60);
+  const bedHr=Math.floor(bed/60);
+  if(wakeHr<=6){
+    strategies.push({text:`Up at ${fmtTime(wake)} gives you ${durStr(morningAvail)} of uninterrupted time before the day gets busy. That's your edge.`,cls:'positive'});
+  }else if(wakeHr>=8){
+    strategies.push({text:`Starting at ${fmtTime(wake)} means your morning focus block is shorter, so the hardest work is front-loaded.`,cls:''});
+  }
+
+  if(isMorning){
+    strategies.push({text:`Your deepest focus block is scheduled before noon — that's when your brain's working memory peaks for ${goalDesc}.`,cls:'goal-ref'});
+  }else if(isNight){
+    strategies.push({text:`You're a night owl, so ${goalDesc} work is shifted to your evening creative peak when distractions fade.`,cls:'goal-ref'});
+  }else{
+    strategies.push({text:`Focus work is split into two sessions — one in the morning, one after lunch — to match your natural energy dips.`,cls:''});
+  }
+
+  if(deepWorkMin>=180){
+    strategies.push({text:`${durStr(deepWorkMin)} of dedicated ${goalDesc} time today. That's enough to make real progress without burnout.`,cls:'goal-ref'});
+  }else if(deepWorkMin>=90){
+    strategies.push({text:`One focused ${durStr(deepWorkMin)} block for ${goalDesc}. Short but intense — use it for your highest-priority task.`,cls:''});
+  }
+
+  if(breakCount>=2){
+    strategies.push({text:`${breakCount} breaks built in. Not filler — your brain consolidates learning during rest. Don't skip them.`,cls:'positive'});
+  }else if(breakCount===0&&totalTaskMin>180){
+    strategies.push({text:`No formal breaks scheduled. Consider standing up every 90 minutes — even 2 minutes prevents mental fatigue.`,cls:'tradeoff'});
+  }
+
+  if(hasWorkout&&morningWorkout){
+    strategies.push({text:`Morning workout triggers cortisol alignment — you'll feel alert for hours after. Exercise before ${goalDesc} work.`,cls:'positive'});
+  }else if(hasWorkout&&prefs.includes('evening-workout')){
+    strategies.push({text:`Evening workout when body temperature peaks. It'll decompress your day and improve tonight's sleep quality.`,cls:''});
+  }else if(!hasWorkout&&state.goal!=='mental'){
+    strategies.push({text:`No exercise today. Even a 15-min walk would boost your focus for the next ${goalDesc} block.`,cls:'tradeoff'});
+  }
+
+  const hasMeditation=prefs.includes('meditation');
+  const hasJournal=prefs.includes('journal');
+  if(hasMeditation){
+    strategies.push({text:`Morning meditation before ${goalDesc} — it quiets the noise so you can focus faster when it counts.`,cls:''});
+  }
+
+  if(hasCommit){
+    strategies.push({text:`Your ${state.lifestyle==='working'?'work':'class'} block is locked at ${fmtTime(commitS)}–${fmtTime(commitE)}. Everything else is scheduled around it.`,cls:''});
+  }
+
+  if(parseFloat(sleepHrs)<7){
+    strategies.push({text:`Only ${sleepHrs}h of sleep. Your focus will dip after lunch — don't schedule demanding tasks there.`,cls:'tradeoff'});
+  }else if(parseFloat(sleepHrs)>=8){
+    strategies.push({text:`${sleepHrs}h sleep window. More than enough for memory consolidation — your recovery is solid.`,cls:'positive'});
+  }
+
+  const now=new Date();const currentHr=now.getHours();
+  if(currentHr>=12&&currentHr<14){
+    strategies.push({text:`It's afternoon — if you haven't eaten yet, do it now. Low blood sugar kills focus for the rest of the day.`,cls:''});
+  }else if(currentHr>=17){
+    strategies.push({text:`Evening check-in: your remaining tasks are lighter by design. Wind down instead of pushing through.`,cls:''});
+  }
 
   document.getElementById('steps-container').style.display='none';
   document.getElementById('progress-bar').style.display='none';
   document.getElementById('schedule-view').style.display='block';
   document.getElementById('nav-tabs').style.display='flex';
 
-  const gn={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'};
-  document.getElementById('s-tag').textContent=gn[state.goal]||state.goal;
-  document.getElementById('strategy-list').innerHTML=strategies.map(s=>`<li>${s}</li>`).join('');
-  document.getElementById('improve-list').innerHTML=improvements.length?improvements.map(s=>`<li>${s}</li>`).join(''):'<li>Schedule looks solid. Trust it.</li>';
+  document.getElementById('s-tag').textContent=goalName;
+  document.getElementById('strategy-subtitle').textContent=prevPct>0?`Based on your ${prevPct}% completion yesterday.`:`First day — building your foundation for ${goalDesc}.`;
+  document.getElementById('strategy-list').innerHTML=strategies.map(s=>`<li class="${s.cls}">${s.text}</li>`).join('');
   document.getElementById('quote-box').textContent=quotes[Math.floor(Math.random()*quotes.length)];
 
   const today=new Date().toISOString().split('T')[0];
-  const daily=getDailyCompletions();
   const todayData=daily[today];
   completedCount=0;
   renderTimeline(todayData?todayData.completed:[]);
@@ -820,11 +974,17 @@ function completeTask(btn,idx){
       toast.classList.remove('done','low');
       toast.classList.add('show');
       setTimeout(()=>toast.classList.remove('show'),5000);
+      const today=new Date().toISOString().split('T')[0];
+      const completedTitles=scheduleBlocks.filter((_,i)=>document.querySelector(`.t-block[data-idx="${i}"] .t-check`)?.classList.contains('checked')).map(b=>b.title);
+      saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
     }else{
       btn.classList.remove('checked');
       block.classList.remove('done');
       completedCount=Math.max(0,completedCount-1);
       updateDash();
+      const today=new Date().toISOString().split('T')[0];
+      const completedTitles=scheduleBlocks.filter((_,i)=>document.querySelector(`.t-block[data-idx="${i}"] .t-check`)?.classList.contains('checked')).map(b=>b.title);
+      saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
     }
     return;
   }
@@ -876,13 +1036,62 @@ function updateDash(){
   const remaining=totalBlocks-completedCount;
   const now=new Date();const cm=now.getHours()*60+now.getMinutes();
   const timeUntilMidnight=1440-cm;
+
+  const startDate=state.startDate?new Date(state.startDate):new Date();
+  const dayNum=Math.max(1,Math.floor((now-startDate)/(1000*60*60*24))+1);
+  const deadline=state.deadline?new Date(state.deadline):null;
+  const totalDays=deadline?Math.max(1,Math.ceil((deadline-startDate)/(1000*60*60*24))):30;
+  const daysRemaining=Math.max(0,totalDays-dayNum);
+  const missionPct=Math.min(100,Math.round((dayNum/totalDays)*100));
+
+  const expectedPct=deadline?Math.min(100,Math.round(((now-startDate)/(deadline-startDate))*100)):Math.min(100,Math.round((dayNum/totalDays)*100));
+  let status,statusClass;
+  if(missionPct>=expectedPct+5){status='Ahead of Schedule';statusClass='ahead'}
+  else if(missionPct>=expectedPct-5){status='On Track';statusClass='on-track'}
+  else if(missionPct>=expectedPct-15){status='Catching Up';statusClass='catching-up'}
+  else{status='Behind Schedule';statusClass='behind'}
+
   document.getElementById('ring-text').textContent=pct+'%';
+  const dayEl=document.getElementById('day-count');
+  if(dayNum!==lastDisplayedDay){dayEl.classList.remove('day-new');void dayEl.offsetWidth;dayEl.classList.add('day-new');lastDisplayedDay=dayNum}
+  dayEl.textContent=dayNum;
+  document.getElementById('mission-sub').textContent=`Day ${dayNum} of ${totalDays}`;
+  document.getElementById('mission-remaining').textContent=daysRemaining>0?`${daysRemaining} days left`:'Goal reached';
+  document.getElementById('mission-pct').textContent=missionPct+'%';
+  document.getElementById('mission-fill').style.width=missionPct+'%';
+  const badge=document.getElementById('mission-badge');
+  badge.textContent=status;
+  badge.className='mission-badge '+statusClass;
   document.getElementById('tasks-left').textContent=remaining;
   document.getElementById('time-left').textContent=durStr(timeUntilMidnight);
 
   const circumference=2*Math.PI*34;
   const offset=circumference-(pct/100)*circumference;
   document.getElementById('ring-fill').style.strokeDashoffset=offset;
+
+  // Current State
+  const states=[
+    {id:'lazy',name:'Lazy',desc:'You haven\'t done much today. Take it easy, a fresh start is always possible.',min:0,max:20,cls:'cs-lazy',svg:'lazy.svg'},
+    {id:'easy',name:'Taking it Easy',desc:'You\'re moving slowly, but every small step counts.',min:21,max:40,cls:'cs-easy',svg:'taking-easy.svg'},
+    {id:'trying',name:'Trying to be Better',desc:'You\'re showing up and putting in the effort. Keep going!',min:41,max:60,cls:'cs-trying',svg:'trying.svg'},
+    {id:'active',name:'Active',desc:'You\'re on track and getting things done. Great consistency!',min:61,max:80,cls:'cs-active',svg:'active.svg'},
+    {id:'productive',name:'Very Productive',desc:'You\'re crushing your tasks! Amazing focus and discipline.',min:81,max:95,cls:'cs-productive',svg:'productive.svg'},
+    {id:'fire',name:'On Fire',desc:'Outstanding! You\'re in the zone and making things happen.',min:96,max:100,cls:'cs-fire',svg:'on-fire.svg'}
+  ];
+  const skippedTasks=totalBlocks-completedCount-remaining;
+  let currentState;
+  if(remaining===0&&completedCount>0){currentState=states[5]}
+  else if(skippedTasks>totalBlocks*0.5){currentState={id:'overwhelmed',name:'Overwhelmed',desc:'Rest is part of your plate. Recharge and come back stronger.',min:0,max:100,cls:'cs-overwhelmed',svg:'overwhelmed.svg'}}
+  else{currentState=states.find(s=>pct>=s.min&&pct<=s.max)||states[0]}
+
+  const card=document.getElementById('current-state-card');
+  card.className='current-state-card '+currentState.cls;
+  document.getElementById('cs-state-name').textContent=currentState.name;
+  document.getElementById('cs-state-desc').textContent=currentState.desc;
+  document.getElementById('cs-pct').textContent=pct+'%';
+  document.getElementById('cs-bar-fill').style.width=pct+'%';
+  const ill=document.getElementById('cs-illustration');
+  if(ill.dataset.current!==currentState.svg){ill.innerHTML=`<img src="assets/states/${currentState.svg}" alt="${currentState.name}" style="width:100%;height:100%;object-fit:contain">`;ill.dataset.current=currentState.svg}
 }
 
 function dayComplete(){
@@ -923,6 +1132,10 @@ function resetAll(){
   document.getElementById('next5').classList.add('ready');
   document.getElementById('goal-desc').value='';
   document.getElementById('deadline').value='';
+  document.getElementById('wake-time').value='06:00';
+  document.getElementById('bed-time').value='22:30';
+  const fieldIds=['class-start','class-end','commute','work-start','work-end','commute2','shift-start','shift-end'];
+  fieldIds.forEach(id=>{const el=document.getElementById(id);if(el){if(el.type==='number')el.value='0';else el.value=el.defaultValue||'09:00'}});
   document.getElementById('schedule-view').style.display='none';
   document.getElementById('progress-view').style.display='none';
   document.getElementById('nav-tabs').style.display='none';
@@ -932,10 +1145,10 @@ function resetAll(){
   showStep(1);
 }
 
-function switchTab(tab){
+function switchTab(tab,ev){
   activeTab=tab;
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  event.target.classList.add('active');
+  ev.target.classList.add('active');
   if(tab==='schedule'){
     document.getElementById('schedule-view').style.display='block';
     document.getElementById('progress-view').style.display='none';
