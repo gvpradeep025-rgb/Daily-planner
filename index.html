@@ -137,7 +137,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .encourage-toast.low{border-color:#f59e0b;background:rgba(245,158,11,0.1)}
 
 /* XP float */
-.xp-float{position:fixed;z-index:200;font-size:0.85rem;font-weight:700;color:var(--accent);pointer-events:none;animation:xpUp 1.2s cubic-bezier(0.16,1,0.3,1) forwards}
+.xp-float{position:fixed;z-index:200;font-size:0.85rem;font-weight:700;color:var(--accent);pointer-events:none;animation:xpUp 1.8s cubic-bezier(0.16,1,0.3,1) forwards}
 @keyframes xpUp{0%{opacity:1;transform:translateY(0) scale(1)}50%{opacity:1;transform:translateY(-30px) scale(1.1)}100%{opacity:0;transform:translateY(-60px) scale(0.9)}}
 
 /* Confetti canvas */
@@ -152,11 +152,11 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 /* Timeline */
 .timeline{position:relative;padding-left:32px}
 .timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--border)}
-.t-block{position:relative;margin-bottom:12px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);cursor:default}
-.t-block::before{content:'';position:absolute;left:-26px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);transition:all 0.3s}
+.t-block{position:relative;margin-bottom:12px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:all 0.4s cubic-bezier(0.16,1,0.3,1);cursor:default}
+.t-block::before{content:'';position:absolute;left:-26px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);transition:all 0.4s cubic-bezier(0.16,1,0.3,1)}
 .t-block.active::before{background:var(--green);box-shadow:0 0 10px var(--green)}
 .t-block.done::before{background:var(--muted)}
-.t-block.done{opacity:0.55}
+.t-block.done{opacity:0.55;transition:opacity 0.5s ease}
 .t-block.completing{animation:cardLift 0.4s cubic-bezier(0.16,1,0.3,1)}
 @keyframes cardLift{0%{transform:scale(1)}30%{transform:scale(1.015) translateY(-2px)}100%{transform:scale(1) translateY(0)}}
 .t-block .success-glow{position:absolute;inset:-1px;border-radius:var(--radius);border:2px solid var(--green);opacity:0;pointer-events:none;animation:glowPulse 0.6s ease-out forwards}
@@ -461,8 +461,8 @@ let soundEnabled=true;
 let scheduleBlocks=[];
 let completedCount=0;
 let totalBlocks=0;
-let streak=parseInt(localStorage.getItem('planner_streak')||'0');
-let lastDay=localStorage.getItem('planner_last_day');
+let streak=0;
+let lastDay=null;
 let audioCtx=null;
 let activeTab='schedule';
 let musicTracks=[];
@@ -471,18 +471,10 @@ let musicAudio=new Audio();
 musicAudio.volume=0.7;
 let musicPlaying=false;
 
-function saveState(){localStorage.setItem('planner_state',JSON.stringify(state))}
-function loadState(){
-  const s=localStorage.getItem('planner_state');
-  if(s){try{const parsed=JSON.parse(s);state={...state,...parsed};return true}catch(e){}}
-  return false;
-}
-function saveDailyCompletions(date,data){
-  const all=JSON.parse(localStorage.getItem('planner_daily')||'{}');
-  all[date]=data;
-  localStorage.setItem('planner_daily',JSON.stringify(all));
-}
-function getDailyCompletions(){return JSON.parse(localStorage.getItem('planner_daily')||'{}')}
+function saveState(){}
+function loadState(){return false}
+function saveDailyCompletions(){}
+function getDailyCompletions(){return {}}
 
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
 function playClick(){if(!soundEnabled)return;try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=800;g.gain.value=0.1;g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.08);o.start();o.stop(ctx.currentTime+0.08)}catch(e){}}
@@ -573,7 +565,7 @@ function showEncouragement(pct){
   if(pct>=1)toast.classList.add('done');
   else if(pct<0.5)toast.classList.add('low');
   toast.classList.add('show');
-  const dur=pct>=1?4000:pct>=0.7?4000:msg.t.length>40?5000:4000;
+  const dur=pct>=1?6000:pct>=0.7?6000:msg.t.length>40?7000:6000;
   setTimeout(()=>toast.classList.remove('show'),dur);
 }
 
@@ -583,7 +575,7 @@ function showXP(x,y){
   el.textContent=`+${x} XP`;
   el.style.left=y+'px';
   document.body.appendChild(el);
-  setTimeout(()=>el.remove(),1200);
+  setTimeout(()=>el.remove(),1800);
 }
 
 function haptic(){if(navigator.vibrate)navigator.vibrate(10)}
@@ -779,7 +771,7 @@ function renderTimeline(completedTitles){
     const el=document.createElement('div');
     el.className='t-block';el.dataset.idx=i;
     const isDone=doneSet.has(item.title);
-    if(isDone||cm>=end)el.classList.add('done');
+    if(isDone)el.classList.add('done');
     else if(cm>=item.start&&cm<end)el.classList.add('active');
     el.innerHTML=`<div class="t-time">${fmtTime(item.start)} — ${fmtTime(end)} · ${durStr(item.dur)}</div><div class="t-title">${item.title}</div><div class="t-desc">${item.desc}</div>${item.reason?`<div class="t-reason">${item.reason}</div>`:''}<div class="t-icon">${item.icon}</div><button class="t-check${isDone?' checked':''}" onclick="completeTask(this,${i})">✓</button>`;
     tl.appendChild(el);
@@ -792,14 +784,14 @@ function refreshTimeline(){
   document.querySelectorAll('.t-block').forEach((el,i)=>{
     const item=scheduleBlocks[i];if(!item)return;
     const end=item.start+item.dur;
-    const wasDone=el.classList.contains('done');
-    const isCurrentlyDone=wasDone||cm>=end;
-    const isCurrentlyActive=!isCurrentlyDone&&cm>=item.start&&cm<end;
-    el.classList.toggle('done',isCurrentlyDone);
+    const isDone=el.querySelector('.t-check')?.classList.contains('checked');
+    const isCurrentlyActive=!isDone&&cm>=item.start&&cm<end;
+    el.classList.toggle('done',isDone);
     el.classList.toggle('active',isCurrentlyActive);
   });
 }
 setInterval(refreshTimeline,30000);
+setInterval(updateDash,60000);
 
 function completeTask(btn,idx){
   const block=btn.closest('.t-block');
@@ -819,18 +811,12 @@ function completeTask(btn,idx){
       document.getElementById('e-text').textContent="Time's still left. Focus.";
       toast.classList.remove('done','low');
       toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'),3000);
-      const today=new Date().toISOString().split('T')[0];
-      const completedTitles=scheduleBlocks.filter((_,i)=>document.querySelector(`.t-block[data-idx="${i}"] .t-check`)?.classList.contains('checked')).map(b=>b.title);
-      saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
+      setTimeout(()=>toast.classList.remove('show'),5000);
     }else{
       btn.classList.remove('checked');
       block.classList.remove('done');
       completedCount=Math.max(0,completedCount-1);
       updateDash();
-      const today=new Date().toISOString().split('T')[0];
-      const completedTitles=scheduleBlocks.filter((_,i)=>document.querySelector(`.t-block[data-idx="${i}"] .t-check`)?.classList.contains('checked')).map(b=>b.title);
-      saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
     }
     return;
   }
@@ -842,7 +828,7 @@ function completeTask(btn,idx){
     document.getElementById('e-text').textContent="Time's still left. Focus.";
     toast.classList.remove('done','low');
     toast.classList.add('show');
-    setTimeout(()=>toast.classList.remove('show'),3000);
+    setTimeout(()=>toast.classList.remove('show'),5000);
     return;
   }
   btn.classList.add('checked');
@@ -880,14 +866,11 @@ function completeTask(btn,idx){
 function updateDash(){
   const pct=totalBlocks?Math.round((completedCount/totalBlocks)*100):0;
   const remaining=totalBlocks-completedCount;
-  let totalMin=0;
-  for(let i=0;i<scheduleBlocks.length;i++){
-    const el=document.querySelector(`.t-block[data-idx="${i}"] .t-check`);
-    if(!el||!el.classList.contains('checked'))totalMin+=scheduleBlocks[i].dur;
-  }
+  const now=new Date();const cm=now.getHours()*60+now.getMinutes();
+  const timeUntilMidnight=1440-cm;
   document.getElementById('ring-text').textContent=pct+'%';
   document.getElementById('tasks-left').textContent=remaining;
-  document.getElementById('time-left').textContent=durStr(totalMin);
+  document.getElementById('time-left').textContent=durStr(timeUntilMidnight);
 
   const circumference=2*Math.PI*34;
   const offset=circumference-(pct/100)*circumference;
@@ -900,7 +883,7 @@ function dayComplete(){
   setTimeout(()=>spawnConfetti(20),300);
 
   const today=new Date().toDateString();
-  if(lastDay!==today){streak++;localStorage.setItem('planner_streak',streak);localStorage.setItem('planner_last_day',today)}
+  if(lastDay!==today){streak++}
 
   const streakCard=document.getElementById('streak-card');
   streakCard.classList.add('show');
@@ -916,16 +899,14 @@ function dayComplete(){
 
 function checkStreak(){
   const today=new Date().toDateString();
-  if(lastDay===today){streak=parseInt(localStorage.getItem('planner_streak')||'0')}
-  else{
+  if(lastDay!==today){
     const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
-    if(lastDay!==yesterday.toDateString()){streak=0;localStorage.setItem('planner_streak','0')}
+    if(lastDay!==yesterday.toDateString()){streak=0}
   }
 }
 
 function resetAll(){
   state={goal:'',desc:'',lifestyle:'',workStart:'',workEnd:'',commute:0,productivity:'',wake:'06:00',bed:'22:30',prefs:[],deadline:'',startDate:''};
-  localStorage.removeItem('planner_state');
   document.querySelectorAll('.goal-card,.lifestyle-card,.prod-card,.pref-chip').forEach(c=>c.classList.remove('selected'));
   document.querySelectorAll('.inline-fields').forEach(f=>f.classList.remove('show'));
   document.querySelectorAll('.next-btn').forEach(b=>b.classList.remove('ready'));
@@ -1051,15 +1032,6 @@ function restoreOnboarding(){
 }
 
 updateProgress();
-
-// Restore state on load
-if(loadState()&&state.goal){
-  document.getElementById('steps-container').style.display='none';
-  document.getElementById('progress-bar').style.display='none';
-  document.getElementById('schedule-view').style.display='block';
-  document.getElementById('nav-tabs').style.display='flex';
-  buildSchedule();
-}
 </script>
 </body>
 </html>

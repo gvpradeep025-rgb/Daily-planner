@@ -5,5 +5,21 @@ Desktop.ini
 
 # Editor files
 .vscode/
+.idea/
 *.swp
 *.swo
+*~
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
