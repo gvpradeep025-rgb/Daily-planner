@@ -461,8 +461,8 @@ let soundEnabled=true;
 let scheduleBlocks=[];
 let completedCount=0;
 let totalBlocks=0;
-let streak=0;
-let lastDay=null;
+let streak=parseInt(localStorage.getItem('planner_streak')||'0');
+let lastDay=localStorage.getItem('planner_last_day');
 let audioCtx=null;
 let activeTab='schedule';
 let musicTracks=[];
@@ -471,10 +471,18 @@ let musicAudio=new Audio();
 musicAudio.volume=0.7;
 let musicPlaying=false;
 
-function saveState(){}
-function loadState(){return false}
-function saveDailyCompletions(){}
-function getDailyCompletions(){return {}}
+function saveState(){localStorage.setItem('planner_state',JSON.stringify(state))}
+function loadState(){
+  const s=localStorage.getItem('planner_state');
+  if(s){try{const parsed=JSON.parse(s);state={...state,...parsed};return true}catch(e){}}
+  return false;
+}
+function saveDailyCompletions(date,data){
+  const all=JSON.parse(localStorage.getItem('planner_daily')||'{}');
+  all[date]=data;
+  localStorage.setItem('planner_daily',JSON.stringify(all));
+}
+function getDailyCompletions(){return JSON.parse(localStorage.getItem('planner_daily')||'{}')}
 
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
 function playClick(){if(!soundEnabled)return;try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=800;g.gain.value=0.1;g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.08);o.start();o.stop(ctx.currentTime+0.08)}catch(e){}}
@@ -883,7 +891,7 @@ function dayComplete(){
   setTimeout(()=>spawnConfetti(20),300);
 
   const today=new Date().toDateString();
-  if(lastDay!==today){streak++}
+  if(lastDay!==today){streak++;localStorage.setItem('planner_streak',streak);localStorage.setItem('planner_last_day',today)}
 
   const streakCard=document.getElementById('streak-card');
   streakCard.classList.add('show');
@@ -899,14 +907,16 @@ function dayComplete(){
 
 function checkStreak(){
   const today=new Date().toDateString();
-  if(lastDay!==today){
+  if(lastDay===today){streak=parseInt(localStorage.getItem('planner_streak')||'0')}
+  else{
     const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
-    if(lastDay!==yesterday.toDateString()){streak=0}
+    if(lastDay!==yesterday.toDateString()){streak=0;localStorage.setItem('planner_streak','0')}
   }
 }
 
 function resetAll(){
   state={goal:'',desc:'',lifestyle:'',workStart:'',workEnd:'',commute:0,productivity:'',wake:'06:00',bed:'22:30',prefs:[],deadline:'',startDate:''};
+  localStorage.removeItem('planner_state');
   document.querySelectorAll('.goal-card,.lifestyle-card,.prod-card,.pref-chip').forEach(c=>c.classList.remove('selected'));
   document.querySelectorAll('.inline-fields').forEach(f=>f.classList.remove('show'));
   document.querySelectorAll('.next-btn').forEach(b=>b.classList.remove('ready'));
@@ -1032,6 +1042,15 @@ function restoreOnboarding(){
 }
 
 updateProgress();
+
+// Restore state on load
+if(loadState()&&state.goal){
+  document.getElementById('steps-container').style.display='none';
+  document.getElementById('progress-bar').style.display='none';
+  document.getElementById('schedule-view').style.display='block';
+  document.getElementById('nav-tabs').style.display='flex';
+  buildSchedule();
+}
 </script>
 </body>
 </html>
