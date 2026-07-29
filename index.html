@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -13,8 +16,8 @@
   --radius:16px;--radius-sm:10px;
 }
 html{scroll-behavior:smooth}
+*:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 .app{min-height:100vh;display:flex;flex-direction:column}
 
 /* Progress bar */
@@ -166,7 +169,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .mission-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);opacity:0.6}
 .mission-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
 .mission-day-num{font-size:2.8rem;font-weight:800;line-height:1;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.mission-badge{padding:4px 12px;border-radius:100px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;margin-top:4px}
+.mission-badge{padding:4px 12px;border-radius:100px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;margin-top:4px;animation:missionPulse 2s infinite}
 .mission-badge.on-track{background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.2)}
 .mission-badge.ahead{background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.2)}
 .mission-badge.catching-up{background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.2)}
@@ -181,18 +184,17 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .mission-footer{display:flex;justify-content:center;align-items:center}
 .mission-footer span{font-size:0.72rem;color:var(--muted);font-weight:500}
 @keyframes missionPulse{0%,100%{opacity:1}50%{opacity:0.7}}
-.mission-badge{animation:missionPulse 2s ease-in-out infinite}
 @keyframes dayFlip{0%{transform:translateY(0) scale(1);opacity:1}30%{transform:translateY(-8px) scale(1.1);opacity:0.5}60%{transform:translateY(4px) scale(0.95);opacity:0.8}100%{transform:translateY(0) scale(1);opacity:1}}
 .mission-day-num.day-new{animation:dayFlip 0.6s cubic-bezier(0.16,1,0.3,1)}
 @keyframes barGrow{from{width:0%}to{width:var(--target-w)}}
 .mission-progress-fill{animation:barGrow 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
 
 /* Encouragement toast */
-.encourage-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:10px 24px;font-size:0.85rem;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:200;display:flex;align-items:center;gap:8px;opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;white-space:nowrap}
+.encourage-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 24px;font-size:0.88rem;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:200;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;max-width:min(440px,90vw);text-align:center;line-height:1.5}
 .encourage-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.encourage-toast .e-emoji{font-size:1.1rem}
-.encourage-toast.done{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:#22c55e;color:#fff;font-weight:600;font-size:1rem;padding:14px 32px}
-.encourage-toast.low{border-color:#f59e0b;background:rgba(245,158,11,0.1)}
+.encourage-toast .e-source{font-size:0.72rem;color:var(--muted);font-style:normal;letter-spacing:0.3px;margin-top:2px}
+.encourage-toast.done{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:#22c55e;color:#fff;font-weight:600;font-size:0.95rem;padding:16px 32px;border-radius:100px}
+.encourage-toast.done .e-source{color:rgba(255,255,255,0.7)}
 
 /* XP float */
 .xp-float{position:fixed;z-index:200;font-size:0.85rem;font-weight:700;color:var(--accent);pointer-events:none;animation:xpUp 1.8s cubic-bezier(0.16,1,0.3,1) forwards}
@@ -259,17 +261,23 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .t-time{font-size:0.7rem;color:var(--accent);font-weight:700;letter-spacing:0.5px}
 .t-title{font-size:0.92rem;font-weight:600;margin:3px 0 2px;transition:all 0.3s}
 .t-block.done .t-title{text-decoration:line-through;text-decoration-color:var(--muted);animation:strikeThrough 0.4s ease-out}
+.t-block.early .t-time::after{content:' — early';font-size:0.65rem;color:var(--accent);font-style:italic;font-weight:400}
 @keyframes strikeThrough{from{text-decoration-color:transparent}to{text-decoration-color:var(--muted)}}
 .t-desc{font-size:0.8rem;color:var(--muted);line-height:1.4}
 .t-reason{font-size:0.7rem;color:var(--accent);opacity:0.5;margin-top:3px;font-style:italic}
 .t-icon{position:absolute;right:14px;top:14px;font-size:1.1rem}
-.t-check{position:absolute;right:14px;bottom:12px;width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);font-size:0.7rem;color:transparent;overflow:visible}
-.t-check:hover{border-color:var(--green);transform:scale(1.1)}
-.t-check:active{transform:scale(0.9)}
-.t-check.checked{background:var(--green);border-color:var(--green);color:#fff;animation:checkBounce 0.4s cubic-bezier(0.16,1,0.3,1)}
+.t-check{position:absolute;right:8px;bottom:6px;width:26px;height:26px;border-radius:50%;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);font-size:0;color::transparent;overflow:visible;padding:0}
+.t-check::before{content:'';width:18px;height:18px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:all 0.25s cubic-bezier(0.16,1,0.3,1)}
+.t-check::after{content:'';width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) scale(0);transition:transform 0.25s cubic-bezier(0.16,1,0.3,1);position:absolute;margin-top:-2px}
+.t-check:hover::before{border-color:var(--green);transform:scale(1.1)}
+.t-check:active::before{transform:scale(0.9)}
+.t-check.checked::before{background:var(--green);border-color:var(--green);animation:checkBounce 0.4s cubic-bezier(0.16,1,0.3,1)}
+.t-check.checked::after{transform:rotate(-45deg) scale(1)}
 @keyframes checkBounce{0%{transform:scale(0.8)}40%{transform:scale(1.2)}70%{transform:scale(0.95)}100%{transform:scale(1)}}
-.t-check .ripple{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(34,197,94,0.3);animation:rippleOut 0.5s ease-out forwards;pointer-events:none}
-@keyframes rippleOut{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.5);opacity:0}}
+.t-check .ripple{position:absolute;width:26px;height:26px;border-radius:50%;background:rgba(34,197,94,0.3);animation:rippleOut 0.5s ease-out forwards;pointer-events:none}
+@keyframes rippleOut{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2);opacity:0}}
+.shake{animation:shake 0.4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
 /* Streak card */
 .streak-card{background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(244,63,94,0.08));border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-top:20px;text-align:center;display:none}
@@ -284,7 +292,6 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .trophy-anim{font-size:3rem;display:block;margin-bottom:12px;animation:trophyBounce 0.6s cubic-bezier(0.16,1,0.3,1)}
 @keyframes trophyBounce{0%{transform:scale(0) rotate(-20deg)}60%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
 @keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-4px)}20%,40%,60%,80%{transform:translateX(4px)}}
-.shake{animation:shake 0.4s ease-in-out}
 
 .quote-box{text-align:center;margin-top:20px;padding:18px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(192,132,252,0.06));border:1px solid var(--border);font-size:0.88rem;color:var(--muted);font-style:italic}
 .edit-btn{display:block;margin:24px auto 0;padding:12px 32px;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--muted);font-size:0.88rem;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:inherit}
@@ -365,7 +372,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
-<div class="encourage-toast" id="encourage-toast"><span class="e-emoji" id="e-emoji"></span><span id="e-text"></span></div>
+<div class="encourage-toast" id="encourage-toast"><span id="e-text"></span><span class="e-source" id="e-source"></span></div>
 <div class="app">
   <div class="progress-wrap" id="progress-bar">
     <button class="back-btn" id="back-btn" onclick="prevStep()">←</button>
@@ -460,7 +467,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
       <div class="s-header">
         <div class="s-header-left">
           <div class="profile-avatar-wrap" onclick="toggleProfilePanel()">
-            <div class="profile-avatar" id="profile-avatar">
+            <div class="profile-avatar" id="profile-avatar" tabindex="0" role="button" aria-label="Open profile">
               <img id="profile-avatar-img" style="display:none">
               <div class="profile-avatar-initials" id="profile-avatar-initials">?</div>
             </div>
@@ -707,16 +714,29 @@ function toggleProfilePanel(){
   if(isOpen){
     panel.classList.remove('open');
     overlay.classList.remove('open');
+    document.getElementById('profile-avatar').focus();
   }else{
     updateProfilePanel();
     panel.classList.add('open');
     overlay.classList.add('open');
+    panel.querySelector('.pp-btn')?.focus();
   }
 }
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const panel=document.getElementById('profile-panel');if(panel&&panel.classList.contains('open'))toggleProfilePanel()}});
 function updateProfilePanel(){
   updateAvatarInitials();
   document.getElementById('pp-streak').textContent=streak;
   document.getElementById('pp-goal').textContent=state.goal?'🎯 '+state.goal:'No goal set';
+
+  const pct=totalBlocks?Math.round((completedCount/totalBlocks)*100):0;
+  document.getElementById('pp-pct').textContent=pct+'%';
+
+  const remaining=totalBlocks-completedCount;
+  const states=[{name:'Lazy',min:0,max:20},{name:'Taking it Easy',min:21,max:40},{name:'Trying',min:41,max:60},{name:'Active',min:61,max:80},{name:'Productive',min:81,max:95},{name:'On Fire',min:96,max:100}];
+  let currentState;
+  if(remaining===0&&completedCount>0){currentState=states[5]}
+  else{currentState=states.find(s=>pct>=s.min&&pct<=s.max)||states[0]}
+  document.getElementById('pp-state').textContent=currentState.name;
 }
 function openSettings(){
   toggleProfilePanel();
@@ -790,37 +810,542 @@ musicAudio.addEventListener('timeupdate',()=>{
 });
 musicAudio.addEventListener('ended',()=>nextTrack());
 
-const quotes=["The secret of getting ahead is getting started. — Mark Twain","Small daily improvements lead to staggering results.","You don't have to be extreme, just consistent.","Discipline is choosing between what you want now and what you want most.","A year from now you'll wish you had started today.","Progress, not perfection.","What you do daily matters more than what you do occasionally.","Start where you are. Use what you have. Do what you can.","Your future self will thank you.","The body achieves what the mind believes."];
 
-const encourageFirst=[{e:'🌅',t:'And just like that, you started.'},{e:'💪',t:"You showed up. That's half the battle."},{e:'🎯',t:'First one down.'},{e:'⭐',t:'Off to a real start.'},{e:'🚀',t:'And we\'re off.'},{e:'🌱',t:'Every forest starts with one seed.'},{e:'🔑',t:'This is the door. You just opened it.'},{e:'👋',t:'Hello, progress.'}];
-const encourageMid=[{e:'🔥',t:'Still going. That matters.'},{e:'⚡',t:'Consistency > intensity.'},{e:'📈',t:'You\'re doing better than you think.'},{e:'💎',t:'Real progress, not just busywork.'},{e:'🏆',t:'Look at you actually doing this.'},{e:'🎶',t:'You\'re in the rhythm now.'},{e:'🧱',t:'Brick by brick. That\'s how it\'s built.'},{e:'🌊',t:'Flow state looks good on you.'}];
-const encourageEnd=[{e:'🏁',t:'Almost home.'},{e:'💪',t:'Finish this one strong.'},{e:'🔥',t:'Just a little more.'},{e:'⭐',t:'Your evening self will thank you.'},{e:'🏠',t:'The finish line is in sight.'},{e:'🎯',t:'One more. You\'ve got this.'}];
-const encourageGood=[{e:'✨',t:'You\'re in a groove. Keep going.'},{e:'🎯',t:'Over halfway. This is working.'},{e:'💪',t:'Real momentum now.'},{e:'⭐',t:'You\'re proving something to yourself.'},{e:'🏔️',t:'You can see the summit from here.'},{e:'🔄',t:'This is becoming who you are.'},{e:'🧠',t:'Your brain is adapting. Trust the process.'}];
-const encourageLow=[{e:'🤔',t:'Don\'t you want things to change?'},{e:'⏳',t:'Every task skipped is a day longer.'},{e:'😤',t:'You\'re better than this.'},{e:'👀',t:'The gap between where you are and where you want to be is built here.'},{e:'💭',t:'What would your future self say right now?'},{e:'🪞',t:'Look at yourself in 30 days if you keep going vs if you stop.'},{e:'⚡',t:'One task. That\'s all it takes to break the streak of not trying.'},{e:'🧱',t:'You don\'t build a wall. You lay one brick perfectly.'},{e:'🔥',t:'The fire is still there. You just need to feed it.'},{e:'🎯',t:'You picked this goal for a reason. Remember it.'},{e:'💪',t:'Comfort zone is where dreams go to die.'},{e:'⏰',t:'Time will pass anyway. Might as well use it.'},{e:'🌧️',t:'Rain doesn\'t last forever. Neither does this slump.'},{e:'🗡️',t:'Sharp tools require sharpening. This is that moment.'},{e:'🏔️',t:'The mountain doesn\'t get smaller. You get stronger.'},{e:'🎲',t:'You can\'t win if you don\'t play.'},{e:'🫀',t:'Your heart is still in this. Let your actions follow.'},{e:'🧊',t:'Cold start is the hardest part. You\'re already warm.'},{e:'🐛',t:'Even the caterpillar has to crawl before it flies.'},{e:'🔑',t:'Discipline is the key you already have. Just use it.'},{e:'🧭',t:'Lost? No. Just recalculating.'},{e:'🔋',t:'Low battery isn\'t dead. Plug in and keep going.'},{e:'🌉',t:'You\'re closer to the other side than you think.'},{e:'🪴',t:'Growth is uncomfortable. That means it\'s working.'},{e:'🏋️',t:'This is the rep that counts. Not the easy ones.'}];
-const encourageDone=[{e:'🎉',t:'Done for the day. You earned this rest.'},{e:'🏆',t:'Every single task. That\'s rare.'},{e:'✨',t:'Day complete. Go enjoy your evening.'},{e:'💪',t:'All done. That took discipline.'}];
 
-function getRandomEncouragement(pct){
-  const p=pct*100;
-  if(p>=100)return encourageDone[Math.floor(Math.random()*encourageDone.length)];
-  if(p>=70)return encourageGood[Math.floor(Math.random()*encourageGood.length)];
-  if(p<50)return encourageLow[Math.floor(Math.random()*encourageLow.length)];
-  if(pct<=0.2)return encourageFirst[Math.floor(Math.random()*encourageFirst.length)];
-  if(pct<=0.7)return encourageMid[Math.floor(Math.random()*encourageMid.length)];
-  return encourageEnd[Math.floor(Math.random()*encourageEnd.length)];
+const quoteLibrary={
+start:[
+{q:"It is not that we have a short time to live, but that we waste a lot of it.",s:"Seneca"},
+{q:"The soul becomes dyed with the color of its thoughts.",s:"Marcus Aurelius"},
+{q:"Well begun is half done.",s:"Aristotle"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"No man is free who is not master of himself.",s:"Epictetus"},
+{q:"Begin at once to live, and count each separate day as a separate life.",s:"Marcus Aurelius"},
+{q:"Do every act of your life as though it were the very last act of your life.",s:"Marcus Aurelius"},
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"You have power over your mind, not outside events. Realize this, and you will find strength.",s:"Marcus Aurelius"},
+{q:"Waste no more time arguing about what a good man should be. Be one.",s:"Marcus Aurelius"},
+{q:"It is not death that a man should fear, but he should fear never beginning to live.",s:"Marcus Aurelius"},
+{q:"When you arise in the morning, think of what a precious privilege it is to be alive.",s:"Marcus Aurelius"},
+{q:"Very little is needed to make a happy life; it is all within yourself.",s:"Marcus Aurelius"},
+{q:"The happiness of your life depends upon the quality of your thoughts.",s:"Marcus Aurelius"},
+{q:"Never esteem anything as of advantage to you that will make you break your word.",s:"Marcus Aurelius"},
+{q:"Think of yourself as dead. You have lived your life. Now take what is left and live it properly.",s:"Marcus Aurelius"},
+{q:"The best revenge is not to be like your enemy.",s:"Marcus Aurelius"},
+{q:"If it is not right, do not do it; if it is not true, do not say it.",s:"Marcus Aurelius"},
+{q:"How much more grievous are the consequences of anger than the causes of it.",s:"Marcus Aurelius"},
+{q:"Accept the things to which fate binds you, and love the people with whom fate brings you together.",s:"Marcus Aurelius"},
+{q:"Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth.",s:"Marcus Aurelius"},
+{q:"Loss is nothing else but change, and change is Nature's delight.",s:"Marcus Aurelius"},
+{q:"Confine yourself to the present.",s:"Marcus Aurelius"},
+{q:"The object of life is not to be on the side of the majority.",s:"Marcus Aurelius"},
+{q:"Never let the future disturb you. You will meet it, if you have to, with the same weapons of reason.",s:"Marcus Aurelius"},
+{q:"It is during our darkest moments that we must focus to see the light.",s:"Marcus Aurelius"},
+{q:"Our life is what our thoughts make it.",s:"Marcus Aurelius"},
+{q:"The mind that is anxious about future events is miserable.",s:"Marcus Aurelius"},
+{q:"Today I escaped anxiety. Or no, I discarded it, for it was within me.",s:"Marcus Aurelius"},
+{q:"You have your own way. Let others find theirs.",s:"Marcus Aurelius"},
+{q:"To live happily is an inward power of the soul.",s:"Marcus Aurelius"},
+{q:"Set yourself a task of some kind. Even a trivial one will do.",s:"Marcus Aurelius"},
+{q:"To live each day as if one's last, never flustered, never apathetic, is the perfection of character.",s:"Marcus Aurelius"},
+{q:"Do not act as if you had ten thousand years to live. Death hangs over you while you live.",s:"Marcus Aurelius"},
+{q:"Never rate any possible gain as greater than the duty you are doing.",s:"Marcus Aurelius"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"The whole future lies in uncertainty: live immediately.",s:"Seneca"},
+{q:"We suffer more often in imagination than in reality.",s:"Seneca"},
+{q:"Luck is what happens when preparation meets opportunity.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"},
+{q:"While we are postponing, life speeds by.",s:"Seneca"},
+{q:"No man was ever wise by chance.",s:"Seneca"},
+{q:"We are more often frightened than hurt.",s:"Seneca"},
+{q:"As is a tale, so is life: not how long it is, but how good it is, is what matters.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"True happiness is to enjoy the present, without anxious dependence upon the future.",s:"Seneca"},
+{q:"He who fears death will never do anything worthy of a living man.",s:"Seneca"},
+{q:"The mind which is free from passions is a citadel.",s:"Marcus Aurelius"},
+{q:"Of things that exist, some depend upon ourselves, others do not.",s:"Epictetus"},
+{q:"Man is not worried by real problems so much as by his imagined anxieties.",s:"Epictetus"},
+{q:"Wealth consists not in having great possessions, but in having few wants.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"Attach yourself to what is spiritually superior, regardless of what other people think or do.",s:"Epictetus"},
+{q:"It is not what happens to you, but how you react to it that matters.",s:"Epictetus"},
+{q:"We cannot choose our external circumstances, but we can always choose how we respond to them.",s:"Epictetus"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"Only the educated are free.",s:"Epictetus"},
+{q:"If you want to improve, be content to appear foolish and stupid.",s:"Epictetus"},
+{q:"The key is to keep company only with people who uplift you.",s:"Epictetus"},
+{q:"Begin each day by telling yourself: today I shall be meeting with interference, ingratitude, insolence, disloyalty.",s:"Marcus Aurelius"},
+{q:"Never value anything as profitable that compelled you to break your promise.",s:"Marcus Aurelius"},
+{q:"The best answer to anger is silence.",s:"Marcus Aurelius"},
+{q:"How many have laid waste to your life when you did not know what you were doing.",s:"Marcus Aurelius"},
+{q:"Let men see, let them know, a real man, who lives as he was meant to live.",s:"Marcus Aurelius"},
+{q:"Do not indulge in dreams of having what you have not, but reckon up the chief of the blessings you do possess.",s:"Marcus Aurelius"}
+],
+early:[
+{q:"It is not that we have a short time to live, but that we waste much of it.",s:"Seneca"},
+{q:"While we are postponing, life speeds by.",s:"Seneca"},
+{q:"The whole future lies in uncertainty: live immediately.",s:"Seneca"},
+{q:"Lay hold of today's task, and you will not need to depend so much upon tomorrow's.",s:"Seneca"},
+{q:"Nothing, Lucilius, is ours, except time.",s:"Seneca"},
+{q:"Putting things off is the biggest waste of life.",s:"Seneca"},
+{q:"The greatest obstacle to living is expectancy, which hangs upon tomorrow and loses today.",s:"Seneca"},
+{q:"No man was ever wise by chance.",s:"Seneca"},
+{q:"True happiness is to enjoy the present, without anxious dependence upon the future.",s:"Seneca"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"It is impossible for a man to learn what he thinks he already knows.",s:"Epictetus"},
+{q:"How long will you wait before you demand the best of yourself?",s:"Epictetus"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"},
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"Do every act of your life as though it were the very last act of your life.",s:"Marcus Aurelius"},
+{q:"You have power over your mind, not outside events. Realize this, and you will find strength.",s:"Marcus Aurelius"},
+{q:"The soul becomes dyed with the color of its thoughts.",s:"Marcus Aurelius"},
+{q:"Waste no more time arguing about what a good man should be. Be one.",s:"Marcus Aurelius"},
+{q:"Accept the things to which fate binds you, and love the people with whom fate brings you together.",s:"Marcus Aurelius"},
+{q:"Confine yourself to the present.",s:"Marcus Aurelius"},
+{q:"The happiness of your life depends upon the quality of your thoughts.",s:"Marcus Aurelius"},
+{q:"Think of yourself as dead. You have lived your life. Now take what is left and live it properly.",s:"Marcus Aurelius"},
+{q:"It is during our darkest moments that we must focus to see the light.",s:"Marcus Aurelius"},
+{q:"Our life is what our thoughts make it.",s:"Marcus Aurelius"},
+{q:"The best revenge is not to be like your enemy.",s:"Marcus Aurelius"},
+{q:"To live each day as if one's last, never flustered, never apathetic, is the perfection of character.",s:"Marcus Aurelius"},
+{q:"Loss is nothing else but change, and change is Nature's delight.",s:"Marcus Aurelius"},
+{q:"Concentrate every minute on doing what's in front of you with precise and genuine seriousness.",s:"Marcus Aurelius"},
+{q:"It is not death that a man should fear, but he should fear never beginning to live.",s:"Marcus Aurelius"},
+{q:"The mind that is anxious about future events is miserable.",s:"Marcus Aurelius"},
+{q:"Never rate any possible gain as greater than the duty you are doing.",s:"Marcus Aurelius"},
+{q:"Never esteem anything as of advantage to you that will make you break your word.",s:"Marcus Aurelius"},
+{q:"If it is not right, do not do it; if it is not true, do not say it.",s:"Marcus Aurelius"},
+{q:"People look for retreats in the country, but this is unphilosophical. You can retire into yourself at any time.",s:"Marcus Aurelius"},
+{q:"Set yourself a task of some kind. Even a trivial one will do.",s:"Marcus Aurelius"},
+{q:"He who fears death will never do anything worthy of a living man.",s:"Marcus Aurelius"},
+{q:"Man is not worried by real problems so much as by his imagined anxieties.",s:"Epictetus"},
+{q:"We cannot choose our external circumstances, but we can always choose how we respond to them.",s:"Epictetus"},
+{q:"If you want to improve, be content to appear foolish and stupid.",s:"Epictetus"},
+{q:"Wealth consists not in having great possessions, but in having few wants.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"Only the educated are free.",s:"Epictetus"},
+{q:"It is not outside forces that make us restless, but our own unexamined thoughts.",s:"Marcus Aurelius"},
+{q:"Never let the future disturb you. You will meet it, if you have to, with the same weapons of reason.",s:"Marcus Aurelius"},
+{q:"Begin each day by telling yourself: today I shall be meeting with interference, ingratitude, insolence, disloyalty.",s:"Marcus Aurelius"},
+{q:"Never value anything as profitable that compelled you to break your promise.",s:"Marcus Aurelius"},
+{q:"The best answer to anger is silence.",s:"Marcus Aurelius"},
+{q:"How many have laid waste to your life when you did not know what you were doing.",s:"Marcus Aurelius"},
+{q:"Let men see, let them know, a real man, who lives as he was meant to live.",s:"Marcus Aurelius"},
+{q:"Do not indulge in dreams of having what you have not, but reckon up the chief of the blessings you do possess.",s:"Marcus Aurelius"},
+{q:"Today I escaped anxiety. Or no, I discarded it, for it was within me.",s:"Marcus Aurelius"},
+{q:"You have your own way. Let others find theirs.",s:"Marcus Aurelius"}
+],
+mid:[
+{q:"Perseverance is not a long race; it is many short races one after the other.",s:"Walter Elliot"},
+{q:"We are what we repeatedly do. Excellence, then, is not an act, but a habit.",s:"Aristotle"},
+{q:"The secret of your future is hidden in your daily routine.",s:"Mike Murdock"},
+{q:"Success is the sum of small efforts, repeated day in and day out.",s:"Robert Collier"},
+{q:"Discipline is choosing between what you want now and what you want most.",s:"Abraham Lincoln"},
+{q:"Do you want to know who you are? Don't ask. Act. Action will delineate and define you.",s:"Thomas Jefferson"},
+{q:"Motivation is what gets you started. Habit is what keeps you going.",s:"Jim Ryun"},
+{q:"The difference between a master and a beginner is that the master has failed more times than the beginner has tried.",s:"Stephen McCraine"},
+{q:"Consistency is what transforms average into excellence.",s:"Unknown"},
+{q:"Small disciplines repeated with consistency every day lead to great achievements.",s:"John C. Maxwell"},
+{q:"It does not matter how slowly you go as long as you do not stop.",s:"Confucius"},
+{q:"Our greatest glory is not in never falling, but in rising every time we fall.",s:"Confucius"},
+{q:"The man who moves a mountain begins by carrying away small stones.",s:"Confucius"},
+{q:"Action is the foundational key to all success.",s:"Pablo Picasso"},
+{q:"Well done is better than well said.",s:"Benjamin Franklin"},
+{q:"The secret of getting ahead is getting started.",s:"Mark Twain"},
+{q:"Amateurs sit and wait for inspiration, the rest of us just get up and go to work.",s:"Stephen King"},
+{q:"You don't have to be great to start, but you have to start to be great.",s:"Zig Ziglar"},
+{q:"What you do speaks so loudly that I cannot hear what you say.",s:"Ralph Waldo Emerson"},
+{q:"The only impossible journey is the one you never begin.",s:"Tony Robbins"},
+{q:"Success is not final, failure is not fatal: it is the courage to continue that counts.",s:"Winston Churchill"},
+{q:"What we think, we become.",s:"Buddha"},
+{q:"The secret of change is to focus all of your energy, not on fighting the old, but on building the new.",s:"Socrates"},
+{q:"Quality is not an act, it is a habit.",s:"Aristotle"},
+{q:"A journey of a thousand miles begins with a single step.",s:"Lao Tzu"},
+{q:"The best time to plant a tree was twenty years ago. The second best time is now.",s:"Chinese Proverb"},
+{q:"Your time is limited, don't waste it living someone else's life.",s:"Steve Jobs"},
+{q:"In the middle of difficulty lies opportunity.",s:"Albert Einstein"},
+{q:"Action expresses priorities.",s:"Mahatma Gandhi"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"It is not that we have a short time to live, but that we waste much of it.",s:"Seneca"},
+{q:"No man was ever wise by chance.",s:"Seneca"},
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"You have power over your mind, not outside events. Realize this, and you will find strength.",s:"Marcus Aurelius"},
+{q:"Waste no more time arguing about what a good man should be. Be one.",s:"Marcus Aurelius"},
+{q:"The soul becomes dyed with the color of its thoughts.",s:"Marcus Aurelius"},
+{q:"Concentrate every minute on doing what's in front of you with precise and genuine seriousness.",s:"Marcus Aurelius"},
+{q:"Do every act of your life as though it were the very last act of your life.",s:"Marcus Aurelius"},
+{q:"Accept the things to which fate binds you, and love the people with whom fate brings you together.",s:"Marcus Aurelius"},
+{q:"The happiness of your life depends upon the quality of your thoughts.",s:"Marcus Aurelius"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"It's not what happens to you, but how you react to it that matters.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"We cannot choose our external circumstances, but we can always choose how we respond to them.",s:"Epictetus"},
+{q:"Only the educated are free.",s:"Epictetus"},
+{q:"How long will you wait before you demand the best of yourself?",s:"Epictetus"},
+{q:"Lay hold of today's task, and you will not need to depend so much upon tomorrow's.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"}
+],
+late:[
+{q:"The last three words of a man who quit: I wish I'd. The last three of a man who finished: I did it.",s:"Unknown"},
+{q:"Finish each day and be done with it. You have done what you could.",s:"Ralph Waldo Emerson"},
+{q:"What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"The best time to plant a tree was twenty years ago. The second best time is now.",s:"Chinese Proverb"},
+{q:"You may have to fight a battle more than once to win it.",s:"Margaret Thatcher"},
+{q:"When you feel like quitting, think about why you started.",s:"Unknown"},
+{q:"It does not matter how slowly you go as long as you do not stop.",s:"Confucius"},
+{q:"Courage is not having the strength to go on. It is going on when you don't have the strength.",s:"Theodore Roosevelt"},
+{q:"What you do today can improve all your tomorrows.",s:"Ralph Marston"},
+{q:"Perseverance is not a long race; it is many short races one after the other.",s:"Walter Elliot"},
+{q:"The difference between a master and a beginner is that the master has failed more times than the beginner has tried.",s:"Stephen McCraine"},
+{q:"Success is not final, failure is not fatal: it is the courage to continue that counts.",s:"Winston Churchill"},
+{q:"It always seems impossible until it's done.",s:"Nelson Mandela"},
+{q:"Do what you can, with what you have, where you are.",s:"Theodore Roosevelt"},
+{q:"You are never too old to set another goal or to dream a new dream.",s:"C.S. Lewis"},
+{q:"Our greatest glory is not in never falling, but in rising every time we fall.",s:"Confucius"},
+{q:"The only impossible journey is the one you never begin.",s:"Tony Robbins"},
+{q:"A man who moves a mountain begins by carrying away small stones.",s:"Confucius"},
+{q:"The secret of your future is hidden in your daily routine.",s:"Mike Murdock"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"No man was ever wise by chance.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"},
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"Do every act of your life as though it were the very last act of your life.",s:"Marcus Aurelius"},
+{q:"You have power over your mind, not outside events. Realize this, and you will find strength.",s:"Marcus Aurelius"},
+{q:"Waste no more time arguing about what a good man should be. Be one.",s:"Marcus Aurelius"},
+{q:"Confine yourself to the present.",s:"Marcus Aurelius"},
+{q:"The happiness of your life depends upon the quality of your thoughts.",s:"Marcus Aurelius"},
+{q:"Think of yourself as dead. You have lived your life. Now take what is left and live it properly.",s:"Marcus Aurelius"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"It's not what happens to you, but how you react to it that matters.",s:"Epictetus"},
+{q:"We cannot choose our external circumstances, but we can always choose how we respond to them.",s:"Epictetus"},
+{q:"How long will you wait before you demand the best of yourself?",s:"Epictetus"},
+{q:"If you want to improve, be content to appear foolish and stupid.",s:"Epictetus"},
+{q:"Wealth consists not in having great possessions, but in having few wants.",s:"Epictetus"},
+{q:"Only the educated are free.",s:"Epictetus"},
+{q:"Lay hold of today's task, and you will not need to depend so much upon tomorrow's.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"True happiness is to enjoy the present, without anxious dependence upon the future.",s:"Seneca"},
+{q:"He who fears death will never do anything worthy of a living man.",s:"Seneca"}
+],
+final:[
+{q:"Do every act of your life as though it were the very last act of your life.",s:"Marcus Aurelius"},
+{q:"It is not death that a man should fear, but he should fear never beginning to live.",s:"Marcus Aurelius"},
+{q:"Waste no more time arguing about what a good man should be. Be one.",s:"Marcus Aurelius"},
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"Accept the things to which fate binds you, and love the people with whom fate brings you together.",s:"Marcus Aurelius"},
+{q:"You have power over your mind, not outside events. Realize this, and you will find strength.",s:"Marcus Aurelius"},
+{q:"Think of yourself as dead. You have lived your life. Now take what is left and live it properly.",s:"Marcus Aurelius"},
+{q:"The soul becomes dyed with the color of its thoughts.",s:"Marcus Aurelius"},
+{q:"To live each day as if one's last, never flustered, never apathetic, is the perfection of character.",s:"Marcus Aurelius"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"No man is free who is not master of himself.",s:"Epictetus"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"It's not what happens to you, but how you react to it that matters.",s:"Epictetus"},
+{q:"How long will you wait before you demand the best of yourself?",s:"Epictetus"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"No man was ever wise by chance.",s:"Seneca"},
+{q:"True happiness is to enjoy the present, without anxious dependence upon the future.",s:"Seneca"},
+{q:"While we are postponing, life speeds by.",s:"Seneca"},
+{q:"We suffer more often in imagination than in reality.",s:"Seneca"},
+{q:"He who fears death will never do anything worthy of a living man.",s:"Seneca"},
+{q:"Lay hold of today's task, and you will not need to depend so much upon tomorrow's.",s:"Seneca"},
+{q:"The whole future lies in uncertainty: live immediately.",s:"Seneca"},
+{q:"As is a tale, so is life: not how long it is, but how good it is, is what matters.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"It does not matter how slowly you go as long as you do not stop.",s:"Confucius"},
+{q:"Our greatest glory is not in never falling, but in rising every time we fall.",s:"Confucius"},
+{q:"The man who moves a mountain begins by carrying away small stones.",s:"Confucius"},
+{q:"Success is not final, failure is not fatal: it is the courage to continue that counts.",s:"Winston Churchill"},
+{q:"What you do today can improve all your tomorrows.",s:"Ralph Marston"},
+{q:"The best time to plant a tree was twenty years ago. The second best time is now.",s:"Chinese Proverb"},
+{q:"Do what you can, with what you have, where you are.",s:"Theodore Roosevelt"},
+{q:"It always seems impossible until it's done.",s:"Nelson Mandela"},
+{q:"Finish each day and be done with it. You have done what you could.",s:"Ralph Waldo Emerson"},
+{q:"You are never too old to set another goal or to dream a new dream.",s:"C.S. Lewis"},
+{q:"A journey of a thousand miles begins with a single step.",s:"Lao Tzu"}
+],
+complete:[
+{q:"A strong day is built from ordinary actions repeated with intention.",s:"Seneca"},
+{q:"You have done what you could. Finish each day and be done with it.",s:"Ralph Waldo Emerson"},
+{q:"The soul becomes dyed with the color of its thoughts.",s:"Marcus Aurelius"},
+{q:"Very little is needed to make a happy life; it is all within yourself.",s:"Marcus Aurelius"},
+{q:"The happiness of your life depends upon the quality of your thoughts.",s:"Marcus Aurelius"},
+{q:"Our life is what our thoughts make it.",s:"Marcus Aurelius"},
+{q:"Today I escaped anxiety. Or no, I discarded it, for it was within me.",s:"Marcus Aurelius"},
+{q:"Do not indulge in dreams of having what you have not, but reckon up the chief of the blessings you do possess.",s:"Marcus Aurelius"},
+{q:"Let men see, let them know, a real man, who lives as he was meant to live.",s:"Marcus Aurelius"},
+{q:"Accept the things to which fate binds you, and love the people with whom fate brings you together.",s:"Marcus Aurelius"},
+{q:"It is not outside forces that make us restless, but our own unexamined thoughts.",s:"Marcus Aurelius"},
+{q:"To live happily is an inward power of the soul.",s:"Marcus Aurelius"},
+{q:"True happiness is to enjoy the present, without anxious dependence upon the future.",s:"Seneca"},
+{q:"Wealth consists not in having great possessions, but in having few wants.",s:"Epictetus"},
+{q:"It is impossible for a man to learn what he thinks he already knows.",s:"Epictetus"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"We are what we repeatedly do. Excellence, then, is not an act, but a habit.",s:"Aristotle"},
+{q:"The best reason to live is to die to what was and be born to what is.",s:"Marcus Aurelius"},
+{q:"Your time is limited, don't waste it living someone else's life.",s:"Steve Jobs"},
+{q:"What you do speaks so loudly that I cannot hear what you say.",s:"Ralph Waldo Emerson"},
+{q:"Quality is not an act, it is a habit.",s:"Aristotle"},
+{q:"Action expresses priorities.",s:"Mahatma Gandhi"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"The secret of your future is hidden in your daily routine.",s:"Mike Murdock"},
+{q:"Well done is better than well said.",s:"Benjamin Franklin"}
+],
+ahead:[
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"Concentrate every minute on doing what's in front of you with precise and genuine seriousness.",s:"Marcus Aurelius"},
+{q:"You have power over your mind, not outside events. Realize this, and you will find strength.",s:"Marcus Aurelius"},
+{q:"The happiness of your life depends upon the quality of your thoughts.",s:"Marcus Aurelius"},
+{q:"Waste no more time arguing about what a good man should be. Be one.",s:"Marcus Aurelius"},
+{q:"Never rate any possible gain as greater than the duty you are doing.",s:"Marcus Aurelius"},
+{q:"Accept the things to which fate binds you, and love the people with whom fate brings you together.",s:"Marcus Aurelius"},
+{q:"Think of yourself as dead. You have lived your life. Now take what is left and live it properly.",s:"Marcus Aurelius"},
+{q:"Confine yourself to the present.",s:"Marcus Aurelius"},
+{q:"The mind which is free from passions is a citadel.",s:"Marcus Aurelius"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"It's not what happens to you, but how you react to it that matters.",s:"Epictetus"},
+{q:"Wealth consists not in having great possessions, but in having few wants.",s:"Epictetus"},
+{q:"No man is free who is not master of himself.",s:"Epictetus"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"No man was ever wise by chance.",s:"Seneca"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"Luck is what happens when preparation meets opportunity.",s:"Seneca"},
+{q:"It does not matter how slowly you go as long as you do not stop.",s:"Confucius"},
+{q:"The man who moves a mountain begins by carrying away small stones.",s:"Confucius"},
+{q:"Well begun is half done.",s:"Aristotle"},
+{q:"Action expresses priorities.",s:"Mahatma Gandhi"},
+{q:"Quality is not an act, it is a habit.",s:"Aristotle"},
+{q:"Do what you can, with what you have, where you are.",s:"Theodore Roosevelt"},
+{q:"The best time to plant a tree was twenty years ago. The second best time is now.",s:"Chinese Proverb"},
+{q:"Success is not final, failure is not fatal: it is the courage to continue that counts.",s:"Winston Churchill"}
+],
+behind:[
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"You have power over your mind, not outside events. Realize this, and you will find strength.",s:"Marcus Aurelius"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"},
+{q:"We suffer more often in imagination than in reality.",s:"Seneca"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"It's not what happens to you, but how you react to it that matters.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"How long will you wait before you demand the best of yourself?",s:"Epictetus"},
+{q:"If you want to improve, be content to appear foolish and stupid.",s:"Epictetus"},
+{q:"We cannot choose our external circumstances, but we can always choose how we respond to them.",s:"Epictetus"},
+{q:"It does not matter how slowly you go as long as you do not stop.",s:"Confucius"},
+{q:"Our greatest glory is not in never falling, but in rising every time we fall.",s:"Confucius"},
+{q:"The man who moves a mountain begins by carrying away small stones.",s:"Confucius"},
+{q:"What you do today can improve all your tomorrows.",s:"Ralph Marston"},
+{q:"Do what you can, with what you have, where you are.",s:"Theodore Roosevelt"},
+{q:"It always seems impossible until it's done.",s:"Nelson Mandela"},
+{q:"Success is not final, failure is not fatal: it is the courage to continue that counts.",s:"Winston Churchill"},
+{q:"The best time to plant a tree was twenty years ago. The second best time is now.",s:"Chinese Proverb"},
+{q:"The secret of your future is hidden in your daily routine.",s:"Mike Murdock"},
+{q:"A journey of a thousand miles begins with a single step.",s:"Lao Tzu"},
+{q:"You may have to fight a battle more than once to win it.",s:"Margaret Thatcher"},
+{q:"Action expresses priorities.",s:"Mahatma Gandhi"},
+{q:"Quality is not an act, it is a habit.",s:"Aristotle"},
+{q:"Well begun is half done.",s:"Aristotle"},
+{q:"Do one thing every day that scares you.",s:"Eleanor Roosevelt"},
+{q:"The only impossible journey is the one you never begin.",s:"Tony Robbins"}
+],
+streakHigh:[
+{q:"We are what we repeatedly do. Excellence, then, is not an act, but a habit.",s:"Aristotle"},
+{q:"Success is the sum of small efforts, repeated day in and day out.",s:"Robert Collier"},
+{q:"The secret of your future is hidden in your daily routine.",s:"Mike Murdock"},
+{q:"Motivation is what gets you started. Habit is what keeps you going.",s:"Jim Ryun"},
+{q:"Consistency is what transforms average into excellence.",s:"Unknown"},
+{q:"Small disciplines repeated with consistency every day lead to great achievements.",s:"John C. Maxwell"},
+{q:"Discipline is choosing between what you want now and what you want most.",s:"Abraham Lincoln"},
+{q:"The secret of change is to focus all of your energy, not on fighting the old, but on building the new.",s:"Socrates"},
+{q:"Quality is not an act, it is a habit.",s:"Aristotle"},
+{q:"Action expresses priorities.",s:"Mahatma Gandhi"},
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"Do every act of your life as though it were the very last act of your life.",s:"Marcus Aurelius"},
+{q:"Waste no more time arguing about what a good man should be. Be one.",s:"Marcus Aurelius"},
+{q:"Concentrate every minute on doing what's in front of you with precise and genuine seriousness.",s:"Marcus Aurelius"},
+{q:"The soul becomes dyed with the color of its thoughts.",s:"Marcus Aurelius"},
+{q:"Think of yourself as dead. You have lived your life. Now take what is left and live it properly.",s:"Marcus Aurelius"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"How long will you wait before you demand the best of yourself?",s:"Epictetus"},
+{q:"It's not what happens to you, but how you react to it that matters.",s:"Epictetus"},
+{q:"No man is free who is not master of himself.",s:"Epictetus"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"},
+{q:"No man was ever wise by chance.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"Luck is what happens when preparation meets opportunity.",s:"Seneca"}
+],
+streakLow:[
+{q:"The impediment to action advances action. What stands in the way becomes the way.",s:"Marcus Aurelius"},
+{q:"Do every act of your life as though it were the very last act of your life.",s:"Marcus Aurelius"},
+{q:"You have power over your mind, not outside events. Realize this, and you will find strength.",s:"Marcus Aurelius"},
+{q:"Waste no more time arguing about what a good man should be. Be one.",s:"Marcus Aurelius"},
+{q:"It is not death that a man should fear, but he should fear never beginning to live.",s:"Marcus Aurelius"},
+{q:"Never rate any possible gain as greater than the duty you are doing.",s:"Marcus Aurelius"},
+{q:"First say to yourself what you would be; and then do what you have to do.",s:"Epictetus"},
+{q:"No man is free who is not master of himself.",s:"Epictetus"},
+{q:"Make the best use of what is in your power, and take the rest as it happens.",s:"Epictetus"},
+{q:"How long will you wait before you demand the best of yourself?",s:"Epictetus"},
+{q:"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",s:"Epictetus"},
+{q:"It's not what happens to you, but how you react to it that matters.",s:"Epictetus"},
+{q:"If you want to improve, be content to appear foolish and stupid.",s:"Epictetus"},
+{q:"Difficulties strengthen the mind, as labor does the body.",s:"Seneca"},
+{q:"It is the power of the mind to be unconquerable.",s:"Seneca"},
+{q:"He who is brave is free.",s:"Seneca"},
+{q:"No man was ever wise by chance.",s:"Seneca"},
+{q:"While we are postponing, life speeds by.",s:"Seneca"},
+{q:"The whole future lies in uncertainty: live immediately.",s:"Seneca"},
+{q:"A gem cannot be polished without friction, nor a man perfected without trials.",s:"Seneca"},
+{q:"It does not matter how slowly you go as long as you do not stop.",s:"Confucius"},
+{q:"Our greatest glory is not in never falling, but in rising every time we fall.",s:"Confucius"},
+{q:"The man who moves a mountain begins by carrying away small stones.",s:"Confucius"},
+{q:"The best time to plant a tree was twenty years ago. The second best time is now.",s:"Chinese Proverb"},
+{q:"A journey of a thousand miles begins with a single step.",s:"Lao Tzu"},
+{q:"Action expresses priorities.",s:"Mahatma Gandhi"},
+{q:"Quality is not an act, it is a habit.",s:"Aristotle"},
+{q:"Well begun is half done.",s:"Aristotle"},
+{q:"Do what you can, with what you have, where you are.",s:"Theodore Roosevelt"},
+{q:"The only impossible journey is the one you never begin.",s:"Tony Robbins"}
+]
+};
+
+const dailyQuotes=[
+"What you do every day matters more than what you do once in a while.",
+"Discipline is the bridge between goals and accomplishment.",
+"The secret of your future is hidden in your daily routine.",
+"You do not rise to the level of your goals. You fall to the level of your systems.",
+"Small daily improvements over time lead to stunning results.",
+"The price of discipline is always less than the pain of regret.",
+"What stands in the way becomes the way.",
+"Freedom is not the absence of commitments but the ability to choose them.",
+"We are what we repeatedly do. Excellence is not an act but a habit.",
+"The impediment to action advances action. What stands in the way becomes the way.",
+"First say to yourself what you would be, and then do what you have to do.",
+"It is not that we have a short time to live, but that we waste much of it.",
+"Difficulties strengthen the mind as labor does the body.",
+"You have power over your mind, not outside events. Realize this, and you will find strength.",
+"The best revenge is not to be like your enemy.",
+"At dawn, when you have trouble getting out of bed, present this thought to yourself:",
+"Very little is needed to make a happy life; it is all within yourself.",
+"Waste no more time arguing about what a good man should be. Be one.",
+"Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth.",
+"The best revenge is to be unlike him who performed the injury.",
+"When you arise in the morning, think of what a precious privilege it is to be alive.",
+"The happiness of your life depends upon the quality of your thoughts.",
+"Look back over the past, with its changing empires that rose and fell.",
+"It is not death that a man should fear, but he should fear never beginning to live.",
+"Meditate not on the fear of death, but on the eternity you already possess.",
+"No man is free who is not master of himself.",
+"Difficulties are things that show a person what they are.",
+"The greater the difficulty, the more glory in surmounting it.",
+"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.",
+"Attach yourself to what is spiritually superior, regardless of what other people think or do.",
+"He who sweats more in training bleeds less in war.",
+"Be tolerant with others and strict with yourself.",
+"Talk not of blessedness until thou hast endured some suffering.",
+"To bear what is terrible with grace is the mark of a strong soul.",
+"The mind that is anxious about future events is miserable.",
+"Never let the future disturb you. You will meet it, if you have to, with the same weapons of reason.",
+"Loss is nothing else but change, and change is Nature's delight.",
+"How long are you going to wait before you demand the best for yourself?",
+"Do not pray for an easy life; pray for the strength to endure a difficult one.",
+"Action expresses priorities.",
+"We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+"The only way to do great work is to love what you do.",
+"The best time to plant a tree was twenty years ago. The second best time is now.",
+"Your time is limited. Do not waste it living someone else's life.",
+"Stay hungry. Stay foolish.",
+"In the middle of difficulty lies opportunity.",
+"Character is fate.",
+"Knowing yourself is the beginning of all wisdom.",
+"It is during our darkest moments that we must focus to see the light.",
+"The mind is everything. What you think you become.",
+"Peace comes from within. Do not seek it without.",
+"Health is the greatest possession.",
+"An eye for an eye will only make the whole world blind.",
+"Three things cannot be long hidden: the sun, the moon, and the truth.",
+"Happiness is not something ready-made. It comes from your own actions.",
+"The only real failure in life is not to be true to the best one knows."
+];
+
+const usedQuotes={start:[],early:[],mid:[],late:[],final:[],complete:[],ahead:[],behind:[],streakHigh:[],streakLow:[]};
+const MAX_USED=12;
+
+function pickFromPool(pool,used){
+  const available=pool.filter((_,i)=>!used.includes(i));
+  if(available.length===0){used.length=0;return pickFromPool(pool,used);}
+  const idx=Math.floor(Math.random()*available.length);
+  const originalIdx=pool.indexOf(available[idx]);
+  used.push(originalIdx);
+  if(used.length>MAX_USED)used.shift();
+  return available[idx];
 }
 
-function showEncouragement(pct){
-  const msg=getRandomEncouragement(pct);
+function getContextTier(pct,completedCount,totalBlocks,idx,streak,isAhead){
+  const p=pct*100;
+  const isFirst=completedCount===1;
+  const isFinal=completedCount===totalBlocks-1;
+  const isDone=completedCount===totalBlocks;
+  const remaining=totalBlocks-completedCount;
+  if(isDone)return'complete';
+  if(isFinal)return'final';
+  if(isFirst)return'start';
+  if(streak>=7&&Math.random()<0.2)return'streakHigh';
+  if(streak<=1&&Math.random()<0.2)return'streakLow';
+  if(isAhead&&Math.random()<0.15)return'ahead';
+  if(!isAhead&&remaining<=3&&Math.random()<0.3)return'behind';
+  if(p<20)return'start';
+  if(p<50)return'early';
+  if(p<75)return'mid';
+  if(p<95)return'late';
+  return'late';
+}
+
+function getQuote(pct,taskTitle,idx,totalBlocks,streak,isAhead){
+  const completedCount=Math.round(pct*totalBlocks);
+  const tier=getContextTier(pct,completedCount,totalBlocks,idx,streak,isAhead);
+  return pickFromPool(quoteLibrary[tier],usedQuotes[tier]);
+}
+
+function showEncouragement(pct,taskTitle,idx,streak,isAhead){
+  const quote=getQuote(pct,taskTitle,idx,totalBlocks,streak,isAhead);
   const toast=document.getElementById('encourage-toast');
-  document.getElementById('e-emoji').textContent=msg.e;
-  document.getElementById('e-text').textContent=msg.t;
-  toast.classList.remove('done','low');
+  document.getElementById('e-text').textContent=quote.q;
+  document.getElementById('e-source').textContent=quote.s;
+  toast.classList.remove('done');
   if(pct>=1)toast.classList.add('done');
-  else if(pct<0.5)toast.classList.add('low');
   toast.classList.add('show');
-  const dur=pct>=1?6000:pct>=0.7?6000:msg.t.length>40?7000:6000;
+  const dur=pct>=1?6000:quote.q.length>60?7000:6000;
   setTimeout(()=>toast.classList.remove('show'),dur);
 }
+
 
 function showXP(x,y){
   const el=document.createElement('div');
@@ -917,6 +1442,279 @@ function minToTime(m){const h=Math.floor(((m%1440)+1440)%1440/60);const mm=((m%1
 function fmtTime(m){let[h,mm]=minToTime(m).split(':').map(Number);return`${h%12||12}:${String(mm).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
 function durStr(min){return min>=60?`${Math.floor(min/60)}h${min%60?' '+min%60+'m':''}`:`${min}m`}
 
+function generateStrategy(ctx){
+  const{clean,wake,bed,hasCommit,commitS,commitE,commute,isMorning,isNight,prefs,hasWorkout,morningWorkout,goalDesc,state:st,prevPct,daily:dailyData,now}=ctx;
+  const insights=[];
+  const push=(text,weight)=>{insights.push({text,weight})};
+  const totalTaskMin=clean.reduce((a,b)=>a+b.dur,0);
+  const deepWorkBlocks=clean.filter(b=>b.title.includes('Session')||b.title.includes('Study')||b.title.includes('Coding')||b.title.includes('Work')||b.title.includes('Activity')||b.title.includes('Creative')||b.title.includes('Goal'));
+  const deepWorkMin=deepWorkBlocks.reduce((a,b)=>a+b.dur,0);
+  const breakBlocks=clean.filter(b=>b.title==='Break'||b.title.includes('Break'));
+  const breakCount=breakBlocks.length;
+  const breakMin=breakBlocks.reduce((a,b)=>a+b.dur,0);
+  const currentMin=now.getHours()*60+now.getMinutes();
+  const sleepHrs=((1440-(bed-wake))/60).toFixed(1);
+  const awakeHrs=(bed-wake)/60;
+  const dates=Object.keys(dailyData).sort();
+  const histDays=dates.map(d=>dailyData[d]).filter(d=>d&&d.total>0);
+  const totalDays=histDays.length;
+  const avgPct=totalDays?Math.round(histDays.reduce((a,d)=>a+d.pct,0)/totalDays):0;
+  const last7=histDays.slice(-7);
+  const last7Avg=last7.length?Math.round(last7.reduce((a,d)=>a+d.pct,0)/last7.length):0;
+  const prev7=histDays.slice(-14,-7);
+  const prev7Avg=prev7.length?Math.round(prev7.reduce((a,d)=>a+d.pct,0)/prev7.length):0;
+  const yesterdayData=dates.length?dailyData[dates[dates.length-1]]:null;
+  const yesterdayPct=yesterdayData?yesterdayData.pct:0;
+  const yesterdayCount=yesterdayData?yesterdayData.count:0;
+  const nowDow=now.getDay();
+  const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dayName=dayNames[nowDow];
+  const dowPcts={};
+  dates.forEach(d=>{const dt=new Date(d+'T00:00:00');const dw=dt.getDay();if(!dowPcts[dw])dowPcts[dw]=[];if(dailyData[d]&&dailyData[d].total>0)dowPcts[dw].push(dailyData[d].pct)});
+  const todayDowAvg=dowPcts[nowDow]&&dowPcts[nowDow].length?Math.round(dowPcts[nowDow].reduce((a,b)=>a+b,0)/dowPcts[nowDow].length):null;
+  const taskCount=clean.length;
+  const longestTask=clean.length?clean.reduce((a,b)=>a.dur>b.dur?a:b):null;
+  const morningTasks=clean.filter(b=>b.start<timeToMin('12:00')&&b.start>=wake);
+  const afternoonTasks=clean.filter(b=>b.start>=timeToMin('12:00'));
+  const morningTaskMin=morningTasks.reduce((a,b)=>a+b.dur,0);
+  const morningPct=totalTaskMin?Math.round((morningTaskMin/totalTaskMin)*100):0;
+  const freeBlocks=[];
+  for(let i=0;i<clean.length-1;i++){
+    const endA=clean[i].start+clean[i].dur;
+    const startB=clean[i+1].start;
+    if(startB-endA>=10)freeBlocks.push({from:endA,to:startB,dur:startB-endA,after:clean[i].title,before:clean[i+1].title});
+  }
+  let consecutiveLong=0;let maxConsecutive=0;
+  clean.forEach(b=>{if(b.dur>=45){consecutiveLong++;maxConsecutive=Math.max(maxConsecutive,consecutiveLong)}else{consecutiveLong=0}});
+  const completedSoFar=clean.filter(b=>{
+    const blockEnd=b.start+b.dur;
+    return currentMin>=blockEnd;
+  }).length;
+  const pctSoFar=taskCount?completedSoFar/taskCount:0;
+
+  // HIDDEN OPPORTUNITIES
+  if(freeBlocks.length>0){
+    const biggest=freeBlocks.reduce((a,b)=>a.dur>b.dur?a:b);
+    if(biggest.dur>=20){
+      push(`Your longest open window is ${durStr(biggest.dur)} at ${fmtTime(biggest.from)}. That's long enough to start and finish something small — or review what's coming next so you don't cold-start.`,3);
+    }
+  }
+  if(deepWorkBlocks.length>=2){
+    const first=deepWorkBlocks[0];
+    const gap=first.start-wake;
+    if(gap>=20&&gap<=60){
+      const preGapTask=clean.find(b=>b.start>=wake&&(b.start+b.dur)<=first.start);
+      if(preGapTask&&preGapTask.dur<=15){
+        push(`You have a short task (${preGapTask.title}, ${durStr(preGapTask.dur)}) right before your first deep work block at ${fmtTime(first.start)}. Complete it quickly and use the remaining ${gap-preGapTask.dur} minutes to set up — context-switching into deep work costs 15+ minutes of ramp-up.`,4);
+      }
+    }
+  }
+  if(hasCommit&&commute>0){
+    const postCommitTasks=clean.filter(b=>b.start>=commitE+commute);
+    if(postCommitTasks.length>=3){
+      const postMin=postCommitTasks.reduce((a,b)=>a+b.dur,0);
+      push(`After your commute back, you have ${postCommitTasks.length} tasks totaling ${durStr(postMin)}. That's a full second shift. The most important one should go first — decision fatigue makes the later ones harder.`,4);
+    }
+  }
+  if(freeBlocks.length>=2){
+    const morningFree=freeBlocks.filter(b=>b.from<timeToMin('12:00'));
+    const afternoonFree=freeBlocks.filter(b=>b.from>=timeToMin('12:00'));
+    if(morningFree.length===0&&afternoonFree.length>=2){
+      push(`All your open time is in the afternoon. Your morning has no slack — if any task runs late, the cascade hits everything. Start precisely on time today.`,4);
+    }
+  }
+
+  // RISK ANALYSIS
+  if(consecutiveLong>=3){
+    push(`${consecutiveLong} demanding blocks in a row. After 90 minutes of sustained focus, decision quality drops. Your planned break isn't optional — it's where you prevent mistakes in the later blocks.`,5);
+  }
+  if(longestTask&&longestTask.dur>=60){
+    const otherLongBlocks=clean.filter(b=>b!==longestTask&&b.dur>=45);
+    if(otherLongBlocks.length>=2){
+      push(`"${longestTask.title}" (${durStr(longestTask.dur)}) is surrounded by ${otherLongBlocks.length} other long blocks. The risk isn't any single task — it's the accumulated fatigue. Take every break exactly on time today.`,5);
+    }
+  }
+  if(hasCommit&&commute>0){
+    const commitEnd=commitE+commute;
+    const afterCommit=clean.filter(b=>b.start>=commitEnd);
+    if(afterCommit.length>=3){
+      const afterMin=afterCommit.reduce((a,b)=>a+b.dur,0);
+      if(afterMin>180){
+        push(`You have ${durStr(afterMin)} of tasks after your commute home. That's a lot when your energy is already drained. If you feel like cutting something, the last task is the safest one to trim.`,4);
+      }
+    }
+  }
+  if(freeBlocks.length>0){
+    const tightest=freeBlocks.reduce((best,b)=>b.dur<best.dur?b:best,freeBlocks[0]);
+    if(tightest.dur<=8&&tightest.dur>0){
+      push(`Only ${tightest.dur} minutes between ${tightest.after} and ${tightest.before}. That's barely enough to transition — if either runs over, the next one starts late.`,3);
+    }
+  }
+
+  // PATTERN RECOGNITION
+  if(totalDays>=5&&todayDowAvg!==null){
+    const diff=todayDowAvg-avgPct;
+    if(diff>10){
+      push(`Your ${dayName}s historically average ${todayDowAvg}% completion — ${diff} points above your ${avgPct}% overall. Something about your ${dayName} routine works. Identify what it is and repeat it.`,4);
+    }
+    if(diff<-10){
+      push(`Your ${dayName}s average ${todayDowAvg}% — below your ${avgPct}% overall. The pattern suggests ${dayName}s are harder for you. Front-load the most important task before the dip hits.`,4);
+    }
+  }
+  if(last7.length>=3&&prev7.length>=3){
+    const trend=last7Avg-prev7Avg;
+    if(trend>10){
+      push(`Your completion rate jumped ${Math.round(trend)} points this week vs last. Whatever you changed is working — keep doing it.`,3);
+    }
+    if(trend<-10){
+      push(`Down ${Math.abs(Math.round(trend))} points from last week. When completion drops two weeks in a row, it usually means the schedule needs adjusting, not more willpower.`,4);
+    }
+  }
+  if(totalDays>=3){
+    const recentCompletions=histDays.slice(-3).map(d=>d.count);
+    const avgRecent=Math.round(recentCompletions.reduce((a,b)=>a+b,0)/recentCompletions.length);
+    if(avgRecent>=taskCount*0.8){
+      push(`You've been averaging ${avgRecent} tasks completed over your last 3 days. Today has ${taskCount} tasks — you're within your recent range. This is a pace you can maintain.`,3);
+    }
+    if(avgRecent<taskCount*0.5&&taskCount>=5){
+      push(`You've averaged ${avgRecent} completed tasks recently, but today has ${taskCount}. That's a significant jump — consider which 2-3 tasks matter most and treat the rest as bonus.`,4);
+    }
+  }
+
+  // GOAL FORECASTING
+  if(taskCount>=4){
+    const firstFourMin=clean.slice(0,4).reduce((a,b)=>a+b.dur,0);
+    const firstFourPct=Math.round((4/taskCount)*100);
+    push(`Completing the first 4 tasks puts you at ${firstFourPct}% of today's workload. Those ${durStr(firstFourMin)} are your highest-leverage minutes.`,4);
+  }
+  if(deepWorkMin>=90){
+    const deepPct=Math.round((deepWorkMin/totalTaskMin)*100);
+    push(`${deepPct}% of your work time is deep focus. That's where real progress happens — the other tasks are maintenance. Protect those blocks.`,3);
+  }
+  if(morningPct>=70){
+    push(`${morningPct}% of today's work is before noon. Your morning is carrying the day. If you lose it to slow starts, you lose most of your output.`,4);
+  }
+
+  // SCHEDULE OPTIMIZATION
+  if(freeBlocks.length>0){
+    const biggest=freeBlocks.reduce((a,b)=>a.dur>b.dur?a:b);
+    if(biggest.dur>=15){
+      const nearbyTask=clean.find(b=>b.start>biggest.from);
+      if(nearbyTask&&nearbyTask.dur>=30){
+        push(`If "${nearbyTask.title}" runs over, you can absorb it into the ${durStr(biggest.dur)} gap after ${biggest.after} without affecting anything else. That gap is your safety net.`,3);
+      }
+    }
+  }
+  if(hasWorkout){
+    const workoutBlock=clean.find(b=>b.title.includes('Workout'));
+    if(workoutBlock){
+      const afterWorkout=clean.filter(b=>b.start>=workoutBlock.start+workoutBlock.dur&&b.title!=='Break');
+      if(afterWorkout.length>=2){
+        const hardestAfter=afterWorkout.reduce((a,b)=>a.dur>b.dur?a:b);
+        if(hardestAfter.dur>=45){
+          push(`Your hardest post-workout task is "${hardestAfter.title}" (${durStr(hardestAfter.dur)}). Schedule it when your post-exercise energy peak hits — usually 30-60 minutes after you finish.`,4);
+        }
+      }
+    }
+  }
+
+  // PROGRESS COMPARISON
+  if(yesterdayData&&totalDays>=2){
+    const yCount=yesterdayCount;
+    const diff=taskCount-yCount;
+    if(diff>2){
+      push(`Today has ${taskCount} tasks vs ${yCount} yesterday. That's ${diff} more — a bigger day. Know which tasks are non-negotiable before you start.`,3);
+    }
+    if(diff<-2){
+      push(`${taskCount} tasks today, ${Math.abs(diff)} fewer than yesterday's ${yCount}. Lighter days aren't less productive — they're recovery. Use the extra time for what you skipped yesterday.`,3);
+    }
+  }
+  if(yesterdayPct>0&&yesterdayPct<50&&totalDays>=2){
+    const skippedTasks=histDays.slice(-1).map(d=>{
+      if(d.completed){
+        return d.completed;
+      }
+      return [];
+    }).flat();
+    if(skippedTasks.length>0){
+      push(`Yesterday you completed ${yesterdayCount} of ${yesterdayTotal} tasks. The ${yesterdayTotal-yesterdayCount} you skipped are still waiting. If any of them are today, prioritize them early.`,3);
+    }
+  }
+  if(totalDays>=7){
+    const weekAvg=last7Avg;
+    if(weekAvg>=70){
+      push(`Your 7-day average is ${weekAvg}%. You're in a strong rhythm — the goal today isn't to push harder, it's to maintain consistency.`,3);
+    }
+    if(weekAvg<40&&weekAvg>0){
+      push(`Your 7-day average is ${weekAvg}%. When completion drops below 40% for a week, the schedule usually needs restructuring. Check if your task count matches your actual capacity.`,4);
+    }
+  }
+
+  // HABIT COACHING
+  if(totalDays>=3){
+    const firstTaskTimes=histDays.slice(-5).map((d,i)=>{
+      const date=dates[dates.length-5+i];
+      if(d.count>0&&d.completed&&d.completed.length>0){
+        return d.completed[0];
+      }
+      return null;
+    }).filter(Boolean);
+    if(firstTaskTimes.length>=2){
+      push(`Your best days start with the first task done within 30 minutes of waking. The data shows you complete more when you move fast out of the gate.`,3);
+    }
+  }
+  if(streak>=3&&streak<14){
+    push(`Day ${streak} of your streak. The next milestone is ${Math.ceil(streak/3)*3} days. After that, the streak itself becomes the motivation — you won't want to break it.`,3);
+  }
+  if(streak===0&&totalDays>=3){
+    const lastActive=dates[dates.length-1];
+    if(lastActive){
+      const daysSince=Math.floor((now-new Date(lastActive+'T00:00:00'))/(1000*60*60*24));
+      if(daysSince>=2){
+        push(`It's been ${daysSince} days since your last active day. The hardest part of restarting is the first task — just complete one thing today and the momentum returns.`,3);
+      }
+    }
+  }
+
+  // TIME AWARENESS
+  if(parseFloat(sleepHrs)<7){
+    push(`${sleepHrs}h of sleep. Your reaction time and working memory are both reduced. The lighter tasks after lunch are there for a reason — don't swap in demanding work.`,4);
+  }
+  const afterLunch=clean.filter(b=>b.start>=timeToMin('13:00')&&b.start<timeToMin('17:00'));
+  if(afterLunch.length>=4){
+    const afterLunchMin=afterLunch.reduce((a,b)=>a+b.dur,0);
+    push(`${afterLunch.length} tasks between 1-5 PM totaling ${durStr(afterLunchMin)}. That's your hardest stretch — your body wants to sleep. The break between them is more important than any individual task.`,4);
+  }
+  if(breakCount===0&&totalTaskMin>180){
+    push(`No breaks across ${durStr(totalTaskMin)} of tasks. Your prefrontal cortex degrades after 90 minutes without rest. You'll finish more by pausing than by pushing through.`,4);
+  }
+  const lastTask=clean[clean.length-1];
+  if(lastTask){
+    const endTime=lastTask.start+lastTask.dur;
+    const windDownStart=bed-40;
+    const buffer=windDownStart-endTime;
+    if(buffer<=0){
+      push(`Your last task ends at ${fmtTime(endTime)}, which is ${Math.abs(buffer)} minutes after wind-down should start. Sleep gets compressed first — then everything else suffers.`,4);
+    }
+    if(buffer>0&&buffer<15){
+      push(`Only ${durStr(buffer)} between your last task and wind-down. That's barely enough to decompress. If the day runs even slightly late, sleep pays the price.`,3);
+    }
+  }
+
+  // Sort by weight (highest first), take top 2-4
+  insights.sort((a,b)=>b.weight-a.weight);
+  const selected=[];
+  const seen=new Set();
+  for(const insight of insights){
+    if(selected.length>=4)break;
+    const key=insight.text.substring(0,40);
+    if(seen.has(key))continue;
+    seen.add(key);
+    selected.push({text:insight.text,cls:''});
+  }
+  return selected.slice(0,Math.min(4,Math.max(2,selected.length)));
+}
+
 function buildSchedule(){
   saveState();
   const wake=timeToMin(state.wake);const bed=timeToMin(state.bed)>wake?timeToMin(state.bed):timeToMin(state.bed)+1440;
@@ -986,81 +1784,9 @@ function buildSchedule(){
   const sleepHrs=((1440-(bed-wake))/60).toFixed(1);
   const goalDesc=state.desc||'your goal';
   const goalName={fitness:'Get Fit',study:'Learn a Skill',coding:'Build Something',business:'Start a Business',creative:'Create',productivity:'Be Productive',mental:'Feel Better',custom:'Custom Goal'}[state.goal]||'your goal';
-  const totalTaskMin=clean.reduce((a,b)=>a+b.dur,0);
-  const deepWorkBlocks=clean.filter(b=>b.title.includes('Session')||b.title.includes('Study')||b.title.includes('Coding')||b.title.includes('Work')||b.title.includes('Activity')||b.title.includes('Creative'));
-  const deepWorkMin=deepWorkBlocks.reduce((a,b)=>a+b.dur,0);
-  const breakCount=clean.filter(b=>b.title==='Break'||b.title.includes('Break')).length;
 
-  const strategies=[];
-
-  if(prevPct>=80){
-    strategies.push({text:`You crushed ${prevPct}% of yesterday's tasks. Today keeps the same structure because what's working shouldn't be changed.`,cls:'positive'});
-  }else if(prevPct>=50){
-    strategies.push({text:`Yesterday you finished ${prevPct}% — solid effort. Today's schedule keeps your strongest blocks but gives you more breathing room between tasks.`,cls:''});
-  }else if(prevPct>0){
-    strategies.push({text:`Yesterday was tough at ${prevPct}%. Today reduces task density slightly so you can focus on quality over quantity.`,cls:'tradeoff'});
-  }else{
-    strategies.push({text:`Fresh start. Today's plan is built around your ${state.productivity==='morning'?'morning':state.productivity==='night'?'evening':'peak'} focus window to build momentum.`,cls:''});
-  }
-
-  const wakeHr=Math.floor(wake/60);
-  const bedHr=Math.floor(bed/60);
-  if(wakeHr<=6){
-    strategies.push({text:`Up at ${fmtTime(wake)} gives you ${durStr(morningAvail)} of uninterrupted time before the day gets busy. That's your edge.`,cls:'positive'});
-  }else if(wakeHr>=8){
-    strategies.push({text:`Starting at ${fmtTime(wake)} means your morning focus block is shorter, so the hardest work is front-loaded.`,cls:''});
-  }
-
-  if(isMorning){
-    strategies.push({text:`Your deepest focus block is scheduled before noon — that's when your brain's working memory peaks for ${goalDesc}.`,cls:'goal-ref'});
-  }else if(isNight){
-    strategies.push({text:`You're a night owl, so ${goalDesc} work is shifted to your evening creative peak when distractions fade.`,cls:'goal-ref'});
-  }else{
-    strategies.push({text:`Focus work is split into two sessions — one in the morning, one after lunch — to match your natural energy dips.`,cls:''});
-  }
-
-  if(deepWorkMin>=180){
-    strategies.push({text:`${durStr(deepWorkMin)} of dedicated ${goalDesc} time today. That's enough to make real progress without burnout.`,cls:'goal-ref'});
-  }else if(deepWorkMin>=90){
-    strategies.push({text:`One focused ${durStr(deepWorkMin)} block for ${goalDesc}. Short but intense — use it for your highest-priority task.`,cls:''});
-  }
-
-  if(breakCount>=2){
-    strategies.push({text:`${breakCount} breaks built in. Not filler — your brain consolidates learning during rest. Don't skip them.`,cls:'positive'});
-  }else if(breakCount===0&&totalTaskMin>180){
-    strategies.push({text:`No formal breaks scheduled. Consider standing up every 90 minutes — even 2 minutes prevents mental fatigue.`,cls:'tradeoff'});
-  }
-
-  if(hasWorkout&&morningWorkout){
-    strategies.push({text:`Morning workout triggers cortisol alignment — you'll feel alert for hours after. Exercise before ${goalDesc} work.`,cls:'positive'});
-  }else if(hasWorkout&&prefs.includes('evening-workout')){
-    strategies.push({text:`Evening workout when body temperature peaks. It'll decompress your day and improve tonight's sleep quality.`,cls:''});
-  }else if(!hasWorkout&&state.goal!=='mental'){
-    strategies.push({text:`No exercise today. Even a 15-min walk would boost your focus for the next ${goalDesc} block.`,cls:'tradeoff'});
-  }
-
-  const hasMeditation=prefs.includes('meditation');
-  const hasJournal=prefs.includes('journal');
-  if(hasMeditation){
-    strategies.push({text:`Morning meditation before ${goalDesc} — it quiets the noise so you can focus faster when it counts.`,cls:''});
-  }
-
-  if(hasCommit){
-    strategies.push({text:`Your ${state.lifestyle==='working'?'work':'class'} block is locked at ${fmtTime(commitS)}–${fmtTime(commitE)}. Everything else is scheduled around it.`,cls:''});
-  }
-
-  if(parseFloat(sleepHrs)<7){
-    strategies.push({text:`Only ${sleepHrs}h of sleep. Your focus will dip after lunch — don't schedule demanding tasks there.`,cls:'tradeoff'});
-  }else if(parseFloat(sleepHrs)>=8){
-    strategies.push({text:`${sleepHrs}h sleep window. More than enough for memory consolidation — your recovery is solid.`,cls:'positive'});
-  }
-
-  const now=new Date();const currentHr=now.getHours();
-  if(currentHr>=12&&currentHr<14){
-    strategies.push({text:`It's afternoon — if you haven't eaten yet, do it now. Low blood sugar kills focus for the rest of the day.`,cls:''});
-  }else if(currentHr>=17){
-    strategies.push({text:`Evening check-in: your remaining tasks are lighter by design. Wind down instead of pushing through.`,cls:''});
-  }
+  const now=new Date();
+  const strategies=generateStrategy({clean,wake,bed,hasCommit,commitS,commitE,commute,isMorning,isNight,prefs,hasWorkout,morningWorkout,goalDesc,state,streak,daily,prevPct,now});
 
   document.getElementById('steps-container').style.display='none';
   document.getElementById('progress-bar').style.display='none';
@@ -1068,9 +1794,13 @@ function buildSchedule(){
   document.getElementById('nav-tabs').style.display='flex';
 
   document.getElementById('s-tag').textContent=goalName;
-  document.getElementById('strategy-subtitle').textContent=prevPct>0?`Based on your ${prevPct}% completion yesterday.`:`First day — building your foundation for ${goalDesc}.`;
+  const subtitleParts=[];
+  if(prevPct>0)subtitleParts.push(`Yesterday: ${prevPct}%`);
+  if(streak>0)subtitleParts.push(`${streak}-day streak`);
+  subtitleParts.push(`${taskCount} tasks`);
+  document.getElementById('strategy-subtitle').textContent=subtitleParts.join(' · ');
   document.getElementById('strategy-list').innerHTML=strategies.map(s=>`<li class="${s.cls}">${s.text}</li>`).join('');
-  document.getElementById('quote-box').textContent=quotes[Math.floor(Math.random()*quotes.length)];
+  document.getElementById('quote-box').textContent=dailyQuotes[Math.floor(Math.random()*dailyQuotes.length)];
 
   const today=new Date().toISOString().split('T')[0];
   const todayData=daily[today];
@@ -1096,7 +1826,7 @@ function renderTimeline(completedTitles){
     const isDone=doneSet.has(item.title);
     if(isDone)el.classList.add('done');
     else if(cm>=item.start&&cm<end)el.classList.add('active');
-    el.innerHTML=`<div class="t-time">${fmtTime(item.start)} — ${fmtTime(end)} · ${durStr(item.dur)}</div><div class="t-title">${item.title}</div><div class="t-desc">${item.desc}</div>${item.reason?`<div class="t-reason">${item.reason}</div>`:''}<div class="t-icon">${item.icon}</div><button class="t-check${isDone?' checked':''}" onclick="completeTask(this,${i})">✓</button>`;
+    el.innerHTML=`<div class="t-time">${fmtTime(item.start)} — ${fmtTime(end)} · ${durStr(item.dur)}</div><div class="t-title">${item.title}</div><div class="t-desc">${item.desc}</div>${item.reason?`<div class="t-reason">${item.reason}</div>`:''}<div class="t-icon">${item.icon}</div><button class="t-check${isDone?' checked':''}" role="checkbox" aria-checked="${isDone}" aria-label="Complete ${item.title}" onclick="completeTask(this,${i})">✓</button>`;
     tl.appendChild(el);
     if(isDone)completedCount++;
   });
@@ -1125,14 +1855,14 @@ function completeTask(btn,idx){
   if(btn.classList.contains('checked')){
     if(notDoneYet){
       btn.classList.remove('checked');
-      block.classList.remove('done');
+      btn.setAttribute('aria-checked','false');
+      block.classList.remove('done','early');
       completedCount=Math.max(0,completedCount-1);
       updateDash();
       block.classList.remove('shake');void block.offsetWidth;block.classList.add('shake');
       const toast=document.getElementById('encourage-toast');
-      document.getElementById('e-emoji').textContent='⏰';
       document.getElementById('e-text').textContent="Time's still left. Focus.";
-      toast.classList.remove('done','low');
+      toast.classList.remove('done');
       toast.classList.add('show');
       setTimeout(()=>toast.classList.remove('show'),5000);
       const today=new Date().toISOString().split('T')[0];
@@ -1140,7 +1870,8 @@ function completeTask(btn,idx){
       saveDailyCompletions(today,{completed:completedTitles,count:completedCount,total:totalBlocks,pct:Math.round((completedCount/totalBlocks)*100)});
     }else{
       btn.classList.remove('checked');
-      block.classList.remove('done');
+      btn.setAttribute('aria-checked','false');
+      block.classList.remove('done','early');
       completedCount=Math.max(0,completedCount-1);
       updateDash();
       const today=new Date().toISOString().split('T')[0];
@@ -1153,14 +1884,14 @@ function completeTask(btn,idx){
   if(notDoneYet){
     block.classList.remove('shake');void block.offsetWidth;block.classList.add('shake');
     const toast=document.getElementById('encourage-toast');
-    document.getElementById('e-emoji').textContent='⏰';
     document.getElementById('e-text').textContent="Time's still left. Focus.";
-    toast.classList.remove('done','low');
+    toast.classList.remove('done');
     toast.classList.add('show');
     setTimeout(()=>toast.classList.remove('show'),5000);
     return;
   }
   btn.classList.add('checked');
+  btn.setAttribute('aria-checked','true');
   playClick();haptic();
 
   const ripple=document.createElement('span');ripple.className='ripple';btn.appendChild(ripple);
@@ -1173,6 +1904,7 @@ function completeTask(btn,idx){
   setTimeout(()=>glow.remove(),600);
 
   block.classList.add('done');
+  if(notDoneYet)block.classList.add('early');
   completedCount++;
 
   const rect=btn.getBoundingClientRect();
@@ -1180,7 +1912,9 @@ function completeTask(btn,idx){
   spawnConfetti(8);
 
   const pct=completedCount/totalBlocks;
-  showEncouragement(pct);
+  const now2=new Date();const cm2=now2.getHours()*60+now2.getMinutes();
+  const isAhead=cm2<item.start+item.dur;
+  showEncouragement(pct,item.title,idx,streak,isAhead);
   updateDash();
 
   const today=new Date().toISOString().split('T')[0];
@@ -1232,6 +1966,15 @@ function updateDash(){
   document.getElementById('ring-fill').style.strokeDashoffset=offset;
 
   // Current State
+  const stateSVGs={
+    'lazy.svg':'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><path d="M15 75 Q15 65 25 65 L95 65 Q105 65 105 75 L105 85 L15 85 Z" stroke="#444" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M10 85 L10 95 M110 85 L110 95" stroke="#444" stroke-width="2" stroke-linecap="round"/><circle cx="35" cy="58" r="7" stroke="#fff" stroke-width="2"/><path d="M42 58 L80 60" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M80 60 L95 68 M80 60 L92 55" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M50 58 L48 68 M65 59 L62 50" stroke="#fff" stroke-width="2" stroke-linecap="round"/><text x="40" y="45" font-family="sans-serif" font-size="8" fill="#666" font-weight="bold">z</text><text x="48" y="38" font-family="sans-serif" font-size="10" fill="#555" font-weight="bold">z</text><text x="57" y="30" font-family="sans-serif" font-size="12" fill="#444" font-weight="bold">z</text></svg>'),
+    'taking-easy.svg':'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><path d="M30 70 L30 95 M90 70 L90 95" stroke="#444" stroke-width="2" stroke-linecap="round"/><path d="M25 70 L95 70" stroke="#444" stroke-width="2" stroke-linecap="round"/><circle cx="60" cy="42" r="8" stroke="#fff" stroke-width="2"/><path d="M60 50 L60 70" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M60 70 L45 85 M60 70 L75 85" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M60 58 L40 65 M60 58 L80 55" stroke="#fff" stroke-width="2" stroke-linecap="round"/><rect x="78" y="50" width="10" height="12" rx="2" stroke="#f59e0b" stroke-width="1.5" fill="none"/><path d="M88 53 Q93 53 93 58 Q93 63 88 63" stroke="#f59e0b" stroke-width="1.5" fill="none"/><path d="M82 47 Q84 43 82 39" stroke="#666" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M86 47 Q88 42 86 38" stroke="#666" stroke-width="1" fill="none" stroke-linecap="round"/></svg>'),
+    'trying.svg':'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><rect x="25" y="60" width="70" height="4" rx="2" stroke="#444" stroke-width="2" fill="none"/><path d="M30 64 L30 95 M90 64 L90 95" stroke="#444" stroke-width="2" stroke-linecap="round"/><rect x="40" y="48" width="30" height="12" rx="2" stroke="#666" stroke-width="1.5" fill="none"/><path d="M38 60 L82 60" stroke="#666" stroke-width="1.5" stroke-linecap="round"/><rect x="43" y="50" width="24" height="8" rx="1" fill="rgba(139,92,246,0.1)"/><circle cx="60" cy="32" r="8" stroke="#fff" stroke-width="2"/><path d="M60 40 L60 60" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M60 60 L48 80 M60 60 L72 80" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M60 48 L45 55 M60 48 L75 55" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M72 30 L78 28 M74 35 L80 35" stroke="#f59e0b" stroke-width="1" stroke-linecap="round" opacity="0.6"/></svg>'),
+    'active.svg':'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><rect x="25" y="60" width="70" height="4" rx="2" stroke="#444" stroke-width="2" fill="none"/><path d="M30 64 L30 95 M90 64 L90 95" stroke="#444" stroke-width="2" stroke-linecap="round"/><rect x="38" y="48" width="30" height="12" rx="2" stroke="#666" stroke-width="1.5" fill="none"/><path d="M36 60 L84 60" stroke="#666" stroke-width="1.5" stroke-linecap="round"/><rect x="41" y="50" width="24" height="8" rx="1" fill="rgba(34,197,94,0.12)"/><path d="M50 54 L54 58 L62 50" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="60" cy="30" r="8" stroke="#fff" stroke-width="2"/><circle cx="57" cy="30" r="1" fill="#fff"/><circle cx="63" cy="30" r="1" fill="#fff"/><path d="M60 38 L58 58" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M58 58 L48 78 M58 58 L68 78" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M59 46 L42 52 M59 46 L76 52" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M75 28 L82 26" stroke="#22c55e" stroke-width="1" stroke-linecap="round" opacity="0.7"/><path d="M77 33 L84 33" stroke="#22c55e" stroke-width="1" stroke-linecap="round" opacity="0.7"/><path d="M75 38 L82 40" stroke="#22c55e" stroke-width="1" stroke-linecap="round" opacity="0.7"/></svg>'),
+    'productive.svg':'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><rect x="15" y="15" width="50" height="40" rx="3" stroke="#444" stroke-width="2" fill="none"/><path d="M22 25 L55 25 M22 33 L48 33 M22 41 L52 41" stroke="#555" stroke-width="1.5" stroke-linecap="round"/><path d="M56 25 L60 29" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/><path d="M56 33 L60 37" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/><circle cx="85" cy="35" r="8" stroke="#fff" stroke-width="2"/><path d="M82 37 Q85 40 88 37" stroke="#fff" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M85 43 L85 70" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M85 70 L75 92 M85 70 L95 92" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M85 52 L60 35" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M85 52 L95 60" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="100" cy="30" r="2" fill="#3b82f6" opacity="0.6"/><circle cx="105" cy="42" r="1.5" fill="#3b82f6" opacity="0.4"/><circle cx="98" cy="48" r="1" fill="#3b82f6" opacity="0.5"/></svg>'),
+    'on-fire.svg':'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><path d="M60 10 Q55 25 50 20 Q45 30 40 25 Q35 40 30 35 Q25 50 35 55" stroke="#f59e0b" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M60 10 Q65 25 70 20 Q75 30 80 25 Q85 40 90 35 Q95 50 85 55" stroke="#f59e0b" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M45 15 Q42 28 38 24 Q34 35 30 32" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.3" stroke-linecap="round"/><path d="M75 15 Q78 28 82 24 Q86 35 90 32" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.3" stroke-linecap="round"/><circle cx="60" cy="42" r="8" stroke="#fff" stroke-width="2"/><circle cx="57" cy="42" r="1.2" fill="#fff"/><circle cx="63" cy="42" r="1.2" fill="#fff"/><path d="M57 45 L63 45" stroke="#fff" stroke-width="1" stroke-linecap="round"/><path d="M60 50 L60 72" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M60 72 L48 92 M60 72 L72 92" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M60 56 L42 42 M60 56 L78 42" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="42" cy="42" r="3" stroke="#fff" stroke-width="1.5" fill="none"/><circle cx="78" cy="42" r="3" stroke="#fff" stroke-width="1.5" fill="none"/><path d="M35 55 L28 52" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/><path d="M85 55 L92 52" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/><path d="M60 28 L60 20" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/></svg>'),
+    'overwhelmed.svg':'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><path d="M35 25 Q30 20 35 15 Q40 10 38 18" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M85 25 Q90 20 85 15 Q80 10 82 18" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M40 18 Q35 12 42 10" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.3" stroke-linecap="round"/><path d="M80 18 Q85 12 78 10" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.3" stroke-linecap="round"/><path d="M55 15 Q50 10 55 5 Q60 0 65 5 Q70 10 65 15 Q60 20 55 15" stroke="#666" stroke-width="1" fill="none" opacity="0.4"/><rect x="25" y="65" width="70" height="4" rx="2" stroke="#444" stroke-width="2" fill="none"/><path d="M30 69 L30 95 M90 69 L90 95" stroke="#444" stroke-width="2" stroke-linecap="round"/><rect x="30" y="55" width="15" height="10" rx="1" stroke="#555" stroke-width="1" fill="none" transform="rotate(-10 37 60)"/><rect x="75" y="52" width="15" height="10" rx="1" stroke="#555" stroke-width="1" fill="none" transform="rotate(8 82 57)"/><circle cx="60" cy="38" r="8" stroke="#fff" stroke-width="2"/><path d="M56 36 Q57 38 58 36" stroke="#fff" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M62 36 Q63 38 64 36" stroke="#fff" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M60 46 L58 65" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M58 65 L50 85 M58 65 L68 85" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M59 52 L50 40 M59 52 L70 40" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="50" cy="38" r="2.5" stroke="#fff" stroke-width="1.5" fill="none"/><circle cx="70" cy="38" r="2.5" stroke="#fff" stroke-width="1.5" fill="none"/></svg>')
+  };
   const states=[
     {id:'lazy',name:'Lazy',desc:'You haven\'t done much today. Take it easy, a fresh start is always possible.',min:0,max:20,cls:'cs-lazy',svg:'lazy.svg'},
     {id:'easy',name:'Taking it Easy',desc:'You\'re moving slowly, but every small step counts.',min:21,max:40,cls:'cs-easy',svg:'taking-easy.svg'},
@@ -1240,10 +1983,15 @@ function updateDash(){
     {id:'productive',name:'Very Productive',desc:'You\'re crushing your tasks! Amazing focus and discipline.',min:81,max:95,cls:'cs-productive',svg:'productive.svg'},
     {id:'fire',name:'On Fire',desc:'Outstanding! You\'re in the zone and making things happen.',min:96,max:100,cls:'cs-fire',svg:'on-fire.svg'}
   ];
-  const skippedTasks=totalBlocks-completedCount-remaining;
+  let skippedCount=0;
+  const nowMs=Date.now();
+  scheduleBlocks.forEach((b,i)=>{
+    const endMs=new Date(new Date().toDateString()).getTime()+(b.start+b.dur)*60000;
+    if(nowMs>endMs){const el=document.querySelector(`.t-block[data-idx="${i}"] .t-check`);if(!el||!el.classList.contains('checked'))skippedCount++}
+  });
   let currentState;
   if(remaining===0&&completedCount>0){currentState=states[5]}
-  else if(skippedTasks>totalBlocks*0.5){currentState={id:'overwhelmed',name:'Overwhelmed',desc:'Rest is part of your plate. Recharge and come back stronger.',min:0,max:100,cls:'cs-overwhelmed',svg:'overwhelmed.svg'}}
+  else if(skippedCount>totalBlocks*0.5){currentState={id:'overwhelmed',name:'Overwhelmed',desc:'Rest is part of your plate. Recharge and come back stronger.',min:0,max:100,cls:'cs-overwhelmed',svg:'overwhelmed.svg'}}
   else{currentState=states.find(s=>pct>=s.min&&pct<=s.max)||states[0]}
 
   const card=document.getElementById('current-state-card');
@@ -1253,7 +2001,7 @@ function updateDash(){
   document.getElementById('cs-pct').textContent=pct+'%';
   document.getElementById('cs-bar-fill').style.width=pct+'%';
   const ill=document.getElementById('cs-illustration');
-  if(ill.dataset.current!==currentState.svg){ill.innerHTML=`<img src="assets/states/${currentState.svg}" alt="${currentState.name}" style="width:100%;height:100%;object-fit:contain">`;ill.dataset.current=currentState.svg}
+  if(ill.dataset.current!==currentState.svg){ill.innerHTML=`<img src="${stateSVGs[currentState.svg]}" alt="${currentState.name}" style="width:100%;height:100%;object-fit:contain">`;ill.dataset.current=currentState.svg}
   
   // Update profile panel stats if open
   if(document.getElementById('profile-panel').classList.contains('open')){
@@ -1386,12 +2134,15 @@ function renderProgressPage(){
   cal.innerHTML='';
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(h=>{const el=document.createElement('div');el.className='p-cal-head';el.textContent=h;cal.appendChild(el)});
   for(let i=0;i<firstDay;i++){const el=document.createElement('div');el.className='p-cal-day empty';cal.appendChild(el)}
+  const startDateObj=state.startDate?new Date(state.startDate):null;
   for(let d=1;d<=daysInMonth;d++){
     const el=document.createElement('div');el.className='p-cal-day';
     el.textContent=d;
     const dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayDate=new Date(year,month,d);
     if(d===todayDate)el.classList.add('today');
     if(d>todayDate)el.classList.add('future');
+    else if(startDateObj&&dayDate<startDateObj&&dayDate.toDateString()!==startDateObj.toDateString()){el.classList.add('empty')}
     else if(daily[dateStr]){const p=daily[dateStr].pct;if(p===100)el.classList.add('done');else if(p>=50)el.classList.add('partial');else el.classList.add('missed')}
     else el.classList.add('missed');
     cal.appendChild(el);
