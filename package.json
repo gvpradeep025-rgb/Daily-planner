@@ -1,0 +1,14 @@
+{
+  "name": "daily-goal-planner",
+  "version": "2.0.0",
+  "description": "A daily planner that builds a realistic, time-boxed schedule around your goal, with a unit + end-to-end test suite.",
+  "private": true,
+  "scripts": {
+    "test:unit": "node --test tests/unit/scheduler.test.js",
+    "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.48.2"
+  }
+}
